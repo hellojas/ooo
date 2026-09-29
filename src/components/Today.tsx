@@ -207,7 +207,10 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
               {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
             </div>}
             <p className="eyebrow steps-h">{lane === 'piano' ? 'Session steps' : lane === 'sax' ? 'Today' : 'Today’s session'}</p>
-            {lane === 'workout' && <p className="meta">Climbing isn’t queued — go when you feel like it and tick “Climbed” in the log. Mon/Wed/Fri at Vital BK is the habit, not a task.</p>}
+            {lane === 'workout' && <div className="climbrow">
+              <label className="inl big"><input type="checkbox" checked={!!user.climbing[date]?.done} onChange={e => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: e.target.checked } } }))} /> Climbed today</label>
+              <span className="meta">Not queued — just for fun. Mon/Wed/Fri at Vital BK is the habit.</span>
+            </div>}
             <ol className="steps">
               {curTasks.length === 0 && <li className="meta">{curBlock?.note ?? 'Nothing queued for today.'}</li>}
               {curTasks.map((t, i) => { const on = isDone(t); return (
