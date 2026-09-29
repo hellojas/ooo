@@ -18,7 +18,7 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const eta = laneEta(user, lane, projected)
   const skip = new Set(user.queueSkip ?? [])
   const setPri = (k: string, p: Priority) => update(u => ({ ...u, queuePriority: { ...u.queuePriority, [k]: p } }))
-  const kinds: Kind[] = lane === 'piano' ? ['lesson', 'technique', 'standard'] : lane === 'sax' ? ['sax'] : ['climb', 'run', 'pull']
+  const kinds: Kind[] = lane === 'piano' ? ['lesson', 'technique', 'standard'] : lane === 'sax' ? ['sax'] : ['run', 'pull']
   const toggleSkip = (id: string) => update(u => ({ ...u, queueSkip: (u.queueSkip ?? []).includes(id) ? u.queueSkip.filter(x => x !== id) : [...(u.queueSkip ?? []), id] }))
   const markDone = (id: string, on: boolean) => update(u => { const qd = { ...u.queueDone }; if (on) qd[id] = real; else delete qd[id]; return { ...u, queueDone: qd } })
   let nextSeen = false

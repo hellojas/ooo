@@ -122,7 +122,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const lessonQ = lessonItem?.qid ? byId(lessonItem.qid) : undefined
   const course = courses.find(c => c.id === (lessonQ?.course ?? coursesForWeek(wk)[0]?.id))
   const chart = (lessonQ ? pdfLinks(lessonQ.pdf) : courseLinks(course?.id ?? ''))[0]
-  const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Workout'
+  const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Run + pull-ups'
   const focusLine = lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s')).map(t => t.label.split(': ')[1]).join('. ') : curTasks[0]?.label.replace(/ \(\d+\/\d+\)$/, '')
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
   const setBlock = (t: string, v: { start?: number; end?: number } | null) => setPr({ blocks: v ? { ...pr.blocks, [t]: v } : Object.fromEntries(Object.entries(pr.blocks ?? {}).filter(([k]) => k !== t)) })
@@ -207,6 +207,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
               {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
             </div>}
             <p className="eyebrow steps-h">{lane === 'piano' ? 'Session steps' : lane === 'sax' ? 'Today' : 'Today’s session'}</p>
+            {lane === 'workout' && <p className="meta">Climbing isn’t queued — go when you feel like it and tick “Climbed” in the log. Mon/Wed/Fri at Vital BK is the habit, not a task.</p>}
             <ol className="steps">
               {curTasks.length === 0 && <li className="meta">{curBlock?.note ?? 'Nothing queued for today.'}</li>}
               {curTasks.map((t, i) => { const on = isDone(t); return (

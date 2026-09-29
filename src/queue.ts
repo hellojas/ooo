@@ -20,8 +20,9 @@ export function masterQueue(): QItem[] {
   plan.technique.forEach((t, i) => { for (let s = 1; s <= TECH_SESSIONS; s++) q.push({ id: `t${i}.${s}`, lane: 'piano', kind: 'technique', label: `Technique: ${t.text} (${s}/${TECH_SESSIONS})` }) })
   plan.standards.forEach((tune, i) => STEPS.forEach((st, k) => q.push({ id: `s${i}.${k}`, lane: 'piano', kind: 'standard', label: `${tune}: ${st}`, tune })))
   plan.sax.forEach((ph, i) => { const n = wkLen(ph.wk) * 5; for (let s = 1; s <= n; s++) q.push({ id: `x${i}.${s}`, lane: 'sax', kind: 'sax', label: `${ph.tasks.join(' · ')} (${s}/${n})` }) })
-  for (const ph of phases) {
-    const perWeek = ph.prog === 'v8' ? 3 : ph.prog === 'c25k' ? 2 : 3
+  // Climbing stays fun: no queue for it. Runs (C25K) and pull-ups keep their roadmap.
+  for (const ph of phases.filter(p => p.prog !== 'v8')) {
+    const perWeek = ph.prog === 'c25k' ? 2 : 3
     const n = wkLen(ph.wk) * perWeek
     const kind: Kind = ph.prog === 'v8' ? 'climb' : ph.prog === 'c25k' ? 'run' : 'pull'
     for (let s = 1; s <= n; s++) q.push({ id: `w${ph.prog}${ph.wk[0]}.${s}`, lane: 'workout', kind, label: `${ph.short}: ${ph.text} (${s}/${n})` })
