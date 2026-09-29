@@ -9,6 +9,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // The service worker was serving stale/blank builds after deploys. Self-destroying SW unregisters old ones and clears caches;
+      // the manifest (Add to Home Screen) is kept.
+      selfDestroying: true,
       manifest: {
         name: 'PROJECT OOO — jas fine tuning',
         short_name: 'PROJECT OOO',

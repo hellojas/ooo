@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { DOW, END, key, parse, START, today as todayKey, weekNo } from '../dates'
-import { coursesForWeek, defaultStartFor, phasesForWeek, setTaipeiStart, startFor, tripOn } from '../model'
+import { coursesForWeek, defaultStartFor, phasesForWeek, setTaipeiStart, startFor, streak, tripOn } from '../model'
 import { update, useUser } from '../storage'
 import { DaySchedule } from './DaySchedule'
 import { DayLog } from './DayLog'
@@ -33,7 +33,8 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
         <h2>{DOW[parse(date).getDay()]}, {date}{date === real ? ' · today' : ''}</h2>
         <button className="btn" onClick={() => setDate(shiftDay(date, 1))} aria-label="Next day">›</button>
       </div>
-      <p>{wk >= 1 ? `Week ${wk}` : 'Before week 1'}{trip ? ` · ✈ ${trip.name}` : ''}</p>
+      <p>{wk >= 1 ? `Week ${wk}` : 'Before week 1'}{trip ? ` · ✈ ${trip.name}` : ''}
+        {(() => { const st = streak(user, date); return st.days > 0 || st.thisWeek > 0 ? <span className="streak"> · 🔥 {st.days}-day music streak · {st.thisWeek} music day{st.thisWeek === 1 ? '' : 's'} this week</span> : null })()}</p>
       {wk >= 1 && <><h3>Week {wk} so far</h3><WeekProgress wk={wk} from={date} /></>}
       <h3>This week’s focus</h3>
       <WeekFocus wk={wk} onNav={onNav} />

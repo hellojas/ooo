@@ -226,3 +226,21 @@ a.chip.online{display:block}
 .ag-date{display:flex;flex-direction:column;align-items:center}.ag-date b{font-size:20px}.ag-date span{font-size:12px;color:var(--ink-3)}
 .ag-items{display:flex;flex-direction:column;gap:4px}.ag-trip{font-size:13px;color:var(--travel-ink)}
 .ag-day.trip{background:color-mix(in srgb,var(--travel) 40%,transparent);border-radius:8px}
+
+/* ---- phone navigation ---- */
+.streak{color:var(--ink);font-weight:600}
+.mob{display:none}
+.subnav{display:none}
+@media (max-width:760px){
+  .tabs.desk{display:none}
+  .subnav.mob{display:flex;gap:6px;overflow-x:auto;margin:14px 0 12px;padding-bottom:2px}
+  .subnav button{flex:none;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:inherit;font-weight:600;padding:9px 16px;border-radius:999px;cursor:pointer}
+  .subnav button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+  .bottombar.mob{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--panel);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .bottombar button{border:0;background:transparent;color:var(--ink-3);font:inherit;font-size:12px;font-weight:600;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;cursor:pointer}
+  .bottombar button i{font-style:normal;font-size:20px;line-height:1}
+  .bottombar button[aria-current=true]{color:var(--ink)}
+  .wrap{padding-bottom:96px}
+  header{margin-bottom:8px}
+  .btn,.seg button,.checks input{min-height:40px}
+}

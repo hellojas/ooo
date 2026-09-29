@@ -49,6 +49,11 @@ export default function App() {
   const g = (k: string) => groups[k]
   const flip = (k: string) => setGroups({ ...groups, [k]: !groups[k] })
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
+  const groups2: Record<'plan' | 'more', [View, string][]> = {
+    plan: [['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs']],
+    more: [['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']],
+  }
+  const inGroup = (k: 'plan' | 'more') => groups2[k].some(([v]) => v === view)
   const tabs: [View, string][] = [['today', 'Today'], ['week', 'Week'], ['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs'], ['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']]
 
   return (
@@ -58,9 +63,14 @@ export default function App() {
         <p>Sabbatical · Oct 5 – Dec 23, 2026</p>
       </header>
 
-      <div className="tabs" role="tablist">
+      <div className="tabs desk" role="tablist">
         {tabs.map(([v, l]) => <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}>{l}</button>)}
       </div>
+      {(inGroup('plan') || inGroup('more')) && (
+        <div className="subnav mob">
+          {groups2[inGroup('plan') ? 'plan' : 'more'].map(([v, l]) => <button key={v} aria-pressed={view === v} onClick={() => setView(v)}>{l}</button>)}
+        </div>
+      )}
 
       {view === 'today' && <Today date={day} setDate={setDay} onOpen={onOpen} onNav={setView} />}
       {view === 'week' && <WeekView wk={wk} setWk={setWk} onOpen={onOpen} onOpenDay={openDay} onNav={setView} />}
@@ -113,6 +123,12 @@ export default function App() {
       {view === 'log' && <LogView onOpenDay={openDay} />}
       {view === 'settings' && <Settings theme={theme} cycleTheme={cycle} />}
 
+      <nav className="bottombar mob" aria-label="Main">
+        <button aria-current={view === 'today'} onClick={() => setView('today')}><i>◉</i>Today</button>
+        <button aria-current={view === 'week'} onClick={() => setView('week')}><i>▦</i>Week</button>
+        <button aria-current={inGroup('plan')} onClick={() => !inGroup('plan') && setView('full')}><i>◫</i>Plan</button>
+        <button aria-current={inGroup('more')} onClick={() => !inGroup('more') && setView('log')}><i>☰</i>More</button>
+      </nav>
       {open && <CheckIn p={open.p} date={open.d} onClose={() => setOpen(null)} />}
     </div>
   )

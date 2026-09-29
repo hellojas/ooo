@@ -154,3 +154,19 @@ export function freeDays(user: UserData, wk: number, from?: string): number {
   }
   return n
 }
+
+const hasMusic = (user: UserData, k: string) => ((user.practice[k]?.piano1 ?? 0) + (user.practice[k]?.piano2 ?? 0) + (user.practice[k]?.sax ?? 0)) > 0
+/** Consecutive music days ending at `upTo` (today not yet logged doesn't break it); travel days neither count nor break. */
+export function streak(user: UserData, upTo: string): { days: number; thisWeek: number } {
+  let days = 0, k = upTo > END ? END : upTo
+  if (!hasMusic(user, k)) k = key(addDays(parse(k), -1))
+  for (; k >= START; k = key(addDays(parse(k), -1))) {
+    if (tripOn(k, user.settings.tripsOff)) continue
+    if (!hasMusic(user, k)) break
+    days++
+  }
+  const wk = weekNo(upTo)
+  let thisWeek = 0
+  for (let i = 0; i < 7; i++) { const d = key(addDays(parse(weekStart(wk)), i)); if (hasMusic(user, d)) thisWeek++ }
+  return { days, thisWeek }
+}
