@@ -62,7 +62,7 @@ export default function App() {
 
       {view === 'full' && <>
         <div className="legend">
-          <Group label="Music" items={[['online', 'Online', true], ['inperson', 'In person (plan)']]} on={g} flip={flip} />
+          <Group label="Music" items={[['online', 'Online', true], ['inperson', 'In person (plan, TBD)']]} on={g} flip={flip} />
           <Group label="Life" items={[['abs', 'Abs'], ['read', 'Read'], ['travel', 'Travel']]} on={g} flip={flip} />
         </div>
         <Calendar showTravel={g('travel')} showOnline={g('online')} showVideos={false} phaseProgs={g('abs') ? ['c25k', 'pull', 'v8'] : []}

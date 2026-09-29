@@ -42,19 +42,20 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
         <h3>Weekly guidelines</h3>
         <p className="sub">Targets per week, not per day — hit them however the week allows. They scale down automatically for travel days.</p>
         <div className="row">
-          {WEEKLY_METRICS.map(m => <label key={m.id}>{m.label} ({m.unit === 'min' ? 'min' : '×'})<input type="number" min={0} value={s.targets?.[m.id] ?? m.def}
+          {WEEKLY_METRICS.map(m => <label key={m.id}>{m.label} ({m.unit === 'min' ? 'min' : m.unit === 'reps' ? 'reps' : '×'})<input type="number" min={0} value={s.targets?.[m.id] ?? m.def}
             onChange={e => set({ targets: { ...s.targets, [m.id]: Number(e.target.value) } })} /></label>)}
         </div>
       </section>
 
       <section className="panel">
         <h2>Sessions on the calendar</h2>
-        <p className="sub">Untick anything you’re not doing. It disappears from every view, reminders and the .ics export.</p>
+        <p className="sub">Untick anything you’re not doing. In-person classes show “(TBD)” until you tick “registered”. It disappears from every view, reminders and the .ics export.</p>
         {KINDS.map(([kind, label]) => <div key={kind}>
           <h3>{label}</h3>
           <ul className="checks">{programs.filter(p => p.kind === kind).map(p => <li key={p.id}><label><input type="checkbox" checked={!s.hiddenItems.includes(p.id)}
             onChange={e => set({ hiddenItems: e.target.checked ? s.hiddenItems.filter(x => x !== p.id) : [...s.hiddenItems, p.id] })} />
-            {p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></label></li>)}</ul>
+            {p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></label>
+            {kind === 'inperson' && <label className="inl"><input type="checkbox" checked={!!s.confirmed?.includes(p.id)} onChange={e => set({ confirmed: e.target.checked ? [...(s.confirmed ?? []), p.id] : (s.confirmed ?? []).filter(x => x !== p.id) })} /> registered</label>}</li>)}</ul>
         </div>)}
       </section>
 

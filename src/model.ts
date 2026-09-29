@@ -52,41 +52,33 @@ export function monthWeeks(year: number, month: number): (string | null)[][] {
 export const isoWeekday = (k: string) => parse(k).getDay()
 export { weekNo }
 
-export const climbDays = (user: UserData, wk: number) => {
-  const days = new Set<string>()
-  for (const [d, c] of Object.entries(user.climbing)) if (weekNo(d) === wk && (c.sessionType || c.sends?.length || c.fingerFeel)) days.add(d)
-  for (const [a, v] of Object.entries(user.attendance)) {
-    const [id, d] = a.split('|'); if (v === 'went' && (id === 'climb' || id === 'climbLES') && weekNo(d) === wk) days.add(d)
-  }
-  return days.size
-}
-
 export function progress(user: UserData, wk: number) {
   const standards = Object.values(user.weekly).filter(w => w.recordedStandard).length
-  const songs = Object.values(user.practice).filter(p => p.songTranscribed?.trim()).length
-  const maxes = Object.entries(user.pullups).filter(([, v]) => v.maxTest != null).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v.maxTest as number)
-  const c25k = Math.max(0, ...Object.values(user.running).map(r => r.c25kWeek ?? 0))
-  const sax = Object.values(user.practice).filter(p => (p.sax ?? 0) > 0).length
-  return { standards, songs, climbs: climbDays(user, wk), maxes, c25k, sax }
+  const maxes = Object.entries(user.weekly).filter(([, w]) => w.pullupMax != null).sort(([a], [b]) => Number(a) - Number(b)).map(([, w]) => w.pullupMax as number)
+  let c25k = ''
+  for (const [d, r] of Object.entries(user.running).sort(([a], [b]) => a.localeCompare(b))) if (r.done) c25k = phasesForWeek(weekNo(d)).find(x => x.prog === 'c25k')?.short ?? c25k
+  const t = weekTotals(user, wk)
+  return { standards, climbs: t.climbs, maxes, c25k, piano: t.piano }
 }
 
 export interface Block { start: number; end: number; title: string; note?: string }
 const H = (h: number, m = 0) => h * 60 + m
 /** The daily template from docs/plan.md (Mon–Fri practice blocks, weekend rows). */
-export const DEFAULT_START = '09:30'
+const BASE_START = '09:30' // the template below is written for a 9:30 start
+export const DEFAULT_START = '10:00'
 export const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + (m || 0) }
 /** Start time for a day: per-day override, else the default from Configure. */
 export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || user.settings.startTime || DEFAULT_START
 export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
   const dow = parse(k).getDay()
-  const shift = toMin(startTime) - toMin(DEFAULT_START)
+  const shift = toMin(startTime) - toMin(BASE_START)
   const moved = (bs: Block[]) => bs.map(b => ({ ...b, start: b.start + shift, end: b.end + shift }))
   if (dow >= 1 && dow <= 5) return moved([
     { start: H(9, 30), end: H(10), title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' },
     { start: H(10), end: H(12), title: 'Piano block 1', note: 'technique/voicings (45) + standard of the week (75)' },
     { start: H(12), end: H(13, 30), title: 'Lunch + walk' },
     { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'ear/transcription (60) + arrangement (30)' },
-    { start: H(15, 30), end: H(17, 30), title: 'Gym slot' },
+    { start: H(15, 30), end: H(17, 30), title: 'Gym slot', note: 'by feel — see Gym below' },
   ])
   if (dow === 0) return [{ start: H(17), end: H(17, 30), title: 'Weekly review (30 min)', note: 'record the standard + arrangement, one fix, next song' }]
   return []
@@ -116,33 +108,38 @@ export const WEEK_TEMPLATE: { day: string; items: { t: string; c?: string; opt?:
   { day: 'Sun', items: [{ t: 'Quick run 10a (optional 2nd)', c: 'run2', opt: true }, { t: 'Weekly review · record' }, { t: 'Barry Harris 6–10p', c: 'bhSun' }] },
 ]
 
-export type TargetId = 'sax' | 'piano' | 'transcribe' | 'arrange' | 'climbs' | 'runs' | 'pullups' | 'reading'
-/** Weekly guidelines (from docs/plan.md): minutes for practice, sessions for the rest. Editable in Configure. */
-export const WEEKLY_METRICS: { id: TargetId; label: string; unit: 'min' | 'sessions'; def: number; note: string }[] = [
+export type TargetId = 'sax' | 'piano' | 'climbs' | 'runs' | 'pullups' | 'reading'
+/** Weekly guidelines (from docs/plan.md): rough minutes for music, sessions/reps for the rest. Editable in Configure. */
+export const WEEKLY_METRICS: { id: TargetId; label: string; unit: 'min' | 'sessions' | 'reps'; def: number; note: string }[] = [
   { id: 'piano', label: 'Piano', unit: 'min', def: 1050, note: '≈3½ h × 5 days' },
-  { id: 'transcribe', label: 'Ear / transcription', unit: 'min', def: 300, note: 'part of the piano time' },
-  { id: 'arrange', label: 'Arrangement', unit: 'min', def: 150, note: 'part of the piano time' },
   { id: 'sax', label: 'Sax', unit: 'min', def: 150, note: '15–30 min a day' },
   { id: 'climbs', label: 'Climbing', unit: 'sessions', def: 3, note: '3 floor, 4 ceiling' },
   { id: 'runs', label: 'Runs', unit: 'sessions', def: 2, note: 'Tue fixed, Sun optional' },
-  { id: 'pullups', label: 'Pull-up sessions', unit: 'sessions', def: 3, note: 'after runs + Friday climb' },
+  { id: 'pullups', label: 'Pull-ups', unit: 'reps', def: 75, note: '≈3 sessions of 5×5' },
   { id: 'reading', label: 'Coffee + reading', unit: 'sessions', def: 2, note: 'Tue + Fri mornings' },
 ]
 
+const attendedDays = (user: UserData, ids: string[], wk: number) => {
+  const days = new Set<string>()
+  for (const [a, v] of Object.entries(user.attendance)) { const [id, d] = a.split('|'); if (v === 'went' && ids.includes(id) && weekNo(d) === wk) days.add(d) }
+  return days
+}
+export const climbDays = (user: UserData, wk: number) => {
+  const days = attendedDays(user, ['climb', 'climbLES'], wk)
+  for (const [d, c] of Object.entries(user.climbing)) if (weekNo(d) === wk && c.done) days.add(d)
+  return days.size
+}
+export const runDays = (user: UserData, wk: number) => {
+  const days = attendedDays(user, ['run', 'run2'], wk)
+  for (const [d, r] of Object.entries(user.running)) if (weekNo(d) === wk && r.done) days.add(d)
+  return days.size
+}
+export const pullReps = (u: { reps?: number; sets?: { reps: number }[] } | undefined) => u ? (u.reps ?? 0) + (u.sets ?? []).reduce((n, x) => n + x.reps, 0) : 0
+
 export function weekTotals(user: UserData, wk: number): Record<TargetId, number> {
-  const inWk = (d: string) => weekNo(d) === wk
-  const t: Record<TargetId, number> = { sax: 0, piano: 0, transcribe: 0, arrange: 0, climbs: climbDays(user, wk), runs: 0, pullups: 0, reading: 0 }
-  for (const [d, p] of Object.entries(user.practice)) if (inWk(d)) {
-    t.sax += p.sax ?? 0; t.piano += (p.piano1 ?? 0) + (p.piano2 ?? 0); t.transcribe += p.transcribe ?? 0; t.arrange += p.arrange ?? 0
-  }
-  const runDays = new Set(Object.entries(user.running).filter(([d, r]) => inWk(d) && (r.minutes || r.c25kWeek)).map(([d]) => d))
-  const pullDays = new Set(Object.entries(user.pullups).filter(([d, r]) => inWk(d) && (r.sets?.length || r.maxTest)).map(([d]) => d))
-  for (const [a, v] of Object.entries(user.attendance)) {
-    const [id, d] = a.split('|'); if (v !== 'went' || !inWk(d)) continue
-    if (id === 'run' || id === 'run2') runDays.add(d)
-    if (id === 'coffee') t.reading++
-  }
-  t.runs = runDays.size; t.pullups = pullDays.size
+  const t: Record<TargetId, number> = { sax: 0, piano: 0, climbs: climbDays(user, wk), runs: runDays(user, wk), pullups: 0, reading: attendedDays(user, ['coffee'], wk).size }
+  for (const [d, p] of Object.entries(user.practice)) if (weekNo(d) === wk) { t.sax += p.sax ?? 0; t.piano += (p.piano1 ?? 0) + (p.piano2 ?? 0) }
+  for (const [d, u] of Object.entries(user.pullups)) if (weekNo(d) === wk) t.pullups += pullReps(u)
   return t
 }
 

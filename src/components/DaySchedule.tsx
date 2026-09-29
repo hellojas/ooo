@@ -17,7 +17,7 @@ export function DaySchedule({ date, onOpen }: { date: string; onOpen: (p: Progra
   const rows: Row[] = []
   for (const b of blocksOn(date, startFor(user, date))) rows.push({ start: b.start, key: 'b' + b.title, node:
     <div className="blk"><b>{b.title}</b> <span>{fmtMin(b.start)}–{fmtMin(b.end)}</span>{b.note && <small>{b.note}</small>}</div> })
-  for (const { p, missed, maybe } of itemsOn(date, user)) {
+  for (const { p, missed, maybe } of itemsOn(date, user).filter(x => !['climb', 'climbLES', 'run', 'run2'].includes(x.p.id))) {
     const hint = missed ? undefined : hintFor(p.id, wk, dow)
     rows.push({ start: span(p.time)?.[0] ?? 0, key: p.id, node: <>
       <Chip p={p} missed={missed} maybe={maybe} att={user.attendance[attKey(p.id, date)]} onOpen={() => onOpen(p, date)} />

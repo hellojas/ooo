@@ -13,16 +13,16 @@ export interface Shop { n: string; a: string; w: string; why: string; tags: stri
 
 export type Attendance = 'went' | 'missed' | 'skipped'
 export interface UserData {
-  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string }
+  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string; confirmed?: string[] }
   attendance: Record<string, Attendance>            // `${programId}|${date}`
   practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'transcribe'|'arrange', number>> & {
-    notes?: string; startTime?: string; standardOfWeek?: string; songTranscribed?: string }>
-  climbing: Record<string, { gym?: 'BK'|'LES'; sessionType?: 'volume'|'limit'; sends?: { grade: string; style: string }[]; fingerFeel?: number; notes?: string }>
-  running: Record<string, { minutes?: number; c25kWeek?: number; felt?: string }>
-  pullups: Record<string, { sets?: { reps: number; weightLb: number }[]; maxTest?: number }>
+    notes?: string; startTime?: string; feel?: 'fresh' | 'ok' | 'tired' | 'sore'; standardOfWeek?: string; songTranscribed?: string }>
+  climbing: Record<string, { done?: boolean; gym?: 'BK'|'LES'; sessionType?: 'volume'|'limit'; sends?: { grade: string; style: string }[]; fingerFeel?: number; notes?: string }>
+  running: Record<string, { done?: boolean; minutes?: number; c25kWeek?: number; felt?: string }>
+  pullups: Record<string, { reps?: number; sets?: { reps: number; weightLb: number }[]; maxTest?: number }>
   coffee: Record<string, { visited?: boolean; date?: string; rating?: number; note?: string }>
   customShops: Shop[]
-  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; standard?: string; recordingUrl?: string; milestones?: string[] }>
+  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; standard?: string; recordingUrl?: string; pullupMax?: number; milestones?: string[] }>
 }
 export const emptyUser = (): UserData => ({
   settings: { hiddenItems: [], tripsOff: [] },

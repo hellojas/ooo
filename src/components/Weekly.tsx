@@ -25,7 +25,7 @@ export function Weekly() {
           <li><label><input type="checkbox" checked={!!w.recordedArrangement} onChange={e => set({ recordedArrangement: e.target.checked })} /> Arrangement recorded</label></li>
           <li>Climbing sessions: <b>{p.climbs}</b> (target 3–4)</li>
           <li>C25K this week: {phasesForWeek(wk).filter(x => x.prog === 'c25k').map(x => x.short + ' — ' + x.text).join('') || '—'}</li>
-          {test && <li>Pull-up max test week — log it in Sunday's run check-in.</li>}
+          {test && <li><label>Pull-up max test <input type="number" min={0} value={w.pullupMax ?? ''} onChange={e => set({ pullupMax: e.target.value === '' ? undefined : Number(e.target.value) })} /></label></li>}
         </ul>
         <label className="block">Recording link (Drive / Voice Memos)<input type="url" placeholder="https://…" value={w.recordingUrl ?? ''} onChange={e => set({ recordingUrl: e.target.value })} /></label>
         <label className="block">Review — one fix, next song<textarea rows={4} value={w.review ?? ''} onChange={e => set({ review: e.target.value })} /></label>
