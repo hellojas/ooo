@@ -1,5 +1,6 @@
 import { programs, trips, phases, courses, dayByDay } from './data'
 import { addDays, key, parse, weekNo, weekStart, START, END } from './dates'
+import { span } from './time'
 import type { Program, UserData } from './types'
 
 let taipeiStart: string | undefined
@@ -85,7 +86,7 @@ export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
     { start: H(9, 30), end: H(10), title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' },
     { start: H(10), end: H(12), title: 'Piano block 1', note: 'technique/voicings (45) + standard of the week (75)' },
     { start: H(12), end: H(13, 30), title: 'Lunch + walk' },
-    { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'ear/transcription (60) + arrangement (30)' },
+    { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'Ear training lives here: transcription (60) + arrangement (30)' },
     { start: H(15, 30), end: H(17, 30), title: 'Gym slot', note: 'by feel — see Gym below' },
   ])
   if (dow === 0) return [{ start: H(17), end: H(17, 30), title: 'Weekly review (30 min)', note: 'record the standard + arrangement, one fix, next song' }]
@@ -178,32 +179,57 @@ export function streak(user: UserData, upTo: string): { days: number; thisWeek: 
   return { days, thisWeek }
 }
 
-export type DayType = 'full' | 'floor' | 'travel' | 'rest'
+export type DayType = 'full' | 'class' | 'light' | 'travel' | 'rest'
 export const DAY_TYPES: { id: DayType; label: string; hint: string }[] = [
   { id: 'full', label: 'Full', hint: 'The whole practice day.' },
-  { id: 'floor', label: 'Floor', hint: 'The minimum that still counts: sax 15 + piano 90.' },
-  { id: 'travel', label: 'Travel', hint: 'Light practice only if you feel like it.' },
+  { id: 'class', label: 'Class', hint: 'Morning practice, then class. Afternoon block drops.' },
+  { id: 'light', label: 'Light', hint: 'The current tune and one enjoyable run-through. Length is yours.' },
+  { id: 'travel', label: 'Travel', hint: 'Nothing reserved. A suggestion, if you feel like it.' },
   { id: 'rest', label: 'Rest', hint: 'Nothing planned. That’s part of the plan.' },
 ]
-/** Explicit choice, else inferred: trips → Travel; a missed yesterday → Floor (never miss twice); otherwise Full. */
+const travelMin = (go?: string) => Number(go?.match(/~?(\d+)\s*min/)?.[1] ?? 0)
+/** Classes you're attending on a date (planned/registered, not lost to travel), with your attendance window (+ travel). */
+export function classWindows(user: UserData, k: string) {
+  return itemsOn(k, user).filter(x => x.p.kind === 'inperson' && !x.missed).map(x => {
+    const t = span(x.p.time); if (!t) return null
+    const until = user.practice[k]?.until?.[x.p.id] ?? t[1]
+    const b = travelMin(x.p.go)
+    return { p: x.p, start: t[0], end: until, from: t[0] - b, to: until + b }
+  }).filter(Boolean) as { p: Program; start: number; end: number; from: number; to: number }[]
+}
+/** Explicit choice, else inferred: trip → Travel; a class that day → Class; a missed yesterday → Light; else Full. */
 export function dayTypeFor(user: UserData, k: string, real: string): DayType {
   const set = user.practice[k]?.dayType
   if (set) return set
   if (tripOn(k, user.settings.tripsOff)) return 'travel'
+  const dow = parse(k).getDay()
   const prev = key(addDays(parse(k), -1))
   if (k <= real && prev >= START && !tripOn(prev, user.settings.tripsOff) && user.practice[prev]?.dayType !== 'rest'
-    && parse(prev).getDay() >= 1 && parse(prev).getDay() <= 5 && !hasMusic(user, prev)) return 'floor'
+    && parse(prev).getDay() >= 1 && parse(prev).getDay() <= 5 && !hasMusic(user, prev)) return 'light'
+  if (dow >= 1 && dow <= 5 && classWindows(user, k).some(c => c.from < H(17, 30))) return 'class'
   return 'full'
 }
-/** Blocks for a day given its type. Weekends have no template except Sunday's review. */
-export function blocksForType(k: string, type: DayType, startTime: string): Block[] {
+/** Blocks for a day given its type, with per-block overrides (moved / shortened) applied. */
+export function blocksForType(k: string, type: DayType, startTime: string, user?: UserData): Block[] {
   const dow = parse(k).getDay()
-  if (type === 'rest') return []
   const st = toMin(startTime)
-  if (type === 'travel') return dow >= 1 && dow <= 5 ? [{ start: st, end: st + 60, title: 'Travel day', note: 'Light practice only if you feel like it' }] : []
-  if (type === 'floor') return dow >= 1 && dow <= 5 ? [
-    { start: st, end: st + 15, title: 'Sax (floor)', note: '15 min' },
-    { start: st + 15, end: st + 105, title: 'Piano (floor)', note: '90 min — the minimum that still counts' },
-  ] : blocksOn(k, startTime)
-  return blocksOn(k, startTime)
+  let bs: Block[] = []
+  if (type === 'rest' || type === 'travel') bs = []
+  else if (type === 'light') {
+    const m = user?.settings.lightMinutes ?? 60
+    bs = dow >= 1 && dow <= 5 ? [{ start: st, end: st + m, title: 'Piano (light)', note: `${m} min — this week’s tune, then one thing you enjoy` }] : blocksOn(k, startTime)
+  } else if (type === 'class') {
+    const base = blocksOn(k, startTime)
+    bs = dow >= 1 && dow <= 5 ? base.filter(b => !b.title.startsWith('Piano block 2') && b.title !== 'Gym slot') : base
+  } else bs = blocksOn(k, startTime)
+  const ov = user?.practice[k]?.blocks
+  if (ov) bs = bs.map(b => ov[b.title] ? { ...b, start: ov[b.title].start ?? b.start, end: ov[b.title].end ?? b.end } : b).sort((a, b) => a.start - b.start)
+  return bs
+}
+/** Earliest slot of the block's length that doesn't hit a class window, after `after`. */
+export function freeSlot(user: UserData, k: string, len: number, after: number): number {
+  const wins = classWindows(user, k).sort((a, b) => a.from - b.from)
+  let t = after
+  for (const w of wins) { if (t + len <= w.from) break; if (t < w.to) t = w.to }
+  return t
 }

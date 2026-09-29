@@ -19,7 +19,7 @@ export function WeekProgress({ wk, from }: { wk: number; from?: string }) {
     <div className="wsum">
       <div className="hero-stat">
         <span className="num">{Math.round(done.piano / 6) / 10}<small> h</small></span>
-        <span className="eyebrow">piano this week · range {Math.round(piano * 0.6 / 60)}–{Math.round(piano / 60)} h{left > 0 ? ` · ${left} day${left > 1 ? 's' : ''} left` : ''}</span>
+        <span className="eyebrow">piano this week · range {Math.round(piano * 0.6 / 60)}–{Math.round(piano / 60)} h{left > 0 ? ` · ${left} practice day${left > 1 ? 's' : ''} left` : ''}</span>
         <div className="bar"><i style={{ width: Math.min(100, (done.piano / piano) * 100) + '%' }} /></div>
       </div>
       <ul className="quiet-stats">

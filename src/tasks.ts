@@ -9,7 +9,7 @@ const inRange = (wk: number, r: number[]) => wk >= r[0] && wk <= r[1]
 export const standardOfWeek = (user: UserData, wk: number) => user.weekly[wk]?.standard || plan.standards[wk - 1]
 
 /** Ordered, checkable tasks per block for a date, derived from docs/plan.md (data/block-tasks.json). Keyed by block title. */
-export function tasksFor(date: string, user: UserData, type: 'full' | 'floor' | 'travel' | 'rest' = 'full'): Record<string, Task[]> {
+export function tasksFor(date: string, user: UserData, type: 'full' | 'class' | 'light' | 'travel' | 'rest' = 'full'): Record<string, Task[]> {
   const wk = weekNo(date), dow = parse(date).getDay()
   const out: Record<string, Task[]> = {}
   if (wk < 1 || type === 'rest' || type === 'travel') return out
@@ -30,17 +30,18 @@ export function tasksFor(date: string, user: UserData, type: 'full' | 'floor' | 
   if (tech) b1.push({ id: 'tech', label: `Technique: ${tech.text} — apply it to ${std ?? 'this week’s standard'}` })
   out['Piano block 1'] = [...b1, ...steps]
 
+  const byEar = user.weekly[wk]?.byEar
   out['Piano block 2'] = [
-    ...plan.ear.map((label, i) => ({ id: `ear${i}`, label })),
+    { id: 'ear-song', label: byEar ? `Transcribe the first 8 bars of “${byEar}” — bass line first` : 'Pick a song to play by ear (set it in Review) — first 8 bars, bass line first' },
+    ...plan.ear.slice(1).map((label, i) => ({ id: `ear${i + 1}`, label })),
     { id: 'arr0', label: `Arrangement: LH pattern — ${plan.lhPatterns[(wk - 1) % plan.lhPatterns.length]}` },
     { id: 'arr1', label: 'Arrangement: RH melody with chord tones below' },
   ]
-  if (type === 'floor') {
+  if (type === 'light') {
     const all = [...out['Piano block 1'], ...out['Piano block 2']]
-    const pick = [...all.filter(t => t.id.startsWith('std')).slice(0, 2), ...all.filter(t => t.id.startsWith('ear')).slice(0, 1)]
-    out['Piano (floor)'] = pick.length ? pick : all.slice(0, 3)
-    out['Sax (floor)'] = (out['Sax'] ?? []).slice(0, 1)
+    out['Piano (light)'] = [...all.filter(t => t.id.startsWith('std')).slice(0, 2), { id: 'fun', label: 'One run-through of anything you enjoy' }]
     delete out['Sax']; delete out['Piano block 1']; delete out['Piano block 2']
   }
+  if (type === 'class') delete out['Piano block 2']
   return out
 }

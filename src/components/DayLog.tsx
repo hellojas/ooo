@@ -8,10 +8,10 @@ const FEELS: { id: Feel; label: string; tip: (w: { climb: string; run: string })
   { id: 'fresh', label: 'Fresh', tip: w => `Climb hard${w.climb ? ' — ' + w.climb : ''}, then pull-ups.` },
   { id: 'ok', label: 'OK', tip: w => `Volume climbing, or a run${w.run ? ' — ' + w.run : ''}.` },
   { id: 'tired', label: 'Tired', tip: () => 'Easy run or a walk. Or rest — it counts.' },
-  { id: 'sore', label: 'Finger sore', tip: w => `No crimping. A run${w.run ? ' — ' + w.run : ''} and pull-ups, or rest.` },
+  { id: 'sore', label: 'Sore finger', tip: w => `No crimping. A run${w.run ? ' — ' + w.run : ''} and pull-ups, or rest.` },
 ]
 
-/** Quick log: rough music minutes, gym by feel, one pull-up number. Deliberately light. */
+/** Quick log. Minutes fill in from finished blocks; the stepper is the backup. */
 export function DayLog({ date }: { date: string }) {
   const user = useUser()
   const wk = weekNo(date), dow = parse(date).getDay()
@@ -22,27 +22,27 @@ export function DayLog({ date }: { date: string }) {
   const feel = FEELS.find(f => f.id === pr.feel)
   const tip = feel?.tip({ climb: hintFor('climb', wk, dow) ?? '', run: hintFor('run', wk, dow)?.split(' · ')[0] ?? '' })
 
+  const reps = pullReps(user.pullups[date])
+  const setReps = (n: number) => update(u => ({ ...u, pullups: { ...u.pullups, [date]: { ...u.pullups[date], sets: undefined, reps: Math.max(0, n) || undefined } } }))
+  const fromTasks = (prefix: string) => user.sessions.filter(s => s.date === date && s.block.startsWith(prefix)).length > 0
   return (
     <div className="quicklog">
-      <h3>Log</h3>
-      {([['Piano', 'piano1', piano], ['Sax', 'sax', pr.sax ?? 0]] as const).map(([label, id, mins]) => (
+      <p className="eyebrow">Practice</p>
+      {([['Piano', 'piano1', piano, fromTasks('Piano')], ['Sax', 'sax', pr.sax ?? 0, fromTasks('Sax')]] as const).map(([label, id, mins, auto]) => (
         <div className="logline" key={id}>
-          <b>{label}</b><span className="num">{mins} min</span>
-          <span className="btns"><button className="btn" onClick={() => add(id, 15)}>+15</button><button className="btn" onClick={() => add(id, 30)}>+30</button><button className="btn" onClick={() => add(id, -15)}>−15</button></span>
+          <span className="lbl2"><b>{label}</b><small>{auto ? 'from finished blocks' : 'or finish a block'}</small></span>
+          <span className="stepper"><button className="btn icon" onClick={() => add(id, -15)} aria-label="minus 15">−</button><span className="num">{mins} min</span><button className="btn icon" onClick={() => add(id, 15)} aria-label="plus 15">+</button></span>
         </div>
       ))}
-      <div className="logline gym">
-        <b>Gym</b>
-        <span className="seg feels">{FEELS.map(f => <button key={f.id} aria-pressed={pr.feel === f.id} onClick={() => setPr({ feel: pr.feel === f.id ? undefined : f.id })}>{f.label}</button>)}</span>
-      </div>
+      <p className="eyebrow">How do you feel?</p>
+      <div className="grid2">{FEELS.map(f => <button key={f.id} className="btn toggle" aria-pressed={pr.feel === f.id} onClick={() => setPr({ feel: pr.feel === f.id ? undefined : f.id })}>{f.label}</button>)}</div>
       {tip && <p className="meta">{tip}</p>}
-      <div className="logline">
-        <label className="inl big"><input type="checkbox" checked={!!climb.done} onChange={e => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: e.target.checked } } }))} /> Climbed</label>
-        <label className="inl big"><input type="checkbox" checked={!!run.done} onChange={e => update(u => ({ ...u, running: { ...u.running, [date]: { ...u.running[date], done: e.target.checked } } }))} /> Ran</label>
-        <label className="inl">Pull-ups <input type="number" min={0} value={pullReps(user.pullups[date]) || ''} placeholder="0"
-          onChange={e => update(u => ({ ...u, pullups: { ...u.pullups, [date]: { ...u.pullups[date], sets: undefined, reps: e.target.value === '' ? undefined : Number(e.target.value) } } }))} /></label>
+      <p className="eyebrow">Training</p>
+      <div className="grid2">
+        <button className="btn toggle" aria-pressed={!!climb.done} onClick={() => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: !climb.done } } }))}>Climbed</button>
+        <button className="btn toggle" aria-pressed={!!run.done} onClick={() => update(u => ({ ...u, running: { ...u.running, [date]: { ...u.running[date], done: !run.done } } }))}>Ran</button>
       </div>
-      <textarea rows={2} placeholder="Note (optional)" value={pr.notes ?? ''} onChange={e => setPr({ notes: e.target.value })} />
+      <div className="logline"><b>Pull-ups</b><span className="stepper"><button className="btn icon" onClick={() => setReps(reps - 5)} aria-label="minus 5">−</button><span className="num">{reps}</span><button className="btn icon" onClick={() => setReps(reps + 5)} aria-label="plus 5">+</button></span></div>
     </div>
   )
 }

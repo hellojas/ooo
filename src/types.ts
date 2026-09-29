@@ -14,10 +14,10 @@ export interface Lunch { n: string; a: string; nb: string; note: string; u: stri
 
 export type Attendance = 'went' | 'missed' | 'skipped'
 export interface UserData {
-  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string; startTimes?: Record<number, string>; confirmed?: string[]; programState?: Record<string, 'considering' | 'planned' | 'registered'> }
+  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string; startTimes?: Record<number, string>; lightMinutes?: number; confirmed?: string[]; programState?: Record<string, 'considering' | 'planned' | 'registered'> }
   attendance: Record<string, Attendance>            // `${programId}|${date}`
   practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'transcribe'|'arrange', number>> & {
-    notes?: string; tasks?: string[]; dayType?: 'full' | 'floor' | 'travel' | 'rest'; skipped?: string[]; startTime?: string; feel?: 'fresh' | 'ok' | 'tired' | 'sore'; standardOfWeek?: string; songTranscribed?: string }>
+    notes?: string; tasks?: string[]; dayType?: 'full' | 'class' | 'light' | 'travel' | 'rest'; blocks?: Record<string, { start?: number; end?: number }>; until?: Record<string, number>; active?: { block: string; since: number }; skipped?: string[]; startTime?: string; feel?: 'fresh' | 'ok' | 'tired' | 'sore'; standardOfWeek?: string; songTranscribed?: string }>
   climbing: Record<string, { done?: boolean; gym?: 'BK'|'LES'; sessionType?: 'volume'|'limit'; sends?: { grade: string; style: string }[]; fingerFeel?: number; notes?: string }>
   running: Record<string, { done?: boolean; minutes?: number; c25kWeek?: number; felt?: string }>
   pullups: Record<string, { reps?: number; sets?: { reps: number; weightLb: number }[]; maxTest?: number }>
@@ -25,11 +25,14 @@ export interface UserData {
   customShops: Shop[]
   tunes: Record<string, Tune>
   transcriptions: Transcription[]
-  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; improved?: string; standard?: string; recordingUrl?: string; pullupMax?: number; milestones?: string[] }>
+  sessions: Session[]
+  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; improved?: string; standard?: string; byEar?: string; recordingUrl?: string; pullupMax?: number; milestones?: string[] }>
 }
-export interface Tune { checks: string[]; recordingUrl?: string; last?: string }
+export interface Take { date: string; url: string; rubric?: Record<string, number> }
+export interface Tune { checks: string[]; recordingUrl?: string; last?: string; takes?: Take[]; rubric?: Record<string, number> }
+export interface Session { date: string; block: string; minutes: number; tune?: string; note?: string; next?: string }
 export interface Transcription { id: string; date: string; song: string; note: string }
 export const emptyUser = (): UserData => ({
   settings: { hiddenItems: [], tripsOff: [] },
-  attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, customShops: [], tunes: {}, transcriptions: [], weekly: {},
+  attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, customShops: [], tunes: {}, transcriptions: [], sessions: [], weekly: {},
 })

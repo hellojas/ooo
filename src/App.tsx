@@ -19,10 +19,10 @@ import { today, weekNo } from './dates'
 import type { Program } from './types'
 
 // Top-level: Today · Calendar · Practice · Review · Configure. Calendar holds Week / Month / Agenda / Music / Fitness.
-type Top = 'today' | 'calendar' | 'practice' | 'review' | 'resources' | 'jawn' | 'settings'
+type Top = 'today' | 'calendar' | 'practice' | 'review' | 'resources' | 'jawn' | 'configure'
 type CalSub = 'week' | 'month' | 'agenda' | 'music' | 'fitness'
 type Sub = 'inperson' | 'online' | 'plan'
-const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Practice'], ['review', 'Review'], ['resources', 'Resources'], ['jawn', 'Jawn'], ['settings', 'Configure']]
+const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Practice'], ['review', 'Review'], ['resources', 'Resources'], ['jawn', 'Jawn'], ['configure', 'Configure']]
 const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month'], ['agenda', 'Agenda'], ['music', 'Music'], ['fitness', 'Fitness']]
 const inPerson = programs.filter(p => p.kind === 'inperson')
 const plan = programs.filter(p => p.plan)
@@ -65,14 +65,13 @@ export default function App() {
 
   return (
     <div className="wrap">
-      <header>
-        <h1>PROJECT OOO</h1>
-        <p className="tagline">jas fine tuning · Oct 5 – Dec 23, 2026</p>
+      <header className="masthead">
+        <h1>PROJECT OOO <span className="tagline">Oct 5 – Dec 23</span></h1>
+        <nav className="tabs desk" role="tablist">
+          {TOPS.filter(([v]) => v !== 'configure').map(([v, l]) => <button key={v} role="tab" aria-selected={view === v} title={v === 'jawn' ? 'Mind your business.' : undefined} onClick={() => setView(v)}>{l}</button>)}
+        </nav>
+        <button className="gear desk" aria-pressed={view === 'configure'} aria-label="Configure" title="Configure" onClick={() => setView('configure')}>⚙</button>
       </header>
-
-      <nav className="tabs desk" role="tablist">
-        {TOPS.map(([v, l]) => <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}>{l}</button>)}
-      </nav>
 
       {view === 'today' && <Today date={day} setDate={setDay} onOpen={onOpen} onNav={toFitness} />}
 
@@ -102,7 +101,7 @@ export default function App() {
             visible={p => p.kind === 'inperson' && (sub === 'inperson' || (sub === 'plan' && !!p.plan))} onOpen={onOpen} />
           {sub === 'inperson' && <Where pool={inPerson} />}
           {sub === 'online' && <OnlineTables />}
-          {sub === 'plan' && <><Where pool={plan} /><Counts pool={plan} /><Template title="Suggested jazz week" /></>}
+          {sub === 'plan' && <><Where pool={plan} /><Counts pool={plan} /></>}
         </>}
         {cal === 'fitness' && <>
           <ProgressStrip kind="abs" />
@@ -111,21 +110,21 @@ export default function App() {
         </>}
       </>}
 
-      {['resources', 'jawn', 'settings'].includes(view) && <div className="subnav mob">
-        {([['resources', 'Resources'], ['jawn', 'Jawn'], ['settings', 'Configure']] as [Top, string][]).map(([v, l]) => <button key={v} aria-pressed={view === v} onClick={() => setView(v)}>{l}</button>)}
+      {['resources', 'jawn', 'configure'].includes(view) && <div className="subnav mob">
+        {([['resources', 'Resources'], ['jawn', 'Jawn'], ['configure', 'Configure']] as [Top, string][]).map(([v, l]) => <button key={v} aria-pressed={view === v} onClick={() => setView(v)}>{l}</button>)}
       </div>}
       {view === 'practice' && <Practice />}
       {view === 'review' && <Weekly onOpenDay={openDay} />}
       {view === 'resources' && <Resources />}
       {view === 'jawn' && <Jawn />}
-      {view === 'settings' && <Settings theme={theme} cycleTheme={cycle} />}
+      {view === 'configure' && <Settings theme={theme} cycleTheme={cycle} />}
 
       <nav className="bottombar mob" aria-label="Main">
         <button aria-current={view === 'today'} onClick={() => setView('today')}>Today</button>
         <button aria-current={view === 'calendar'} onClick={() => setView('calendar')}>Calendar</button>
         <button aria-current={view === 'practice'} onClick={() => setView('practice')}>Practice</button>
         <button aria-current={view === 'review'} onClick={() => setView('review')}>Review</button>
-        <button aria-current={['resources', 'jawn', 'settings'].includes(view)} onClick={() => setView('resources')}>More</button>
+        <button aria-current={['resources', 'jawn', 'configure'].includes(view)} onClick={() => setView('resources')}>More</button>
       </nav>
       {open && <CheckIn p={open.p} date={open.d} onClose={() => setOpen(null)} />}
     </div>
