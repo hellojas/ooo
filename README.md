@@ -1,19 +1,32 @@
-# sabbatical-app
+# Project ooo — Jas fine tuning
 
-Personal calendar + tracker for a 10-week sabbatical (Oct 5 – Dec 23, 2026).
+Personal calendar + tracker for the sabbatical (Oct 5 – Dec 23, 2026).
+Vite + React + TypeScript, installable as a PWA (Add to Home Screen on iPhone).
 
-- `CLAUDE.md` — start here: who, what, and the rules the code must respect.
-- `SPEC.md` — features, data model, views.
-- `data/` — the plan as JSON (programs, online curriculum, training phases,
-  trips, coffee shops). Source of truth.
-- `docs/` — the narrative plan, program research, curriculum, sources.
-- `prototype/index.html` — working single-file prototype (open in a browser).
-  Everything in `data/` was extracted from it; the app replaces it.
+```
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # type-check + production build into dist/
+```
 
-Suggested first prompt for Claude Code:
+- `CLAUDE.md` / `SPEC.md` — context, rules, and feature spec.
+- `data/*.json` — the plan (source of truth for dates and programs).
+- `docs/` — narrative plan, program research, curriculum, sources.
+- `prototype/index.html` — the original single-file prototype (reference only).
+- `src/` — the app. User data lives behind the `Storage` interface in
+  `src/storage.ts` (localStorage today; swap in Firestore later without touching UI).
 
-> Read CLAUDE.md and SPEC.md. Scaffold a Vite + React + TypeScript app that
-> loads data/*.json, reproduces the four views in prototype/index.html, then
-> adds the check-in sheet and Today view from SPEC.md with local-first
-> persistence behind a storage interface. Keep the prototype's palette and
-> chip/bar language.
+## What's built
+
+Today (schedule, practice timers, notes) · Full sabbatical · Jazz (in person / online / plan) ·
+Abs · Coffee shops · Weekly review + milestones · check-in sheet on every chip
+(went / missed / skipped, climbing sends, runs, pull-up sets) · JSON export/import backup.
+
+## Next
+
+1. Deploy (GitHub Pages or Firebase Hosting) so it can be installed on the phone.
+2. Firebase Auth + Firestore behind `Storage` for sync between laptop and phone.
+3. Reminders: iOS supports Web Push for home-screen PWAs (iOS 16.4+), which needs a small
+   push backend (Firebase Cloud Messaging + a scheduled function). Alternative: a native
+   iOS app with local notifications if we outgrow the PWA.
+4. ICS export of the plan items.
