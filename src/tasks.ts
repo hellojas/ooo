@@ -2,6 +2,7 @@ import plan from '../data/block-tasks.json'
 import { parse, weekNo } from './dates'
 import { pdfLinks } from './drive'
 import { currentTune, project, type QItem } from './queue'
+import { currentByEar, EAR_STEPS } from './components/ByEar'
 import type { UserData } from './types'
 
 export interface Task { id: string; label: string; url?: string; qid?: string; pdf?: string }
@@ -28,10 +29,10 @@ export function tasksFor(date: string, user: UserData, type: 'full' | 'class' | 
   const b1 = items.filter(i => i.lane === 'piano' && i.kind !== 'standard').map(toTask).concat(items.filter(i => i.kind === 'standard').map(toTask))
   const gym = items.filter(i => i.lane === 'workout').map(toTask)
   if (gym.length) out['Gym slot'] = gym
-  const byEar = user.weekly[wk]?.byEar
+  const ear = currentByEar(user.transcriptions)
+  const nextStep = ear ? EAR_STEPS.find(st => !(ear.steps ?? []).includes(st)) : undefined
   const b2: Task[] = [
-    { id: 'ear-song', label: byEar ? `Transcribe the next 8 bars of “${byEar}” — bass line first` : 'Pick a song to play by ear (set it in Review) — first 8 bars, bass line first' },
-    ...plan.ear.slice(1).map((label, i) => ({ id: `ear${i + 1}`, label })),
+    ear ? { id: 'ear-song', label: `By ear · ${ear.song}: ${nextStep ?? 'done'}`, url: ear.url } : { id: 'ear-song', label: 'Pick a song to learn by ear (Roadmap → By ear) — bass line first, label chords by function' },
     { id: 'arr0', label: `Arrangement: LH pattern — ${plan.lhPatterns[(wk - 1) % plan.lhPatterns.length]}` },
     { id: 'arr1', label: 'Arrangement: RH melody with chord tones below' },
   ]

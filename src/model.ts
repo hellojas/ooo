@@ -87,7 +87,7 @@ export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
     { start: H(10), end: H(12), title: 'Piano block 1', note: 'technique/voicings (45) + standard of the week (75)' },
     { start: H(12), end: H(13, 30), title: 'Lunch + walk' },
     { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'Ear training lives here: transcription (60) + arrangement (30)' },
-    { start: H(15, 30), end: H(17, 30), title: 'Gym slot', note: 'by feel — see Gym below' },
+    { start: H(15, 30), end: H(17, 30), title: 'Gym slot' },
   ])
   if (dow === 0) return [{ start: H(17), end: H(17, 30), title: 'Weekly review (30 min)', note: 'record the standard + arrangement, one fix, next song' }]
   return []

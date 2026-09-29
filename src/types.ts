@@ -36,7 +36,7 @@ export interface UserData {
 export interface Take { date: string; url: string; rubric?: Record<string, number> }
 export interface Tune { checks: string[]; recordingUrl?: string; last?: string; takes?: Take[]; rubric?: Record<string, number> }
 export interface Session { date: string; block: string; minutes: number; tune?: string; note?: string; next?: string }
-export interface Transcription { id: string; date: string; song: string; note: string }
+export interface Transcription { id: string; date: string; song: string; note: string; url?: string; steps?: string[]; keys?: number; done?: string }
 export const emptyUser = (): UserData => ({
   settings: { hiddenItems: [], tripsOff: [] },
   attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, customShops: [], tunes: {}, transcriptions: [], sessions: [], queueDone: {}, queueSkip: [], queueRepeat: [], queuePriority: {}, weekly: {},

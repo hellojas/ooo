@@ -18,7 +18,6 @@ import type { Program } from './types'
 type Top = 'today' | 'calendar' | 'practice' | 'programs' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['programs', 'Programs'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
-const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, programs: Ic.programs, review: Ic.review, play: Ic.play, configure: Ic.gear }
 const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month']]
 
 const readHash = (): [Top, CalSub] => {
@@ -55,7 +54,7 @@ export default function App() {
       <header className="masthead">
         <h1><Ic.logo className="logo" />PROJECT OOO <span className="tagline">jas fine tuning</span></h1>
         <nav className="tabs desk" role="tablist">
-          {TOPS.filter(([v]) => v !== 'configure').map(([v, l]) => { const Icon = ICON[v]; return <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}><Icon />{l}</button> })}
+          {TOPS.filter(([v]) => v !== 'configure').map(([v, l]) => <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}>{l}</button>)}
         </nav>
         <button className="gear desk" aria-pressed={view === 'configure'} aria-label="Configure" title="Configure" onClick={() => setView('configure')}><Ic.gear /></button>
       </header>

@@ -6,7 +6,7 @@ import { span } from '../time'
 import { update, useUser } from '../storage'
 import { signIn, useSync } from '../sync'
 import { standardOfWeek, tasksFor, type Task } from '../tasks'
-import { byId, nextIn, project, priorityOf, type Lane } from '../queue'
+import { MASTER, byId, project, priorityOf, type Lane } from '../queue'
 import { courseLinks, pdfLinks } from '../drive'
 import { DayLog } from './DayLog'
 import { WeekProgress } from './WeekProgress'
@@ -113,7 +113,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const curTasks = laneTasks(lane)
   const laneDone = (l: Lane) => { const ts = laneTasks(l); return ts.length > 0 && ts.every(isDone) }
   const onDay = new Set(curTasks.map(t => t.qid).filter(Boolean) as string[])
-  const next = nextIn(user, lane, onDay)
+  const next = (() => { const cand = MASTER.filter(x => x.lane === lane && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && !onDay.has(x.id) && priorityOf(user, x) !== 'parked'); return cand.find(x => (projected.dateOf[x.id] ?? '9999') > date) ?? cand[0] })()
   const active = pr.active
   const isActive = !!active && laneOf(active.block) === lane
   const elapsed = isActive ? Math.max(1, Math.round((Date.now() - active!.since) / 60000)) : 0
@@ -142,19 +142,15 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <button className="btn icon" onClick={() => setDate(shiftDay(date, -1))} aria-label="Previous day">‹</button>
           <div>
             <h2 className="serif big">{fmtLong(date)}</h2>
-            <p className="meta">{wk >= 1 ? `Week ${wk}` : date < START ? 'Before the sabbatical' : 'After'} · New York{trip ? ` · ✈ ${trip.name}` : ''}{!isToday ? (date < real ? ' · past' : ' · projected') : ''}</p>
+            <p className="meta">{DAY_TYPES.find(t => t.id === type)?.label} day · {why} · {wk >= 1 ? `week ${wk}` : date < START ? 'before the sabbatical' : 'after'}{!isToday ? (date < real ? ' · past' : ' · projected') : ''}</p>
           </div>
           <button className="btn icon" onClick={() => setDate(shiftDay(date, 1))} aria-label="Next day">›</button>
-          {!isToday && <button className="btn small" onClick={() => setDate(clampDay(real))}>Today</button>}
         </div>
-        <div className="daytag" title={DAY_TYPES.find(t => t.id === type)?.hint}>
-          <span className="eyebrow">Today is a</span>
-          <b>{DAY_TYPES.find(t => t.id === type)?.label} day</b>
-          <span className="meta">{why} · {pr.dayType
-            ? <button className="linkbtn quiet" onClick={() => setPr({ dayType: undefined })}>undo</button>
-            : <select className="inline" value="" onChange={e => e.target.value && setPr({ dayType: e.target.value as never })}><option value="">change today…</option>{DAY_TYPES.filter(t => t.id !== type).map(t => <option key={t.id} value={t.id}>{t.label} day</option>)}</select>}
-            {type !== 'travel' && type !== 'rest' && !pr.skippedDay && date <= real && <> · <button className="linkbtn quiet" onClick={() => setPr({ skippedDay: true })}>skipped today</button></>}
-            {pr.skippedDay && <> · skipped <button className="linkbtn quiet" onClick={() => setPr({ skippedDay: undefined })}>undo</button></>}</span>
+        <div className="hdr-actions">
+          <label className="btn selbtn"><Ic.calendar /><span>{pr.dayType ? 'Day changed' : 'Change day'}</span>
+            <select value={pr.dayType ?? ''} onChange={e => setPr({ dayType: (e.target.value || undefined) as never })}><option value="">Let the app decide ({DAY_TYPES.find(t => t.id === type)?.label})</option>{DAY_TYPES.map(t => <option key={t.id} value={t.id}>{t.label} day</option>)}</select></label>
+          {type !== 'travel' && type !== 'rest' && date <= real && <button className={'btn' + (pr.skippedDay ? ' on' : '')} onClick={() => setPr({ skippedDay: pr.skippedDay ? undefined : true })}>{pr.skippedDay ? 'Skipped ✓' : 'Skipped today'}</button>}
+          {!isToday && <button className="btn" onClick={() => setDate(clampDay(real))}>Back to today</button>}
         </div>
       </div>
 
@@ -192,10 +188,9 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
         </section>
 
         <section className="card main">
-          <div className="lanes">
-            <span className="eyebrow">On the</span>
-            {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label}{laneDone(l.id) ? ' ✓' : ''}</button> })}
-            <span className="eyebrow">today</span>
+          <p className="eyebrow">Next at the {lane}</p>
+          <div className="lanes seg-chips" role="tablist">
+            {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} role="tab" aria-selected={lane === l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label[0].toUpperCase() + l.label.slice(1)}{laneDone(l.id) ? ' ✓' : ''}</button> })}
           </div>
           {curTasks.length > 0 || curBlock || (lane === 'workout' && type !== 'travel' && type !== 'rest') ? <>
             <h1 className="tune">{title}</h1>
@@ -214,7 +209,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
               <label className="inl big"><input type="checkbox" checked={!!user.climbing[date]?.done} onChange={e => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: e.target.checked } } }))} /> Climbed today</label>
               <span className="meta">Not queued — just for fun. Mon/Wed/Fri at Vital BK is the habit.</span>
             </div>}
-            <ol className="steps">
+            <ol className="steps rows">
               {curTasks.length === 0 && <li className="meta">{curBlock?.note ?? 'Nothing queued for today.'}</li>}
               {curTasks.map((t, i) => { const on = isDone(t); return (
                 <li key={t.id} className={(on ? 'on' : '') + (isRepeat(t) ? ' rep' : '')} onClick={() => toggleTask(t)}>
@@ -227,11 +222,11 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
                   </span>}
                 </li>) })}
             </ol>
-            {laneDone(lane) && next && <div className="nextq">
-              <span>Done for today. Next in the queue: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></span>
-              <button className="btn" onClick={() => setPr({ pulled: [...(pr.pulled ?? []), next.id] })}>Pull it into today</button>
+            {next && <div className="nextq">
+              <span><Ic.programs /> Up next: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></span>
+              {laneDone(lane) && <button className="btn" onClick={() => setPr({ pulled: [...(pr.pulled ?? []), next.id] })}>Pull it into today</button>}
             </div>}
-            {!laneDone(lane) && curTasks.some(t => t.qid) && <p className="meta small">Anything unticked stays at the front of the queue and shows up tomorrow. Classes are the only fixed dates.</p>}
+            <p className="banner"><span>✈</span> Travel or rest day? Your queue stays paused. Anything unticked stays at the front and shows up tomorrow.</p>
           </> : <div className="quietday">
             <h1 className="tune small">{type === 'rest' ? 'Rest' : type === 'travel' ? 'Away' : title}</h1>
             <p className="lede serif">{type === 'rest' ? 'Nothing planned. That’s part of the plan.' : trip ? `${trip.name}. The queue waits.` : 'Open to interpretation.'}</p>
@@ -239,17 +234,21 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           </div>}
         </section>
 
-        <section className="card log quiet">
-          <h3 className="serif">Logged today</h3>
-          {(() => { const ss = user.sessions.filter(x => x.date === date && x.minutes > 0); return <>
-            {ss.length === 0 && pianoToday === 0 && !(pr.sax) && <p className="meta">Nothing yet. Finish a session and it lands here.</p>}
-            <ul className="sesslist">{ss.map((x, i) => <li key={i}><b className="num">{x.minutes} min</b><span>{x.block.replace(/ block \d/, '')}{x.note ? ` · ${x.note}` : ''}</span></li>)}</ul>
-            <p className="tot num">{pianoToday} min piano · {pr.sax ?? 0} min sax{user.climbing[date]?.done ? ' · climbed' : ''}{user.running[date]?.done ? ' · ran' : ''}</p>
-          </> })()}
-          <details className="adjust"><summary>Adjust / log manually</summary><DayLog date={date} /></details>
+        <section className="card log">
+          <details className="adjust training" open={false}>
+            <summary><Ic.review /> Quick log <span className="meta num">{pianoToday} min piano · {pr.sax ?? 0} min sax{user.climbing[date]?.done ? ' · climbed' : ''}{user.running[date]?.done ? ' · ran' : ''}</span></summary>
+            <p className="lbl">Practice time (minutes)</p>
+            <div className="bigstep">
+              <button className="btn" onClick={() => setPr({ piano1: Math.max(0, (pr.piano1 ?? 0) - 15) })} aria-label="minus 15">−</button>
+              <span className="num">{pianoToday}</span>
+              <button className="btn" onClick={() => setPr({ piano1: (pr.piano1 ?? 0) + 15 })}>+15</button>
+            </div>
+            {(() => { const ss = user.sessions.filter(x => x.date === date && x.minutes > 0); return ss.length ? <ul className="sesslist">{ss.map((x, i) => <li key={i}><b className="num">{x.minutes} min</b><span>{x.block.replace(/ block \d/, '')}{x.note ? ` · ${x.note}` : ''}</span></li>)}</ul> : null })()}
+            <DayLog date={date} />
+          </details>
           <label className="block">Next time, start with…
-            <textarea rows={2} placeholder={todayNext ?? 'e.g. slower tempo, left hand voicings, or the bridge…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
-          <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device only · <button className="linkbtn" onClick={signIn}>{sync.state === 'syncing' ? 'signing in…' : 'sign in to sync'}</button>{sync.error && <><br /><span className="warn">⚠ {sync.error}</span></>}</>}</p>
+            <textarea rows={3} placeholder={todayNext ?? 'Add a quick note…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
+          <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device · <button className="linkbtn" onClick={signIn}>{sync.state === 'syncing' ? 'signing in…' : 'sign in to sync'}</button>{sync.error && <><br /><span className="warn">⚠ {sync.error}</span></>}</>}</p>
         </section>
       </div>
 

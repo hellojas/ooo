@@ -4,6 +4,7 @@ import { today, weekNo } from '../dates'
 import { update, useUser } from '../storage'
 import { standardOfWeek } from '../tasks'
 import { QueueView } from './Queue'
+import { ByEar } from './ByEar'
 
 
 const STAGES = ['Melody from memory', 'Shells through the form', 'Comping at a recorded tempo', 'Solo without losing the form', 'Complete performance recorded']
@@ -12,18 +13,18 @@ const daysAgo = (d?: string) => d ? Math.floor((Date.now() - new Date(d + 'T12:0
 
 /** Repertoire pipeline for the 10 standards + the transcription log. */
 export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
-  const [tab, setTab] = useState<'repertoire' | 'library'>('repertoire')
+  const [tab, setTab] = useState<'repertoire' | 'library' | 'byear'>('repertoire')
   const user = useUser()
   const wk = Math.max(1, weekNo(today()))
   const current = standardOfWeek(user, wk)
-  const [song, setSong] = useState(''), [note, setNote] = useState('')
   const [showLater, setShowLater] = useState(false)
   const [takeUrl, setTakeUrl] = useState<Record<string, string>>({})
   const set = (name: string, v: object) => update(u => ({ ...u, tunes: { ...u.tunes, [name]: { ...{ checks: [] }, ...u.tunes[name], ...v } } }))
   const touch = (name: string) => set(name, { last: today() })
   return (
     <>
-      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Library</button></div>
+      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Library</button><button aria-pressed={tab === 'byear'} onClick={() => setTab('byear')}>By ear</button></div>
+      {tab === 'byear' && <ByEar />}
       {tab === 'library' && <QueueView onOpenDay={onOpenDay} />}
       {tab === 'repertoire' && <>
       <section className="plain">
@@ -64,17 +65,6 @@ export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
             {showLater && <ul className="tunes">{later.map(r => <Tune key={r.name} {...r} full={false} />)}</ul>}
           </>
         })()}
-      </section>
-      <section className="plain">
-        <h2>Transcriptions</h2>
-        <p className="meta">Songs played by ear, functionally labeled. What did you steal?</p>
-        <div className="row">
-          <input placeholder="Song" value={song} onChange={e => setSong(e.target.value)} />
-          <input placeholder="Progression / what you stole" value={note} onChange={e => setNote(e.target.value)} />
-          <button className="btn primary" onClick={() => { if (song.trim()) { update(u => ({ ...u, transcriptions: [{ id: String(Date.now()), date: today(), song: song.trim(), note }, ...u.transcriptions] })); setSong(''); setNote('') } }}>Add</button>
-        </div>
-        <p className="meta">{user.transcriptions.length} so far · milestone: 8+ by week 3</p>
-        <ul className="translist">{user.transcriptions.map(t => <li key={t.id}><b>{t.song}</b> <span className="meta">{t.date}</span>{t.note && <div>{t.note}</div>}<button className="linkbtn quiet" onClick={() => update(u => ({ ...u, transcriptions: u.transcriptions.filter(x => x.id !== t.id) }))}>remove</button></li>)}</ul>
       </section>
       </>}
     </>
