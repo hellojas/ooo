@@ -20,11 +20,12 @@ type CalSub = 'week' | 'month'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['programs', 'Programs'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
 const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month']]
 
-const readHash = (): [Top, CalSub] => {
+const readHash = (): [Top, CalSub, string | undefined] => {
   const [a, b] = location.hash.replace(/^#\/?/, '').split('/')
   const top = (TOPS.some(([t]) => t === a) ? a : 'today') as Top
   const cal = (CALS.some(([c]) => c === b) ? b : 'week') as CalSub
-  return [top, cal]
+  const day = top === 'today' && /^\d{4}-\d{2}-\d{2}$/.test(b ?? '') ? b : undefined
+  return [top, cal, day]
 }
 
 function useTheme() {
@@ -39,14 +40,16 @@ function useTheme() {
 export default function App() {
   const user = useUser()
   const [theme, cycle] = useTheme()
-  const [[view, cal], setRoute] = useState(readHash)
-  const setView = (v: Top, c: CalSub = cal) => { location.hash = v === 'calendar' ? `/${v}/${c}` : `/${v}` }
+  const [[view, cal, hashDay], setRoute] = useState(readHash)
+  const setView = (v: Top, c: CalSub = cal) => { location.hash = v === 'calendar' ? `/${v}/${c}` : v === 'today' ? `/today/${day}` : `/${v}` }
   useEffect(() => { const f = () => setRoute(readHash()); addEventListener('hashchange', f); return () => removeEventListener('hashchange', f) }, [])
   useEffect(() => startReminders(() => user), [user])
-  const [day, setDay] = useState(clampDay(today()))
+  const [day, setDayRaw] = useState(() => clampDay(hashDay ?? today()))
+  const setDay = (d: string) => { setDayRaw(d); if (view === 'today') location.hash = `/today/${d}` }
+  useEffect(() => { if (hashDay && hashDay !== day) setDayRaw(clampDay(hashDay)) }, [hashDay]) // eslint-disable-line react-hooks/exhaustive-deps
   const [open, setOpen] = useState<{ p: Program; d: string } | null>(null)
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
-  const openDay = (d: string) => { setDay(d); setView('today'); window.scrollTo(0, 0) }
+  const openDay = (d: string) => { setDayRaw(d); location.hash = `/today/${d}`; window.scrollTo(0, 0) }
   const toFitness = () => setView('practice')
 
   return (
