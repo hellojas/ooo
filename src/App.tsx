@@ -17,7 +17,7 @@ import type { Program } from './types'
 // Top-level: Today · Calendar · Practice · Review · Configure. Calendar holds Week / Month / Agenda / Music / Fitness.
 type Top = 'today' | 'calendar' | 'practice' | 'programs' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month'
-const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['programs', 'Programs'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
+const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['review', 'Review'], ['play', 'Play'], ['programs', 'Programs'], ['configure', 'Configure']]
 const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week']]
 
 const readHash = (): [Top, CalSub, string | undefined] => {
