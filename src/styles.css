@@ -528,3 +528,38 @@ h2.serif.big{font-size:clamp(28px,3.6vw,40px);line-height:1.05;margin:0}
   .weekbar{gap:10px;font-size:13px}.weekbar .wknav{margin-left:0;width:100%;justify-content:space-between}
 }
 .grid3{grid-template-columns:minmax(280px,1fr) minmax(0,1.5fr) minmax(240px,.8fr)}
+
+/* ==== type pass (matches the mock): Inter for UI, Instrument Serif for headings, italic serif for the tune ==== */
+body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;letter-spacing:-0.005em;-webkit-font-smoothing:antialiased}
+.serif,.tune,h2.serif.big,.card h3.serif,.plain h2,.month h2,.sheet h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.main .tune{font-style:italic;font-weight:400;font-size:clamp(48px,7vw,84px);line-height:.95;letter-spacing:-0.02em;margin:4px 0 10px}
+.main .lede.serif{font-size:26px;line-height:1.2;color:var(--ink)}
+.main .meta{font-size:15px;color:var(--ink-3)}
+h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
+.card h3.serif{font-size:24px;margin-bottom:12px}
+.plain h2{font-size:26px;font-weight:400}
+.eyebrow{font-family:"Inter",sans-serif;font-size:11px;letter-spacing:.12em;color:var(--ink-3);font-weight:600}
+.masthead h1{font-family:"Inter",sans-serif;font-weight:700;letter-spacing:.02em;font-size:18px}
+.masthead h1 .tagline{font-family:"Instrument Serif",serif;font-style:italic;font-size:15px;letter-spacing:0}
+.tabs button{font-weight:500;font-size:15px;color:var(--ink-3)}
+.tabs button[aria-selected="true"]{font-weight:600}
+.btn{font-weight:500}
+.btn.primary.big.wide{font-weight:600;font-size:18px;letter-spacing:-0.01em}
+.links .btn{font-weight:500}
+.steps li{font-size:17px;font-weight:400}
+.steps .n{font-family:"Inter",sans-serif;font-size:12px;font-weight:500}
+.plan-row .body b{font-weight:600;font-size:15px}
+.plan-row .body small,.plan-row .t{font-size:13px;color:var(--ink-3)}
+.plan-list::before{left:76px}
+.plan-row{padding:12px 6px;border-bottom:1px solid var(--line);border-radius:0}
+.plan-row:last-child{border-bottom:0}
+.plan-row.block:hover,.plan-row.sel{background:transparent}
+.plan-row.sel .body b{color:var(--accent)}
+.quicklog b,.logline b{font-weight:600}
+.stepper .num{font-weight:500}
+.weekbar{font-size:14px}.weekbar b{font-weight:600}
+.meta{font-size:13.5px}
+.seg.types.compact button{font-weight:500}
+.quiet-stats li,.wp-top{font-family:"Inter",sans-serif}
+.hero-stat .num{font-weight:600}
+.num{font-variant-numeric:tabular-nums}
