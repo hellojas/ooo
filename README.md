@@ -18,9 +18,16 @@ npm run build    # type-check + production build into dist/
 
 ## What's built
 
-Today (schedule, practice timers, notes) · Full sabbatical · Jazz (in person / online / plan) ·
-Abs · Coffee shops · Weekly review + milestones · check-in sheet on every chip
-(went / missed / skipped, climbing sends, runs, pull-up sets) · JSON export/import backup.
+- **Today**: day type (Full / Floor / Travel / Rest, inferred from trips and a never-miss-twice rule), tune-of-the-week hero,
+  Now/Next bar, per-block checklists tied to the week (data/block-tasks.json), conflict warnings vs. fixed classes + travel,
+  skip/restore per block, quick log (rough minutes, gym by feel, climb/run ticks, pull-up reps).
+- **Calendar**: Week · Month · Agenda · Music · Fitness. Class states: considering / planned / registered (Configure).
+- **Practice**: repertoire pipeline for the 10 standards (5 stages, takes + 3-point rubric, review-due after 7 days), transcription log.
+- **Review**: three prompts, next week's standard, pre-set next week's day types, milestones; Log lives here too.
+- **Resources**: coffee shops by neighborhood (from the Maps list) with nearby lunch spots; program links.
+- **Jawn**: soft-locked personal tab (client-side password; content is in the bundle, so not truly secret).
+- Hash routing (`#/today`, `#/calendar/week`, …), phone bottom bar, block-start reminders while the app is open,
+  Drive deep links for course PDFs (data/drive-links.json), Firebase sync (optional), ICS export.
 
 ## Also built
 Firebase Google sign-in + Firestore sync (`src/sync.ts`, `firestore.rules`) · ICS export of plan items ·

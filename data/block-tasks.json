@@ -1,0 +1,22 @@
+{
+  "standards": ["Autumn Leaves", "Blue Bossa", "F Blues (Billie's Bounce)", "All the Things You Are", "Fly Me to the Moon", "There Will Never Be Another You", "Bye Bye Blackbird", "Someday My Prince Will Come", "Take the A Train", "Summertime"],
+  "technique": [
+    { "wk": [1, 3], "text": "Shells + rootless voicings through 12 keys on ii–V–I" },
+    { "wk": [4, 6], "text": "Drop-2, bebop scales, enclosures" },
+    { "wk": [7, 10], "text": "Quartal, upper structures, the transcribed blues chorus / Parker heads" }
+  ],
+  "sax": [
+    { "wk": [1, 3], "tasks": ["Long tones (tuner, chromatic from low B♭)", "Overtones", "One simple melody"] },
+    { "wk": [4, 11], "tasks": ["Long tones + breathing", "Head of this week's standard"] }
+  ],
+  "standardSteps": {
+    "1": ["Melody", "Shell voicings", "Memorize the form"],
+    "2": ["Melody", "Shell voicings", "Memorize the form"],
+    "3": ["Rootless A/B voicings", "Walk chord tones 1‑3‑5‑7 at tempo"],
+    "4": ["Rootless A/B voicings", "Walk chord tones 1‑3‑5‑7 at tempo"],
+    "5": ["Chord-tone solo", "Add enclosures", "Record it"]
+  },
+  "ear": ["Find the key (sing tonic) and the bass line: loop 4 bars", "Label every chord by function, out loud", "Add quality/extensions, play in the original key + two more"],
+  "lhPatterns": ["root‑5‑octave", "broken 1‑5‑10", "syncopated bass + chord on the “and”"],
+  "sundayReview": ["Record the week's standard (head + one chorus)", "Record the by-ear arrangement", "Listen back, note one fix", "Set next week's song"]
+}

@@ -13,15 +13,22 @@ export interface Filters { on: Set<string>; travel: boolean }
 export const GROUPS: { label: string; ids: string[]; group: string }[] = []
 export const inPlan = (p: Program) => p.plan
 
+export type PState = 'considering' | 'planned' | 'registered'
+/** Where a program stands: considering (comparison only), planned (on the calendar, outlined), registered (solid). */
+export const stateOf = (p: Program, user: UserData): PState =>
+  user.settings.programState?.[p.id] ?? (user.settings.confirmed?.includes(p.id) ? 'registered' : p.kind !== 'inperson' || p.plan ? 'planned' : 'considering')
+
 /** Items scheduled on a date, split by whether they're missed because of travel. */
-export function itemsOn(k: string, user: UserData, pool: Program[] = programs) {
+export function itemsOn(k: string, user: UserData, pool: Program[] = programs, showConsidering = false) {
   const trip = tripOn(k, user.settings.tripsOff)
-  const out: { p: Program; missed: boolean; maybe: boolean }[] = []
+  const out: { p: Program; missed: boolean; maybe: boolean; state: PState }[] = []
   for (const p of pool) {
     if (!p.dates.includes(k)) continue
     if (user.settings.hiddenItems.includes(p.id)) continue
     if (trip && p.kind !== 'inperson') continue // life items are hidden on trips
-    out.push({ p, missed: !!trip, maybe: !!p.uncertain?.includes(k) })
+    const state = stateOf(p, user)
+    if (state === 'considering' && !showConsidering) continue
+    out.push({ p, missed: !!trip, maybe: !!p.uncertain?.includes(k), state })
   }
   return out
 }
@@ -169,4 +176,34 @@ export function streak(user: UserData, upTo: string): { days: number; thisWeek: 
   let thisWeek = 0
   for (let i = 0; i < 7; i++) { const d = key(addDays(parse(weekStart(wk)), i)); if (hasMusic(user, d)) thisWeek++ }
   return { days, thisWeek }
+}
+
+export type DayType = 'full' | 'floor' | 'travel' | 'rest'
+export const DAY_TYPES: { id: DayType; label: string; hint: string }[] = [
+  { id: 'full', label: 'Full', hint: 'The whole practice day.' },
+  { id: 'floor', label: 'Floor', hint: 'The minimum that still counts: sax 15 + piano 90.' },
+  { id: 'travel', label: 'Travel', hint: 'Light practice only if you feel like it.' },
+  { id: 'rest', label: 'Rest', hint: 'Nothing planned. That’s part of the plan.' },
+]
+/** Explicit choice, else inferred: trips → Travel; a missed yesterday → Floor (never miss twice); otherwise Full. */
+export function dayTypeFor(user: UserData, k: string, real: string): DayType {
+  const set = user.practice[k]?.dayType
+  if (set) return set
+  if (tripOn(k, user.settings.tripsOff)) return 'travel'
+  const prev = key(addDays(parse(k), -1))
+  if (k <= real && prev >= START && !tripOn(prev, user.settings.tripsOff) && user.practice[prev]?.dayType !== 'rest'
+    && parse(prev).getDay() >= 1 && parse(prev).getDay() <= 5 && !hasMusic(user, prev)) return 'floor'
+  return 'full'
+}
+/** Blocks for a day given its type. Weekends have no template except Sunday's review. */
+export function blocksForType(k: string, type: DayType, startTime: string): Block[] {
+  const dow = parse(k).getDay()
+  if (type === 'rest') return []
+  const st = toMin(startTime)
+  if (type === 'travel') return dow >= 1 && dow <= 5 ? [{ start: st, end: st + 60, title: 'Travel day', note: 'Light practice only if you feel like it' }] : []
+  if (type === 'floor') return dow >= 1 && dow <= 5 ? [
+    { start: st, end: st + 15, title: 'Sax (floor)', note: '15 min' },
+    { start: st + 15, end: st + 105, title: 'Piano (floor)', note: '90 min — the minimum that still counts' },
+  ] : blocksOn(k, startTime)
+  return blocksOn(k, startTime)
 }

@@ -1,64 +1,9 @@
 [
   {
-    "n": "Alita Cafe",
-    "a": "",
-    "w": "~0.5 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Alita+Cafe+NYC"
-  },
-  {
-    "n": "Amarin Cafe",
-    "a": "",
-    "w": "~0.7 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Amarin+Cafe+NYC"
-  },
-  {
-    "n": "CADET Coffee",
-    "a": "623 Manhattan Ave, Brooklyn 11222",
-    "w": "~0.7 mi from home",
-    "why": "Nicola",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=CADET+Coffee+623+Manhattan+Ave%2C+Brooklyn%2C+NY+11222"
-  },
-  {
-    "n": "field study coffee",
-    "a": "904 Grand St, Brooklyn 11206",
-    "w": "~0.7 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=field+study+coffee+904+Grand+St%2C+Brooklyn%2C+NY+11206%2C+United+States"
-  },
-  {
-    "n": "Driftaway Coffee",
-    "a": "",
-    "w": "~0.7 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Driftaway+Coffee+NYC"
-  },
-  {
-    "n": "Maru Coffee",
-    "a": "320 Wythe Ave, Brooklyn 11249",
-    "w": "~0.7 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Maru+Coffee+320+Wythe+Ave%2C+Brooklyn%2C+NY+11249"
-  },
-  {
-    "n": "SEY Coffee",
-    "a": "",
-    "w": "~1.1 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=SEY+Coffee+NYC"
-  },
-  {
     "n": "Loveless Coffees",
     "a": "",
-    "w": "~1.4 mi from home",
+    "nb": "Bushwick",
+    "w": "~1.4 mi",
     "why": "",
     "tags": [],
     "u": "https://www.google.com/maps/search/?api=1&query=Loveless+Coffees+NYC"
@@ -66,167 +11,98 @@
   {
     "n": "HEADREST COFFEE",
     "a": "",
-    "w": "~2.1 mi from home",
+    "nb": "Bushwick",
+    "w": "~2.1 mi",
     "why": "",
     "tags": [],
     "u": "https://www.google.com/maps/search/?api=1&query=HEADREST+COFFEE+NYC"
   },
   {
-    "n": "Moon Coffee Lab",
-    "a": "45 E 1st St, New York 10003",
-    "w": "~2.2 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Moon+Coffee+Lab+45+E+1st+St%2C+New+York%2C+NY+10003"
-  },
-  {
-    "n": "rule 25/7 coffee shop",
-    "a": "54 Eldridge St, New York 10002",
-    "w": "~2.2 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=rule+25%2F7+coffee+shop+54+Eldridge+St%2C+New+York%2C+NY+10002"
-  },
-  {
-    "n": "Kuih Cafe",
-    "a": "46 Eldridge St, New York 10002",
-    "w": "~2.2 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Kuih+Cafe+46+Eldridge+St%2C+New+York%2C+NY+10002"
-  },
-  {
-    "n": "BAZU! Coffee",
-    "a": "41 Division St, New York 10002",
-    "w": "~2.3 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=BAZU%21+Coffee+41+Division+St%2C+New+York%2C+NY+10002"
-  },
-  {
-    "n": "Canyon Coffee",
-    "a": "601 Vanderbilt Ave, Brooklyn 11238",
-    "w": "~2.5 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Canyon+Coffee+601+Vanderbilt+Ave%2C+Brooklyn%2C+NY+11238"
-  },
-  {
-    "n": "Spongies Cafe",
-    "a": "121 Baxter St, New York 10013",
-    "w": "~2.5 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Spongies+Cafe+121+Baxter+St%2C+New+York%2C+NY+10013"
-  },
-  {
-    "n": "White Noise Coffee - Coffee Shop & Roastery",
-    "a": "57 Smith St, Brooklyn 11201",
-    "w": "~2.6 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=White+Noise+Coffee+-+Coffee+Shop+%26+Roastery+57+Smith+St%2C+Brooklyn%2C+NY+11201"
-  },
-  {
-    "n": "Sawada Coffee",
-    "a": "33 Cortlandt Alley, New York 10013",
-    "w": "~2.7 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Sawada+Coffee+33+Cortlandt+Alley%2C+New+York%2C+NY+10013"
-  },
-  {
-    "n": "ansā Micro Coffee Roastery",
-    "a": "101 Thompson St, New York 10012",
-    "w": "~2.8 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=ans%C4%81+Micro+Coffee+Roastery+101+Thompson+St%2C+New+York%2C+NY+10012"
-  },
-  {
-    "n": "GBB Cafe",
-    "a": "13 E 30th St Front 1, New York 10016",
-    "w": "~2.9 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=GBB+Cafe+13+E+30th+St+Front+1%2C+New+York%2C+NY+10016"
-  },
-  {
-    "n": "ARVACI Coffee",
-    "a": "",
-    "w": "~2.9 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=ARVACI+Coffee+NYC"
-  },
-  {
-    "n": "Arcane Estate Coffee",
-    "a": "37 Cornelia St, New York 10014",
-    "w": "~3.0 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Arcane+Estate+Coffee+37+Cornelia+St%2C+New+York%2C+NY+10014"
-  },
-  {
-    "n": "Radiant café",
-    "a": "",
-    "w": "~3.0 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Radiant+caf%C3%A9+NYC"
-  },
-  {
-    "n": "dae day coffee",
-    "a": "485 Lexington Ave, New York 10017",
-    "w": "~3.0 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=dae+day+coffee+485+Lexington+Ave%2C+New+York%2C+NY+10017"
-  },
-  {
-    "n": "rōk Coffee and Tea - West Village",
-    "a": "156 7th Ave S, New York 10014",
-    "w": "~3.1 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=r%C5%8Dk+Coffee+and+Tea+-+West+Village+156+7th+Ave+S%2C+New+York%2C+NY+10014"
-  },
-  {
-    "n": "Monoblend Coffee",
-    "a": "142 W 23rd St, New York 10011",
-    "w": "~3.1 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Monoblend+Coffee+142+W+23rd+St%2C+New+York%2C+NY+10011"
-  },
-  {
-    "n": "common hours",
-    "a": "35 W 35th St, New York 10001",
-    "w": "~3.1 mi from home",
-    "why": "",
-    "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=common+hours+35+W+35th+St%2C+New+York%2C+NY+10001"
-  },
-  {
     "n": "Principles GI Coffee House",
     "a": "",
-    "w": "~3.6 mi from home",
+    "nb": "Carroll Gardens",
+    "w": "~3.6 mi",
     "why": "",
     "tags": [],
     "u": "https://www.google.com/maps/search/?api=1&query=Principles+GI+Coffee+House+NYC"
   },
   {
-    "n": "Solid State Coffee",
-    "a": "104 W 71st St, New York 10023",
-    "w": "~4.6 mi from home",
+    "n": "Monoblend Coffee",
+    "a": "142 W 23rd St, New York 10011",
+    "nb": "Chelsea",
+    "w": "~3.1 mi",
     "why": "",
     "tags": [],
-    "u": "https://www.google.com/maps/search/?api=1&query=Solid+State+Coffee+104+W+71st+St%2C+New+York%2C+NY+10023"
+    "u": "https://www.google.com/maps/search/?api=1&query=Monoblend+Coffee+142+W+23rd+St%2C+New+York%2C+NY+10011"
+  },
+  {
+    "n": "White Noise Coffee - Coffee Shop & Roastery",
+    "a": "57 Smith St, Brooklyn 11201",
+    "nb": "Downtown Brooklyn",
+    "w": "~2.6 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=White+Noise+Coffee+-+Coffee+Shop+%26+Roastery+57+Smith+St%2C+Brooklyn%2C+NY+11201"
+  },
+  {
+    "n": "Moon Coffee Lab",
+    "a": "45 E 1st St, New York 10003",
+    "nb": "East Village",
+    "w": "~2.2 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Moon+Coffee+Lab+45+E+1st+St%2C+New+York%2C+NY+10003"
+  },
+  {
+    "n": "field study coffee",
+    "a": "904 Grand St, Brooklyn 11206",
+    "nb": "East Williamsburg",
+    "w": "~0.7 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=field+study+coffee+904+Grand+St%2C+Brooklyn%2C+NY+11206%2C+United+States"
+  },
+  {
+    "n": "Driftaway Coffee",
+    "a": "",
+    "nb": "East Williamsburg",
+    "w": "~0.7 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Driftaway+Coffee+NYC"
+  },
+  {
+    "n": "SEY Coffee",
+    "a": "",
+    "nb": "East Williamsburg",
+    "w": "~1.1 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=SEY+Coffee+NYC"
+  },
+  {
+    "n": "CADET Coffee",
+    "a": "623 Manhattan Ave, Brooklyn 11222",
+    "nb": "Greenpoint",
+    "w": "~0.7 mi",
+    "why": "Nicola",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=CADET+Coffee+623+Manhattan+Ave%2C+Brooklyn%2C+NY+11222"
+  },
+  {
+    "n": "Amarin Cafe",
+    "a": "",
+    "nb": "Greenpoint",
+    "w": "~0.7 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Amarin+Cafe+NYC"
   },
   {
     "n": "Plowshares Coffee Roasters",
     "a": "1351 Amsterdam Ave, New York 10027",
-    "w": "~6.9 mi from home",
+    "nb": "Harlem",
+    "w": "~6.9 mi",
     "why": "",
     "tags": [],
     "u": "https://www.google.com/maps/search/?api=1&query=Plowshares+Coffee+Roasters+1351+Amsterdam+Ave%2C+New+York%2C+NY+10027"
@@ -234,17 +110,172 @@
   {
     "n": "Lucille's Coffee and Cocktails",
     "a": "26 Macombs Pl, New York 10039",
-    "w": "~7.8 mi from home",
+    "nb": "Harlem",
+    "w": "~7.8 mi",
     "why": "",
     "tags": [],
     "u": "https://www.google.com/maps/search/?api=1&query=Lucille%27s+Coffee+and+Cocktails+26+Macombs+Pl%2C+New+York%2C+NY+10039"
   },
   {
+    "n": "rule 25/7 coffee shop",
+    "a": "54 Eldridge St, New York 10002",
+    "nb": "Lower East Side",
+    "w": "~2.2 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=rule+25%2F7+coffee+shop+54+Eldridge+St%2C+New+York%2C+NY+10002"
+  },
+  {
+    "n": "Kuih Cafe",
+    "a": "46 Eldridge St, New York 10002",
+    "nb": "Lower East Side",
+    "w": "~2.2 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Kuih+Cafe+46+Eldridge+St%2C+New+York%2C+NY+10002"
+  },
+  {
+    "n": "BAZU! Coffee",
+    "a": "41 Division St, New York 10002",
+    "nb": "Lower East Side",
+    "w": "~2.3 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=BAZU%21+Coffee+41+Division+St%2C+New+York%2C+NY+10002"
+  },
+  {
+    "n": "common hours",
+    "a": "35 W 35th St, New York 10001",
+    "nb": "Midtown",
+    "w": "~3.1 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=common+hours+35+W+35th+St%2C+New+York%2C+NY+10001"
+  },
+  {
+    "n": "dae day coffee",
+    "a": "485 Lexington Ave, New York 10017",
+    "nb": "Midtown East",
+    "w": "~3.0 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=dae+day+coffee+485+Lexington+Ave%2C+New+York%2C+NY+10017"
+  },
+  {
+    "n": "GBB Cafe",
+    "a": "13 E 30th St Front 1, New York 10016",
+    "nb": "Murray Hill",
+    "w": "~2.9 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=GBB+Cafe+13+E+30th+St+Front+1%2C+New+York%2C+NY+10016"
+  },
+  {
+    "n": "Canyon Coffee",
+    "a": "601 Vanderbilt Ave, Brooklyn 11238",
+    "nb": "Prospect Heights",
+    "w": "~2.5 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Canyon+Coffee+601+Vanderbilt+Ave%2C+Brooklyn%2C+NY+11238"
+  },
+  {
+    "n": "ARVACI Coffee",
+    "a": "",
+    "nb": "Prospect Heights",
+    "w": "~2.9 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=ARVACI+Coffee+NYC"
+  },
+  {
+    "n": "ansā Micro Coffee Roastery",
+    "a": "101 Thompson St, New York 10012",
+    "nb": "SoHo / NoHo",
+    "w": "~2.8 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=ans%C4%81+Micro+Coffee+Roastery+101+Thompson+St%2C+New+York%2C+NY+10012"
+  },
+  {
+    "n": "Spongies Cafe",
+    "a": "121 Baxter St, New York 10013",
+    "nb": "Tribeca / Chinatown",
+    "w": "~2.5 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Spongies+Cafe+121+Baxter+St%2C+New+York%2C+NY+10013"
+  },
+  {
+    "n": "Sawada Coffee",
+    "a": "33 Cortlandt Alley, New York 10013",
+    "nb": "Tribeca / Chinatown",
+    "w": "~2.7 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Sawada+Coffee+33+Cortlandt+Alley%2C+New+York%2C+NY+10013"
+  },
+  {
+    "n": "Solid State Coffee",
+    "a": "104 W 71st St, New York 10023",
+    "nb": "Upper West Side",
+    "w": "~4.6 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Solid+State+Coffee+104+W+71st+St%2C+New+York%2C+NY+10023"
+  },
+  {
     "n": "Forever Coffee",
     "a": "714 W 181st St, New York 10033",
-    "w": "~9.5 mi from home",
+    "nb": "Washington Heights",
+    "w": "~9.5 mi",
     "why": "",
     "tags": [],
     "u": "https://www.google.com/maps/search/?api=1&query=Forever+Coffee+714+W+181st+St%2C+New+York%2C+NY+10033"
+  },
+  {
+    "n": "Radiant café",
+    "a": "",
+    "nb": "West Village",
+    "w": "~3.0 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Radiant+caf%C3%A9+NYC"
+  },
+  {
+    "n": "Arcane Estate Coffee",
+    "a": "37 Cornelia St, New York 10014",
+    "nb": "West Village",
+    "w": "~3.0 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Arcane+Estate+Coffee+37+Cornelia+St%2C+New+York%2C+NY+10014"
+  },
+  {
+    "n": "rōk Coffee and Tea - West Village",
+    "a": "156 7th Ave S, New York 10014",
+    "nb": "West Village",
+    "w": "~3.1 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=r%C5%8Dk+Coffee+and+Tea+-+West+Village+156+7th+Ave+S%2C+New+York%2C+NY+10014"
+  },
+  {
+    "n": "Alita Cafe",
+    "a": "",
+    "nb": "Williamsburg",
+    "w": "~0.5 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Alita+Cafe+NYC"
+  },
+  {
+    "n": "Maru Coffee",
+    "a": "320 Wythe Ave, Brooklyn 11249",
+    "nb": "Williamsburg",
+    "w": "~0.7 mi",
+    "why": "",
+    "tags": [],
+    "u": "https://www.google.com/maps/search/?api=1&query=Maru+Coffee+320+Wythe+Ave%2C+Brooklyn%2C+NY+11249"
   }
 ]

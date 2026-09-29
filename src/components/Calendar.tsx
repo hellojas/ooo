@@ -14,6 +14,7 @@ export interface CalOpts {
   showTravel: boolean
   onOpen: (p: Program, date: string) => void
   months?: number[]
+  showConsidering?: boolean
 }
 
 export function Calendar(o: CalOpts) {
@@ -53,7 +54,7 @@ export function Calendar(o: CalOpts) {
                 {w.map((k, di) => {
                   if (!k) return <div className="day pad" key={di} />
                   const trip = o.showTravel ? tripOn(k) : undefined
-                  const items = itemsOn(k, eff, pool)
+                  const items = itemsOn(k, eff, pool, o.showConsidering)
                   const vids = o.showVideos ? videosOn(k) : []
                   const isFirst = trip && (k === trip.from || k.endsWith('-01'))
                   return (

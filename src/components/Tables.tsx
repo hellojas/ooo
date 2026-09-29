@@ -10,7 +10,7 @@ export function Where({ pool }: { pool: Program[] }) {
   return (
     <section className="panel">
       <h2>Where things are</h2>
-      <p>Travel is a rough subway estimate from 505 Union Ave.</p>
+      <p>Travel is a rough estimate from Williamsburg.</p>
       <div className="tblwrap"><table className="t"><thead><tr><th>Program</th><th>When</th><th>Where</th><th>From home</th></tr></thead><tbody>
         {pool.map(p => <tr key={p.id}>
           <td><span className="sw" style={sw(p.id)} /><a href={p.url} target="_blank" rel="noreferrer">{p.name}</a></td>

@@ -1,50 +1,63 @@
 import { useState } from 'react'
-import { MILESTONES, phasesForWeek, progress } from '../model'
+import plan from '../../data/block-tasks.json'
+import { programs } from '../data'
+import { DOW, addDays, key, parse, today, weekNo, weekStart } from '../dates'
+import { DAY_TYPES, MILESTONES, dayTypeFor, stateOf, type DayType } from '../model'
 import { update, useUser } from '../storage'
-import { today, weekNo, weekStart } from '../dates'
 import { WeekProgress } from './WeekProgress'
+import { LogView } from './LogView'
 
-export function Weekly() {
+/** Sunday setup: three prompts, next week's standard, confirm classes, pre-set day types. Plus the log. */
+export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const user = useUser()
   const [wk, setWk] = useState(Math.min(10, Math.max(1, weekNo(today()))))
+  const [tab, setTab] = useState<'review' | 'log'>('review')
   const w = user.weekly[wk] ?? {}
-  const p = progress(user, wk)
-  const set = (v: Partial<typeof w>) => update(u => ({ ...u, weekly: { ...u.weekly, [wk]: { ...u.weekly[wk], ...v } } }))
+  const nextW = user.weekly[wk + 1] ?? {}
+  const set = (n: number, v: object) => update(u => ({ ...u, weekly: { ...u.weekly, [n]: { ...u.weekly[n], ...v } } }))
   const test = [3, 6, 10].includes(wk)
+  const nextDays = Array.from({ length: 7 }, (_, i) => key(addDays(parse(weekStart(wk + 1)), i)))
   return (
     <>
-      <section className="panel">
-        <div className="daynav">
-          <button className="btn" onClick={() => setWk(Math.max(1, wk - 1))}>‹</button>
-          <h2>Weekly review · week {wk} <small>({weekStart(wk)})</small></h2>
-          <button className="btn" onClick={() => setWk(Math.min(10, wk + 1))}>›</button>
-        </div>
-        <WeekProgress wk={wk} />
-        <ul className="checks">
-          <li><label><input type="checkbox" checked={!!w.recordedStandard} onChange={e => set({ recordedStandard: e.target.checked })} /> Standard memorized + recorded</label></li>
-          <li><label><input type="checkbox" checked={!!w.recordedArrangement} onChange={e => set({ recordedArrangement: e.target.checked })} /> Arrangement recorded</label></li>
-          <li>Climbing sessions: <b>{p.climbs}</b> (target 3–4)</li>
-          <li>C25K this week: {phasesForWeek(wk).filter(x => x.prog === 'c25k').map(x => x.short + ' — ' + x.text).join('') || '—'}</li>
-          {test && <li><label>Pull-up max test <input type="number" min={0} value={w.pullupMax ?? ''} onChange={e => set({ pullupMax: e.target.value === '' ? undefined : Number(e.target.value) })} /></label></li>}
-        </ul>
-        <label className="block">Recording link (Drive / Voice Memos)<input type="url" placeholder="https://…" value={w.recordingUrl ?? ''} onChange={e => set({ recordingUrl: e.target.value })} /></label>
-        <label className="block">Review — one fix, next song<textarea rows={4} value={w.review ?? ''} onChange={e => set({ review: e.target.value })} /></label>
-      </section>
-      <section className="panel">
-        <h2>Milestones</h2>
-        {MILESTONES.map(m => (
-          <div key={m.wk}>
-            <h3>Week {m.wk}</h3>
-            <ul className="checks">{m.items.map(it => {
-              const id = `${m.wk}:${it}`; const on = user.weekly[0]?.milestones?.includes(id)
-              return <li key={id}><label><input type="checkbox" checked={!!on} onChange={e => update(u => {
-                const cur = u.weekly[0]?.milestones ?? []
-                return { ...u, weekly: { ...u.weekly, 0: { ...u.weekly[0], milestones: e.target.checked ? [...cur, id] : cur.filter(x => x !== id) } } }
-              })} /> {it}</label></li>
-            })}</ul>
+      <div className="subtabs"><button aria-pressed={tab === 'review'} onClick={() => setTab('review')}>Review</button><button aria-pressed={tab === 'log'} onClick={() => setTab('log')}>Log</button></div>
+      {tab === 'log' && <LogView onOpenDay={onOpenDay} />}
+      {tab === 'review' && <>
+        <section className="plain">
+          <div className="daynav">
+            <button className="btn" onClick={() => setWk(Math.max(1, wk - 1))}>‹</button>
+            <h2>Week {wk} review <small>{weekStart(wk)}</small></h2>
+            <button className="btn" onClick={() => setWk(Math.min(10, wk + 1))}>›</button>
           </div>
-        ))}
-      </section>
+          <WeekProgress wk={wk} />
+          <h3>Five minutes, three prompts</h3>
+          <label className="block">What’s starting to sound like music?<textarea rows={2} value={w.improved ?? ''} onChange={e => set(wk, { improved: e.target.value })} /></label>
+          <label className="block">One fix for next week<textarea rows={2} value={w.review ?? ''} onChange={e => set(wk, { review: e.target.value })} /></label>
+          <label className="block">Next week’s standard<input list="stds" value={nextW.standard ?? ''} placeholder={plan.standards[wk] ?? ''} onChange={e => set(wk + 1, { standard: e.target.value })} /><datalist id="stds">{plan.standards.map(s => <option key={s} value={s} />)}</datalist></label>
+          <ul className="checks">
+            <li><label><input type="checkbox" checked={!!w.recordedStandard} onChange={e => set(wk, { recordedStandard: e.target.checked })} /> This week’s standard recorded (head + one chorus)</label></li>
+            <li><label><input type="checkbox" checked={!!w.recordedArrangement} onChange={e => set(wk, { recordedArrangement: e.target.checked })} /> By-ear arrangement recorded</label></li>
+            {test && <li><label className="inl">Pull-up max test <input type="number" min={0} value={w.pullupMax ?? ''} onChange={e => set(wk, { pullupMax: e.target.value === '' ? undefined : Number(e.target.value) })} /></label></li>}
+          </ul>
+          <label className="block">The takes <input type="url" placeholder="Drive / Voice Memos link" value={w.recordingUrl ?? ''} onChange={e => set(wk, { recordingUrl: e.target.value })} /></label>
+        </section>
+        <section className="plain">
+          <h3>Set up week {wk + 1}</h3>
+          <p className="meta">Pre-decide now so weekday-you doesn’t have to.</p>
+          <div className="daytypes">{nextDays.map(d => { const t = dayTypeFor(user, d, today()); return (
+            <div key={d} className="dt"><span>{DOW[parse(d).getDay()]} {parse(d).getDate()}</span>
+              <select value={user.practice[d]?.dayType ?? ''} onChange={e => update(u => ({ ...u, practice: { ...u.practice, [d]: { ...u.practice[d], dayType: (e.target.value || undefined) as DayType | undefined } } }))}>
+                <option value="">auto ({t})</option>{DAY_TYPES.map(x => <option key={x.id} value={x.id}>{x.label}</option>)}</select></div>) })}</div>
+          <p className="meta">Classes next week: {programs.filter(p => p.kind === 'inperson' && stateOf(p, user) !== 'considering' && p.dates.some(d => nextDays.includes(d))).map(p => `${p.short}${stateOf(p, user) === 'registered' ? '' : ' (planned)'}`).join(' · ') || 'none'} — change in Configure.</p>
+        </section>
+        <section className="plain">
+          <h3>Milestones</h3>
+          {MILESTONES.map(m => (
+            <div key={m.wk}><h4>Week {m.wk}</h4>
+              <ul className="checks">{m.items.map(it => { const id = `${m.wk}:${it}`; const on = user.weekly[0]?.milestones?.includes(id)
+                return <li key={id}><label><input type="checkbox" checked={!!on} onChange={e => update(u => { const cur = u.weekly[0]?.milestones ?? []; return { ...u, weekly: { ...u.weekly, 0: { ...u.weekly[0], milestones: e.target.checked ? [...cur, id] : cur.filter(x => x !== id) } } } })} /> {it}</label></li> })}</ul>
+            </div>))}
+        </section>
+      </>}
     </>
   )
 }

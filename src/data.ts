@@ -15,3 +15,6 @@ export const trips = tripsJson as Trip[]
 export const shops = coffeeJson as Shop[]
 export const OS_URL = 'https://app.openstudiojazz.com/courses'
 export const byId = (id: string) => programs.find(p => p.id === id)
+import lunchJson from '../data/lunch.json'
+import type { Lunch } from './types'
+export const lunch = lunchJson as Lunch[]

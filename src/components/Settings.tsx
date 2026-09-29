@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { programs, trips } from '../data'
 import { DOW } from '../dates'
 import { downloadIcs } from '../ics'
-import { DEFAULT_START, WEEKLY_METRICS } from '../model'
-import { canNotify, enableReminders } from '../reminders'
+import { DEFAULT_START, WEEKLY_METRICS, stateOf, type PState } from '../model'
+import { canNotify, enableReminders, remindersOn } from '../reminders'
 import { exportJson, importJson, update, useUser } from '../storage'
 import { logOut, signIn, useSync } from '../sync'
 
@@ -29,7 +29,7 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
 
   return (
     <div className="settings">
-      <section className="panel">
+      <section className="plain">
         <h2>Schedule</h2>
         <h3>Trips</h3>
         <p className="sub">Sessions on trip days show as missed. Untick a trip if it isn’t happening.</p>
@@ -51,19 +51,22 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
         </div>
       </section>
 
-      <section className="panel">
+      <section className="plain">
         <h2>Sessions on the calendar</h2>
-        <p className="sub">Untick anything you’re not doing. In-person classes show “(TBD)” until you tick “registered”. It disappears from every view, reminders and the .ics export.</p>
+        <p className="sub">Classes are <b>Considering</b> (only on the Music tab, for comparison), <b>Planned / trial</b> (on the calendar, outlined) or <b>Registered</b> (solid). Untick abs or reading items you’re not doing. It disappears from every view, reminders and the .ics export.</p>
         {KINDS.map(([kind, label]) => <div key={kind}>
           <h3>{label}</h3>
-          <ul className="checks">{programs.filter(p => p.kind === kind).map(p => <li key={p.id}><label><input type="checkbox" checked={!s.hiddenItems.includes(p.id)}
-            onChange={e => set({ hiddenItems: e.target.checked ? s.hiddenItems.filter(x => x !== p.id) : [...s.hiddenItems, p.id] })} />
-            {p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></label>
-            {kind === 'inperson' && <label className="inl"><input type="checkbox" checked={!!s.confirmed?.includes(p.id)} onChange={e => set({ confirmed: e.target.checked ? [...(s.confirmed ?? []), p.id] : (s.confirmed ?? []).filter(x => x !== p.id) })} /> registered</label>}</li>)}</ul>
+          <ul className="checks">{programs.filter(p => p.kind === kind).map(p => kind === 'inperson'
+            ? <li key={p.id}><span>{p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></span>
+                <select value={stateOf(p, user)} onChange={e => set({ programState: { ...s.programState, [p.id]: e.target.value as PState } })}>
+                  <option value="considering">Considering</option><option value="planned">Planned / trial</option><option value="registered">Registered</option></select></li>
+            : <li key={p.id}><label><input type="checkbox" checked={!s.hiddenItems.includes(p.id)}
+                onChange={e => set({ hiddenItems: e.target.checked ? s.hiddenItems.filter(x => x !== p.id) : [...s.hiddenItems, p.id] })} />
+                {p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></label></li>)}</ul>
         </div>)}
       </section>
 
-      <section className="panel">
+      <section className="plain">
         <h2>Data &amp; export</h2>
         <div className="setrow"><div><b>Calendar (.ics)</b><span className="sub">Plan sessions that aren’t lost to travel, with a 45-min alert. Import into Google or Apple Calendar.</span></div>
           <button className="btn" onClick={() => downloadIcs(user)}>Download</button></div>
@@ -73,13 +76,13 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
         {msg && <p className="sub">{msg}</p>}
       </section>
 
-      <section className="panel">
+      <section className="plain">
         <h2>App</h2>
         <div className="setrow"><div><b>Account &amp; sync</b>
-          <span className="sub">{sync.user ? `${sync.user.email} · ${sync.state === 'synced' ? 'synced' : sync.state === 'error' ? `error: ${sync.error}` : 'syncing…'}` : `This device only.${sync.error ? ' ' + sync.error : ''}`}</span></div>
+          <span className="sub">{sync.user ? `${sync.user.email} · ${sync.state === 'synced' ? 'synced across devices' : sync.state === 'error' ? `error: ${sync.error}` : 'syncing…'}` : `Local-first: everything is saved on this device. Sign in only if you want it on your phone and laptop.${sync.error ? ' ' + sync.error : ''}`}</span></div>
           {sync.user ? <button className="btn" onClick={logOut}>Sign out</button> : <button className="btn primary" onClick={signIn}>Sign in with Google</button>}</div>
-        {canNotify() && <div className="setrow"><div><b>Reminders</b><span className="sub">30 min before sessions and a 9pm log nudge, while the app is open.</span></div>
-          <button className="btn" onClick={async () => setMsg((await enableReminders()) ? 'Reminders on.' : 'Notifications are blocked in this browser.')}>Enable</button></div>}
+        {canNotify() && <div className="setrow"><div><b>Reminders</b><span className="sub">{remindersOn() ? 'On — a nudge at each block start, and before classes with travel time.' : 'A nudge at each block start, and before classes (with travel time), while the app is open.'}</span></div>
+          {!remindersOn() && <button className="btn" onClick={async () => setMsg((await enableReminders()) ? 'Reminders on.' : 'Notifications are blocked in this browser.')}>Enable</button>}</div>}
         <div className="setrow"><div><b>Theme</b><span className="sub">{theme}</span></div><button className="btn" onClick={cycleTheme}>Switch</button></div>
       </section>
     </div>

@@ -3,13 +3,13 @@ import { DaySchedule } from './DaySchedule'
 import { WeekFocus } from './Today'
 import type { Program } from '../types'
 
-export function WeekView({ wk, setWk, onOpen, onOpenDay, onNav }: { wk: number; setWk: (n: number) => void; onOpen: (p: Program, d: string) => void; onOpenDay: (d: string) => void; onNav: (v: 'abs') => void }) {
+export function WeekView({ wk, setWk, onOpen, onOpenDay, onNav }: { wk: number; setWk: (n: number) => void; onOpen: (p: Program, d: string) => void; onOpenDay: (d: string) => void; onNav: (v: 'fitness') => void }) {
   const start = parse(weekStart(wk)), t = today()
   return (
-    <section className="panel">
+    <section className="plain">
       <div className="daynav">
         <button className="btn" onClick={() => setWk(Math.max(1, wk - 1))}>‹</button>
-        <h2>Week {wk} <small>({weekStart(wk)})</small></h2>
+        <h2>Week {wk} <small>{weekStart(wk)}</small></h2>
         <button className="btn" onClick={() => setWk(Math.min(11, wk + 1))}>›</button>
       </div>
       <WeekFocus wk={wk} onNav={onNav} />

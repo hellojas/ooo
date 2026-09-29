@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { courses, programs } from '../data'
 import { Coffee } from './Coffee'
 
-const SECTIONS = [['coffee', 'Coffee shops'], ['links', 'Links']] as const
+const SECTIONS = [['coffee', 'Coffee shops'], ['links', 'Program Links']] as const
 
 /** Reference material. Coffee shops is one section; Links is a single screen of the real deep links. */
 export function Resources() {
@@ -16,8 +16,8 @@ export function Resources() {
       </div>
       {sec === 'coffee' && <Coffee />}
       {sec === 'links' && (
-        <section className="panel">
-          <h2>Links</h2>
+        <section className="plain">
+          <h2>Program Links</h2>
           <h3>Classes &amp; places</h3>
           <ul className="linklist">{links.map(p => <li key={p.id}><a href={p.url} target="_blank" rel="noreferrer">{p.name}</a><span className="sub">{p.loc}</span></li>)}</ul>
           <h3>Open Studio courses</h3>
