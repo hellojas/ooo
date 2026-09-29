@@ -198,3 +198,8 @@ a.chip.online{display:block}
 .linkbtn{background:none;border:0;padding:0;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;cursor:pointer}
 .logrow{border-top:1px solid var(--line);padding:8px 0}.logrow ul{margin:4px 0 0;padding-left:18px;color:var(--ink-2);font-size:13px}
 @media (max-width:1000px){.weekview{grid-template-columns:1fr}}
+.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 18px;align-items:start}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.setrow>div:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.setrow .row{margin:0}
+.panel h3:first-of-type{margin-top:8px}

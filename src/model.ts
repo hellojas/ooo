@@ -110,8 +110,4 @@ export const WEEK_TEMPLATE: { day: string; items: { t: string; c?: string; opt?:
   { day: 'Sun', items: [{ t: 'Quick run 10a (optional 2nd)', c: 'run2', opt: true }, { t: 'Weekly review · record' }, { t: 'Barry Harris 6–10p', c: 'bhSun' }] },
 ]
 
-export const PRACTICE_BLOCKS = [
-  { id: 'sax', label: 'Sax', target: 30 },
-  { id: 'piano1', label: 'Piano 1', target: 120 },
-  { id: 'piano2', label: 'Piano 2', target: 90 },
-] as const
+export const DEFAULT_TARGETS = { sax: 30, piano: 210 }

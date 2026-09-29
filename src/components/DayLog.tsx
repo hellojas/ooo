@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PRACTICE_BLOCKS } from '../model'
+import { DEFAULT_TARGETS } from '../model'
 import { update, useUser } from '../storage'
 import { useEffect, useRef } from 'react'
 import { weekNo } from '../dates'
@@ -24,7 +24,8 @@ export function DayLog({ date }: { date: string }) {
     <>
       <h3>Practice log</h3>
       <div className="blocks">
-        {PRACTICE_BLOCKS.map(b => <Block key={b.id} label={b.label} target={b.target} mins={(pr as Record<string, number>)[b.id] ?? 0} onAdd={m => addMin(b.id, m)} />)}
+        <Block label="Sax" target={user.settings.targets?.sax ?? DEFAULT_TARGETS.sax} mins={pr.sax ?? 0} onAdd={m => addMin('sax', m)} />
+        <Block label="Piano" target={user.settings.targets?.piano ?? DEFAULT_TARGETS.piano} mins={(pr.piano1 ?? 0) + (pr.piano2 ?? 0)} onAdd={m => addMin('piano1', m)} />
         <div className="block-card"><b>Transcribe</b><span>{pr.transcribe ?? 0} min</span><div className="row">
           <button className="btn" onClick={() => addMin('transcribe', 15)}>+15</button><button className="btn" onClick={() => addMin('transcribe', 30)}>+30</button><button className="btn" onClick={() => addMin('transcribe', -15)}>−15</button></div></div>
         <div className="block-card"><b>Arrangement</b><span>{pr.arrange ?? 0} min</span><div className="row">

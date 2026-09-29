@@ -44,13 +44,13 @@ export default function App() {
   const g = (k: string) => groups[k]
   const flip = (k: string) => setGroups({ ...groups, [k]: !groups[k] })
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
-  const tabs: [View, string][] = [['today', 'Today'], ['week', 'Week'], ['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs'], ['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Settings']]
+  const tabs: [View, string][] = [['today', 'Today'], ['week', 'Week'], ['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs'], ['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']]
 
   return (
     <div className="wrap">
       <header>
         <h1>PROJECT OOO <small>· jas fine tuning</small></h1>
-        <p>Sabbatical, Oct 5 – Dec 23. Tap any session to check in.</p>
+        <p>Sabbatical · Oct 5 – Dec 23, 2026</p>
       </header>
 
       <div className="tabs" role="tablist">
