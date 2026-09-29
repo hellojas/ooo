@@ -3,6 +3,9 @@ import { programs } from './data'
 import { Calendar } from './components/Calendar'
 import { CheckIn } from './components/CheckIn'
 import { Today, clampDay } from './components/Today'
+import { Agenda } from './components/Agenda'
+import { downloadIcs } from './ics'
+import { trips } from './data'
 import { WeekView } from './components/Week'
 import { LogView } from './components/LogView'
 import { Settings } from './components/Settings'
@@ -31,10 +34,12 @@ function useTheme() {
 }
 
 export default function App() {
+  const user = useUser()
   const [theme, cycle] = useTheme()
   const userRef = useUser()
   useEffect(() => startReminders(() => userRef), [userRef])
   const [view, setView] = useState<View>('today')
+  const [mode, setMode] = useState<'month' | 'agenda'>('month')
   const [day, setDay] = useState(clampDay(today()))
   const [wk, setWk] = useState(Math.min(11, Math.max(1, weekNo(clampDay(today())))))
   const openDay = (d: string) => { setDay(d); setView('today'); window.scrollTo(0, 0) }
@@ -61,12 +66,26 @@ export default function App() {
       {view === 'week' && <WeekView wk={wk} setWk={setWk} onOpen={onOpen} onOpenDay={openDay} onNav={setView} />}
 
       {view === 'full' && <>
+        <div className="fullbar">
+          <div className="subtabs" role="group" aria-label="Calendar view">
+            <button aria-pressed={mode === 'month'} onClick={() => setMode('month')}>Month</button>
+            <button aria-pressed={mode === 'agenda'} onClick={() => setMode('agenda')}>Agenda</button>
+          </div>
+          <button className="btn" onClick={() => downloadIcs(user)}>Export suggested plan</button>
+        </div>
+        <div className="trips">
+          {trips.map(t => <div key={t.name} className={'trip-card' + (t.tentative ? ' tent' : '')}><b>{t.name}</b><span>{t.from.slice(5)} → {t.to.slice(5)}</span></div>)}
+        </div>
         <div className="legend">
           <Group label="Music" items={[['online', 'Online', true], ['inperson', 'In person (plan, TBD)']]} on={g} flip={flip} />
           <Group label="Life" items={[['abs', 'Abs'], ['read', 'Read'], ['travel', 'Travel']]} on={g} flip={flip} />
         </div>
-        <Calendar showTravel={g('travel')} showOnline={g('online')} showVideos={false} phaseProgs={g('abs') ? ['c25k', 'pull', 'v8'] : []}
-          visible={p => (p.kind === 'inperson' ? !!p.plan && g('inperson') : p.kind === 'abs' ? g('abs') : g('read'))} onOpen={onOpen} />
+        {(() => {
+          const visible = (p: Program) => (p.kind === 'inperson' ? !!p.plan && g('inperson') : p.kind === 'abs' ? g('abs') : g('read'))
+          return mode === 'month'
+            ? <Calendar showTravel={g('travel')} showOnline={g('online')} showVideos={false} phaseProgs={g('abs') ? ['c25k', 'pull', 'v8'] : []} visible={visible} onOpen={onOpen} />
+            : <Agenda visible={visible} showTravel={g('travel')} onOpen={onOpen} />
+        })()}
         <Template title="Full sabbatical week" />
       </>}
 

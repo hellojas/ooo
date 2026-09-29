@@ -48,3 +48,13 @@ export const downloadIcs = (user: UserData) => {
   a.href = URL.createObjectURL(new Blob([buildIcs(user, { planOnly: true })], { type: 'text/calendar' }))
   a.download = 'project-ooo.ics'; a.click()
 }
+
+/** Google Calendar "add event" link for one session. */
+export function gcalUrl(p: { short: string; time: string; loc?: string; url?: string }, date: string): string {
+  const t = span(p.time), d = date.replace(/-/g, '')
+  const f = (m: number) => `${d}T${pad(Math.floor(m / 60))}${pad(m % 60)}00`
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: p.short, dates: t ? `${f(t[0])}/${f(t[1])}` : `${d}/${d}` })
+  if (p.loc) q.set('location', p.loc)
+  if (p.url) q.set('details', p.url)
+  return 'https://calendar.google.com/calendar/render?' + q.toString()
+}

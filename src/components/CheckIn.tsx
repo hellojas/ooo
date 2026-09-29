@@ -1,5 +1,6 @@
 import { update, useUser } from '../storage'
 import { attKey } from '../model'
+import { gcalUrl } from '../ics'
 import type { Attendance, Program } from '../types'
 
 export function CheckIn({ p, date, onClose }: { p: Program; date: string; onClose: () => void }) {
@@ -15,14 +16,22 @@ export function CheckIn({ p, date, onClose }: { p: Program; date: string; onClos
     <div className="sheet-bg" onClick={onClose}>
       <div className="sheet" onClick={e => e.stopPropagation()} role="dialog" aria-label={`Check in: ${p.name}`}>
         <h3>{p.name}</h3>
-        <p className="sub">{date} · {p.time}{p.loc ? ` · ${p.loc}` : ''}</p>
+        <dl className="detail">
+          <dt>When</dt><dd>{date} · {p.time}</dd>
+          {p.loc && <><dt>Where</dt><dd>{p.loc}</dd></>}
+          {p.go && <><dt>From home</dt><dd>{p.go}</dd></>}
+          {p.uncertain?.includes(date) && <><dt>Status</dt><dd>Not confirmed by the school for this date</dd></>}
+        </dl>
         <div className="seg">
           {(['went', 'missed', 'skipped'] as Attendance[]).map(a => (
             <button key={a} aria-pressed={att === a} onClick={() => set(att === a ? undefined : a)}>{a}</button>
           ))}
         </div>
         <div className="row end">
-          {p.url && <a href={p.url} target="_blank" rel="noreferrer">Program page ↗</a>}
+          <span className="links">
+            {p.url && <a href={p.url} target="_blank" rel="noreferrer">Source ↗</a>}
+            <a href={gcalUrl(p, date)} target="_blank" rel="noreferrer">Add to Google Calendar ↗</a>
+          </span>
           <button className="btn primary" onClick={onClose}>Done</button>
         </div>
       </div>

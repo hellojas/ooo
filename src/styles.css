@@ -215,3 +215,14 @@ a.chip.online{display:block}
 .big{font-size:22px;font-weight:600}
 .checks.big label{font-size:17px;padding:6px 0}
 .checks.big input{width:22px;height:22px}
+.fullbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}.fullbar .subtabs{margin:0}
+.trips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.trip-card{display:flex;flex-direction:column;padding:8px 12px;border-radius:10px;background:var(--travel);color:var(--travel-ink);font-size:13px}
+.trip-card.tent{background:repeating-linear-gradient(135deg,var(--travel) 0 6px,var(--panel) 6px 12px)}
+.trip-card span{font-size:12px}
+.detail{display:grid;grid-template-columns:80px 1fr;gap:4px 10px;margin:8px 0 12px;font-size:14px}.detail dt{color:var(--ink-3)}.detail dd{margin:0}
+.links{display:flex;gap:14px;flex-wrap:wrap}
+.ag-day{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.ag-date{display:flex;flex-direction:column;align-items:center}.ag-date b{font-size:20px}.ag-date span{font-size:12px;color:var(--ink-3)}
+.ag-items{display:flex;flex-direction:column;gap:4px}.ag-trip{font-size:13px;color:var(--travel-ink)}
+.ag-day.trip{background:color-mix(in srgb,var(--travel) 40%,transparent);border-radius:8px}
