@@ -8,6 +8,8 @@ import { Coffee } from './components/Coffee'
 import { ProgressStrip } from './components/Progress'
 import { AbsTables, Counts, OnlineTables, Template, Where } from './components/Tables'
 import { exportJson, importJson, update, useUser } from './storage'
+import { downloadIcs } from './ics'
+import { canNotify, enableReminders, startReminders } from './reminders'
 import { logOut, signIn, useSync } from './sync'
 import type { Program } from './types'
 
@@ -30,6 +32,8 @@ export default function App() {
   const user = useUser()
   const [theme, cycle] = useTheme()
   const sync = useSync()
+  const userRef = useUser()
+  useEffect(() => startReminders(() => userRef), [userRef])
   const [view, setView] = useState<View>('today')
   const [sub, setSub] = useState<Sub>('plan')
   const [open, setOpen] = useState<{ p: Program; d: string } | null>(null)
@@ -51,6 +55,8 @@ export default function App() {
           {sync.error && !sync.user && <span className="sub">{sync.error}</span>}
           <button className="btn" onClick={cycle}>Theme: {theme}</button>
           <button className="btn" onClick={() => { const b = new Blob([exportJson()], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'ooo-backup.json'; a.click() }}>Export</button>
+          <button className="btn" onClick={() => downloadIcs(user)}>Calendar (.ics)</button>
+          {canNotify() && <button className="btn" onClick={async () => alert((await enableReminders()) ? 'Reminders on while the app is open.' : 'Notifications blocked.')}>Reminders</button>}
           <label className="btn">Import<input type="file" accept="application/json" hidden onChange={async e => { const f = e.target.files?.[0]; if (f) importJson(await f.text()) }} /></label>
         </div>
       </header>
@@ -96,6 +102,7 @@ export default function App() {
       <footer className="foot">
         Trips: {trips.map(t => t.name).join(' · ')}
         {user.settings.tripsOff.length > 0 && <> · ignoring: {user.settings.tripsOff.join(', ')}</>}
+        <div className="row"><label className="inl">Taipei start <input type="date" value={user.settings.taipeiStart ?? ''} min="2026-12-01" max="2026-12-28" onChange={e => update(u => ({ ...u, settings: { ...u.settings, taipeiStart: e.target.value || undefined } }))} /></label></div>
         <div className="row">{trips.map(t => <label key={t.name} className="inl"><input type="checkbox" checked={!user.settings.tripsOff.includes(t.name)}
           onChange={e => update(u => ({ ...u, settings: { ...u.settings, tripsOff: e.target.checked ? u.settings.tripsOff.filter(x => x !== t.name) : [...u.settings.tripsOff, t.name] } }))} /> {t.name}</label>)}</div>
       </footer>

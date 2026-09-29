@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { courses, dayByDay, phasePrograms, phases, skipCourses, OS_URL } from '../data'
-import { sessionsAttendable, WEEK_TEMPLATE } from '../model'
+import { setTaipeiStart, sessionsAttendable, WEEK_TEMPLATE } from '../model'
 import { useUser } from '../storage'
 import type { Program } from '../types'
 
@@ -22,6 +22,7 @@ export function Where({ pool }: { pool: Program[] }) {
 
 export function Counts({ pool }: { pool: Program[] }) {
   const user = useUser()
+  setTaipeiStart(user.settings.taipeiStart)
   return <div className="counts">{pool.map(p => { const c = sessionsAttendable(p, user); return <div key={p.id}><b>{p.short}</b><span>{c.ok} of {c.total} sessions</span></div> })}</div>
 }
 

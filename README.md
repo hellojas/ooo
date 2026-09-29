@@ -22,11 +22,20 @@ Today (schedule, practice timers, notes) · Full sabbatical · Jazz (in person /
 Abs · Coffee shops · Weekly review + milestones · check-in sheet on every chip
 (went / missed / skipped, climbing sends, runs, pull-up sets) · JSON export/import backup.
 
-## Next
+## Also built
+Firebase Google sign-in + Firestore sync (`src/sync.ts`, `firestore.rules`) · ICS export of plan items ·
+Taipei start-date setting (recomputes missed sessions) · weekly recording links ·
+in-app reminders (30 min before sessions, 9pm practice nudge; only while the app is open).
 
-1. Deploy (GitHub Pages or Firebase Hosting) so it can be installed on the phone.
-2. ~~Firebase sync~~ done: Google sign-in + Firestore (`src/sync.ts`, `firestore.rules`). Deploy rules with `firebase deploy --only firestore:rules,hosting`.
-3. Reminders: iOS supports Web Push for home-screen PWAs (iOS 16.4+), which needs a small
-   push backend (Firebase Cloud Messaging + a scheduled function). Alternative: a native
-   iOS app with local notifications if we outgrow the PWA.
-4. ICS export of the plan items.
+## Deploy
+```
+npm run build
+npx firebase-tools login
+npx firebase-tools deploy --only firestore:rules,hosting
+```
+Console prerequisites: enable Google sign-in, create the Firestore database, add your hosting domain to
+Authorized domains. Optional: build with `VITE_ALLOWED_EMAIL=you@gmail.com` to lock to one account.
+
+## Not built
+True background push on iPhone (needs Cloud Functions + FCM on the Blaze plan) — the in-app reminders
+cover the app-open case for now.

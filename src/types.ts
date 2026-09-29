@@ -21,7 +21,7 @@ export interface UserData {
   running: Record<string, { minutes?: number; c25kWeek?: number; felt?: string }>
   pullups: Record<string, { sets?: { reps: number; weightLb: number }[]; maxTest?: number }>
   coffee: Record<string, { visited?: boolean; date?: string; rating?: number; note?: string }>
-  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; milestones?: string[] }>
+  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; recordingUrl?: string; milestones?: string[] }>
 }
 export const emptyUser = (): UserData => ({
   settings: { hiddenItems: [], tripsOff: [] },

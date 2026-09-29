@@ -2,8 +2,11 @@ import { programs, trips, phases, courses, dayByDay } from './data'
 import { key, parse, weekNo, START, END } from './dates'
 import type { Program, UserData } from './types'
 
+let taipeiStart: string | undefined
+export const setTaipeiStart = (d?: string) => { taipeiStart = d || undefined }
+export const effTrips = () => trips.map(t => t.name.startsWith('Taipei') && taipeiStart ? { ...t, from: taipeiStart } : t)
 export const tripOn = (k: string, off: string[] = []) =>
-  trips.find(t => k >= t.from && k <= t.to && !off.includes(t.name))
+  effTrips().find(t => k >= t.from && k <= t.to && !off.includes(t.name))
 
 export interface Filters { on: Set<string>; travel: boolean }
 

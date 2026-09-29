@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { DOW, END, parse, START, today as todayKey, weekNo } from '../dates'
-import { attKey, itemsOn, PRACTICE_BLOCKS, phasesForWeek, coursesForWeek, tripOn, videosOn } from '../model'
+import { setTaipeiStart, attKey, itemsOn, PRACTICE_BLOCKS, phasesForWeek, coursesForWeek, tripOn, videosOn } from '../model'
 import { update, useUser } from '../storage'
 import { courses } from '../data'
 import { Chip } from './Chip'
@@ -13,6 +13,7 @@ export function Today({ onOpen }: { onOpen: (p: Program, d: string) => void }) {
   const real = todayKey()
   const [date, setDate] = useState(clamp(real))
   const wk = weekNo(date)
+  setTaipeiStart(user.settings.taipeiStart)
   const trip = tripOn(date, user.settings.tripsOff)
   const items = itemsOn(date, user).sort((a, b) => a.p.time.localeCompare(b.p.time))
   const practice = user.practice[date] ?? {}

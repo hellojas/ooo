@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { DOW, MONTHS, parse, weekNo } from '../dates'
 import { courses, programs, trips, OS_URL } from '../data'
-import { attKey, coursesForWeek, itemsOn, monthWeeks, phasesForWeek, tripOn, videosOn } from '../model'
+import { setTaipeiStart, attKey, coursesForWeek, itemsOn, monthWeeks, phasesForWeek, tripOn, videosOn } from '../model'
 import { useUser } from '../storage'
 import { Chip } from './Chip'
 import type { Program } from '../types'
@@ -18,6 +18,7 @@ export interface CalOpts {
 
 export function Calendar(o: CalOpts) {
   const user = useUser()
+  setTaipeiStart(user.settings.taipeiStart)
   const tripsOff = o.showTravel ? user.settings.tripsOff : trips.map(t => t.name)
   const eff = { ...user, settings: { ...user.settings, tripsOff } }
   const pool = programs.filter(o.visible)
