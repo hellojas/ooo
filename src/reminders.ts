@@ -23,7 +23,7 @@ export function startReminders(getUser: () => UserData) {
     }
     const pr = user.practice[k]
     if (mins >= 21 * 60 && !(pr?.sax || pr?.piano1 || pr?.piano2) && !fired.has('eve' + k) && k >= '2026-10-05' && k <= '2026-12-23') {
-      fired.add('eve' + k); new Notification('Project ooo', { body: 'Log today’s practice and check-ins.' })
+      fired.add('eve' + k); new Notification('PROJECT OOO', { body: 'Log today’s practice and check-ins.' })
     }
   }
   const t = window.setInterval(tick, 60_000); tick()

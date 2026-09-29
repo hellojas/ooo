@@ -10,7 +10,8 @@
         1
       ],
       "hrs": "2.5 h · 12 videos",
-      "feeds": "Rooted 5-note, rootless 4-note, rootless LH voicings in 12 keys. Do it in week 1 so Kaufman Tuesday has vocabulary to attach to."
+      "feeds": "Rooted 5-note, rootless 4-note, rootless LH voicings in 12 keys. Do it in week 1 so Kaufman Tuesday has vocabulary to attach to.",
+      "url": "https://www.openstudiojazz.com/courses/jazz-chords-for-beginners/"
     },
     {
       "id": "osLHV",
@@ -21,7 +22,8 @@
         3
       ],
       "hrs": "1 h · 5 videos",
-      "feeds": "Five LH voicing types over Oleo / Solar / I Remember You. This is the autopilot left hand your arrangement goal needs."
+      "feeds": "Five LH voicing types over Oleo / Solar / I Remember You. This is the autopilot left hand your arrangement goal needs.",
+      "url": "https://www.openstudiojazz.com/courses/jazz-piano-basics-vol-2-left-hand-voicings/"
     },
     {
       "id": "osScales",
@@ -32,7 +34,8 @@
         3
       ],
       "hrs": "short",
-      "feeds": "Chord-scale pairing for the chord-tone soloing you're already working on. Pair with the Targetting 3rds worksheet."
+      "feeds": "Chord-scale pairing for the chord-tone soloing you're already working on. Pair with the Targetting 3rds worksheet.",
+      "url": "https://www.openstudiojazz.com/courses/jazz-scales-for-beginners/"
     },
     {
       "id": "osLead",
@@ -43,7 +46,8 @@
         5
       ],
       "hrs": "short",
-      "feeds": "How to turn a lead sheet into a full two-hand version. This is the template for every standard of the week from here on."
+      "feeds": "How to turn a lead sheet into a full two-hand version. This is the template for every standard of the week from here on.",
+      "url": "https://www.openstudiojazz.com/courses/jazz-piano-basics-vol-1-lead-sheet-breakdown/"
     },
     {
       "id": "osHear",
@@ -54,7 +58,8 @@
         10
       ],
       "hrs": "1 lesson / week",
-      "feeds": "The one ear-training course that's about hearing harmony in context, not intervals. Runs alongside your transcription block for 7 weeks."
+      "feeds": "The one ear-training course that's about hearing harmony in context, not intervals. Runs alongside your transcription block for 7 weeks.",
+      "url": "https://www.openstudiojazz.com/courses/hearing-great-harmony/"
     },
     {
       "id": "osBebopCh",
@@ -65,7 +70,8 @@
         7
       ],
       "hrs": "short",
-      "feeds": "Barry Harris–style 6th/diminished movement. Timed to land between Barry Harris Sundays Nov 15 and 22."
+      "feeds": "Barry Harris–style 6th/diminished movement. Timed to land between Barry Harris Sundays Nov 15 and 22.",
+      "url": "https://www.openstudiojazz.com/courses/bebop-chords-for-beginners/"
     },
     {
       "id": "osBHSoC",
@@ -76,7 +82,8 @@
         7
       ],
       "hrs": "short",
-      "feeds": "Same weeks as Bebop Chords; the two are one idea from two angles. Bring questions to the Sunday harmony class."
+      "feeds": "Same weeks as Bebop Chords; the two are one idea from two angles. Bring questions to the Sunday harmony class.",
+      "url": "https://www.openstudiojazz.com/courses/barry-harris-scales-of-chords/"
     },
     {
       "id": "osEncl",
@@ -87,7 +94,8 @@
         9
       ],
       "hrs": "short",
-      "feeds": "Chord tones → enclosures. Use on the Blues Jam tune each week; this is what turns the Baker bebop-scale chapter into lines."
+      "feeds": "Chord tones → enclosures. Use on the Blues Jam tune each week; this is what turns the Baker bebop-scale chapter into lines.",
+      "url": "https://www.openstudiojazz.com/courses/bebop-enclosures-for-beginners/"
     },
     {
       "id": "osSolo",
@@ -98,7 +106,8 @@
         11
       ],
       "hrs": "longer",
-      "feeds": "Arrangement capstone: LH pattern + RH melody with chord tones underneath, on a ballad you've transcribed. Record it before Taipei."
+      "feeds": "Arrangement capstone: LH pattern + RH melody with chord tones underneath, on a ballad you've transcribed. Record it before Taipei.",
+      "url": "https://www.openstudiojazz.com/courses/elements-of-solo-piano/"
     }
   ],
   "skip": [

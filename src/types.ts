@@ -4,7 +4,7 @@ export interface Program {
   dates: string[]; url?: string; loc?: string; go?: string
   plan?: boolean; planOpt?: boolean; drop?: boolean; uncertain?: string[]
 }
-export interface Course { id: string; name: string; short: string; wk: [number, number]; hrs: string; feeds: string }
+export interface Course { id: string; url: string; name: string; short: string; wk: [number, number]; hrs: string; feeds: string }
 export interface DayVideo { date: string; course: string; what: string; pdf?: string }
 export interface Phase { id: string; prog: string; short: string; wk: [number, number]; text: string }
 export interface PhaseProgram { id: string; name: string; goal: string; rows: string[][] }
@@ -21,9 +21,10 @@ export interface UserData {
   running: Record<string, { minutes?: number; c25kWeek?: number; felt?: string }>
   pullups: Record<string, { sets?: { reps: number; weightLb: number }[]; maxTest?: number }>
   coffee: Record<string, { visited?: boolean; date?: string; rating?: number; note?: string }>
-  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; recordingUrl?: string; milestones?: string[] }>
+  customShops: Shop[]
+  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; standard?: string; recordingUrl?: string; milestones?: string[] }>
 }
 export const emptyUser = (): UserData => ({
   settings: { hiddenItems: [], tripsOff: [] },
-  attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, weekly: {},
+  attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, customShops: [], weekly: {},
 })

@@ -6,7 +6,7 @@ const pad = (n: number) => String(n).padStart(2, '0')
 const esc = (s: string) => s.replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n')
 
 /** Parse "Tue 5:30–7p", "Sat 10a", "8–9:30a", "Thu 4:30–6:30p" → [startMin, endMin]. */
-function span(time: string): [number, number] | null {
+export function span(time: string): [number, number] | null {
   const m = time.match(/(\d{1,2})(?::(\d{2}))?(?:[–-](\d{1,2})(?::(\d{2}))?)?\s*([ap])?/i)
   if (!m) return null
   const suffix = (m[5] ?? 'p').toLowerCase()

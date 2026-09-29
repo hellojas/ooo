@@ -52,17 +52,46 @@ export function monthWeeks(year: number, month: number): (string | null)[][] {
 export const isoWeekday = (k: string) => parse(k).getDay()
 export { weekNo }
 
+export const climbDays = (user: UserData, wk: number) => {
+  const days = new Set<string>()
+  for (const [d, c] of Object.entries(user.climbing)) if (weekNo(d) === wk && (c.sessionType || c.sends?.length || c.fingerFeel)) days.add(d)
+  for (const [a, v] of Object.entries(user.attendance)) {
+    const [id, d] = a.split('|'); if (v === 'went' && (id === 'climb' || id === 'climbLES') && weekNo(d) === wk) days.add(d)
+  }
+  return days.size
+}
+
 export function progress(user: UserData, wk: number) {
-  const weeks = Object.entries(user.weekly)
-  const standards = weeks.filter(([, w]) => w.recordedStandard).length
-  const songs = Object.values(user.practice).filter(p => p.songTranscribed).length
-  const inWeek = (k: string) => weekNo(k) === wk
-  const climbs = Object.entries(user.attendance).filter(([a, v]) => {
-    const [id, d] = a.split('|'); return v === 'went' && (id === 'climb' || id === 'climbLES') && inWeek(d)
-  }).length + Object.keys(user.climbing).filter(d => inWeek(d) && !Object.keys(user.attendance).some(a => a === `climb|${d}` || a === `climbLES|${d}`)).length
+  const standards = Object.values(user.weekly).filter(w => w.recordedStandard).length
+  const songs = Object.values(user.practice).filter(p => p.songTranscribed?.trim()).length
   const maxes = Object.entries(user.pullups).filter(([, v]) => v.maxTest != null).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v.maxTest as number)
   const c25k = Math.max(0, ...Object.values(user.running).map(r => r.c25kWeek ?? 0))
-  return { standards, songs, climbs, maxes, c25k }
+  const sax = Object.values(user.practice).filter(p => (p.sax ?? 0) > 0).length
+  return { standards, songs, climbs: climbDays(user, wk), maxes, c25k, sax }
+}
+
+export interface Block { start: number; end: number; title: string; note?: string }
+const H = (h: number, m = 0) => h * 60 + m
+/** The daily template from docs/plan.md (Mon–Fri practice blocks, weekend rows). */
+export function blocksOn(k: string): Block[] {
+  const dow = parse(k).getDay()
+  if (dow >= 1 && dow <= 5) return [
+    { start: H(9, 30), end: H(10), title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' },
+    { start: H(10), end: H(12), title: 'Piano block 1', note: 'technique/voicings (45) + standard of the week (75)' },
+    { start: H(12), end: H(13, 30), title: 'Lunch + walk' },
+    { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'ear/transcription (60) + arrangement (30)' },
+    { start: H(15, 30), end: H(17, 30), title: 'Gym slot' },
+  ]
+  if (dow === 0) return [{ start: H(17), end: H(17, 30), title: 'Weekly review (30 min)', note: 'record the standard + arrangement, one fix, next song' }]
+  return []
+}
+export const fmtMin = (m: number) => { const h = Math.floor(m / 60), mm = m % 60; return `${((h + 11) % 12) + 1}${mm ? ':' + String(mm).padStart(2, '0') : ''}${h < 12 ? 'a' : 'p'}` }
+
+/** One-line prescriptions to show under a session for the given week. */
+export function hintFor(id: string, wk: number, dow: number): string | undefined {
+  const ph = (prog: string) => phasesForWeek(wk).find(x => x.prog === prog)
+  if (id === 'run' || id === 'run2') return [ph('c25k') && `${ph('c25k')!.short}: ${ph('c25k')!.text}`, ph('pull') && `Pull-ups: ${ph('pull')!.text}`].filter(Boolean).join(' · ')
+  if (id === 'climb' || id === 'climbLES') return [ph('v8') && `${ph('v8')!.short}: ${ph('v8')!.text}`, dow === 5 && ph('pull') ? `+ pull-ups after` : ''].filter(Boolean).join(' · ')
 }
 
 export const MILESTONES: { wk: number; items: string[] }[] = [

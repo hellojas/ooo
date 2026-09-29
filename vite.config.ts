@@ -10,8 +10,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Project ooo — Jas fine tuning',
-        short_name: 'ooo',
+        name: 'PROJECT OOO — jas fine tuning',
+        short_name: 'PROJECT OOO',
         description: 'Sabbatical calendar + tracker, Oct 5 – Dec 23, 2026',
         display: 'standalone',
         background_color: '#EEF1F4',

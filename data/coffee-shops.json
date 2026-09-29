@@ -1,169 +1,165 @@
-{
-  "readHere": [
-    {
-      "n": "Sey Coffee",
-      "a": "18 Grattan St, East Williamsburg",
-      "w": "~20 min walk · 8 bike",
-      "why": "The light-roast pole of Brooklyn: rotating single origins, a big quiet room with high ceilings, pour-over is the point. Closest match to your anaerobic / co-ferment taste; ask what's on that isn't on the menu.",
-      "tags": [
-        "light roast",
-        "pour-over",
-        "best for reading"
-      ],
-      "u": "https://www.seycoffee.com/"
-    },
-    {
-      "n": "Devoción",
-      "a": "69 Grand St, Williamsburg",
-      "w": "~15 min walk",
-      "why": "Colombian direct-trade, roasted on site, skylit room full of plants. Roast sits a touch darker than Sey; the space is the draw for a long read.",
-      "tags": [
-        "roaster",
-        "big room",
-        "reading"
-      ],
-      "u": "https://www.devocion.com/"
-    },
-    {
-      "n": "Café Grumpy",
-      "a": "193 Meserole Ave, Greenpoint",
-      "w": "~15 min walk",
-      "why": "The 2005 original beside its own roastery. Pour-over is still the best thing here; unfussy, plenty of seats, 7–6 daily.",
-      "tags": [
-        "roaster",
-        "pour-over",
-        "laptop-tolerant"
-      ],
-      "u": "https://cafegrumpy.com/"
-    },
-    {
-      "n": "Variety Coffee Roasters",
-      "a": "368 Grand St, Williamsburg · 142 Driggs Ave, Greenpoint",
-      "w": "~10 / ~12 min walk",
-      "why": "The reliable one: solid roast program, tables, outlets, Driggs is open until 9. Not a tasting destination; the place you go when you want to be sure you'll get a seat.",
-      "tags": [
-        "roaster",
-        "seats",
-        "open late"
-      ],
-      "u": "https://www.varietycoffeeroasters.com/"
-    },
-    {
-      "n": "Partners Coffee (ex-Toby's)",
-      "a": "125 N 6th St, Williamsburg",
-      "w": "~15 min walk",
-      "why": "Aussie-style roastery with a proper pour-over bar. Beautiful room, but crowded by 10 on weekends — go on your Tuesday.",
-      "tags": [
-        "roaster",
-        "pour-over",
-        "busy"
-      ],
-      "u": "https://www.partnerscoffee.com/"
-    },
-    {
-      "n": "Pueblo Querido",
-      "a": "195 Greenpoint Ave, Greenpoint",
-      "w": "~20 min walk",
-      "why": "Family-run Colombian roaster, roasts on site, Colombian pastries. Small and early — weekdays 6:30–3 — so it's a Friday-morning place, not an afternoon one.",
-      "tags": [
-        "roaster",
-        "early",
-        "small"
-      ],
-      "u": "https://www.pueblo-querido.com/"
-    },
-    {
-      "n": "Homecoming",
-      "a": "107 Franklin St, Greenpoint",
-      "w": "~20 min walk",
-      "why": "Flowers and coffee in one room; calm, good light, the kind of place a book actually gets read. Coffee is good rather than serious.",
-      "tags": [
-        "calm",
-        "reading"
-      ],
-      "u": "https://www.home-coming.com/"
-    },
-    {
-      "n": "Oslo Coffee Roasters",
-      "a": "133 Roebling St, Williamsburg",
-      "w": "~8 min walk",
-      "why": "The nearest real roaster to the apartment. Norwegian-leaning, small, no fuss. Your default when the morning is short.",
-      "tags": [
-        "roaster",
-        "closest"
-      ],
-      "u": "https://www.oslocoffee.com/"
-    }
-  ],
-  "checkOut": [
-    {
-      "n": "Coffee Project NY (LIC)",
-      "a": "Long Island City (roastery / tasting lab)",
-      "w": "pair with Kotofit Saturdays",
-      "why": "Tasting flights and experimental processes are their whole thing — the most anaerobic-forward program in the city. Badminton mornings put you ten minutes away.",
-      "tags": [
-        "flights",
-        "experimental",
-        "pair: badminton"
-      ],
-      "u": "https://coffeeprojectny.com/"
-    },
-    {
-      "n": "La Cabra",
-      "a": "152 2nd Ave, East Village",
-      "w": "pair with Vital LES Thursdays",
-      "why": "Aarhus light-roast Nordic style, the closest thing here to the Tokyo omakase shops. Bakery is half the reason people go.",
-      "tags": [
-        "Nordic",
-        "light roast",
-        "pair: LES climb"
-      ],
-      "u": "https://lacabra.dk/"
-    },
-    {
-      "n": "Sweetleaf",
-      "a": "159 Freeman St, Greenpoint",
-      "w": "~25 min walk · 10 bike",
-      "why": "Greenpoint roaster with a real pour-over bar on Freeman. Worth one Friday when you want a longer walk.",
-      "tags": [
-        "roaster",
-        "pour-over"
-      ],
-      "u": "https://sweetleafcoffee.com/"
-    },
-    {
-      "n": "Loveless Coffee",
-      "a": "Bushwick (look up current address)",
-      "w": "pair with a Sey morning",
-      "why": "Small Brooklyn team roasting light-to-medium in a New York–Nordic style; keeps coming up next to Sey in current guides. Do both in one Bushwick morning.",
-      "tags": [
-        "light roast",
-        "verify"
-      ],
-      "u": "https://www.google.com/search?q=Loveless+Coffee+Bushwick"
-    },
-    {
-      "n": "Cadet Coffee",
-      "a": "Greenpoint (look up current address)",
-      "w": "walk",
-      "why": "New Greenpoint bar pouring Sey on espresso plus guest pour-overs from other roasters — a multi-roaster program a few blocks from home.",
-      "tags": [
-        "multi-roaster",
-        "new",
-        "verify"
-      ],
-      "u": "https://www.google.com/search?q=Cadet+Coffee+Greenpoint"
-    },
-    {
-      "n": "Devoción public classes",
-      "a": "69 Grand St, Williamsburg",
-      "w": "~15 min walk",
-      "why": "Their training lab runs pour-over classes and cuppings. One cupping during the sabbatical fits the competition-barista curiosity without becoming a project.",
-      "tags": [
-        "cupping",
-        "class"
-      ],
-      "u": "https://www.devocion.com/"
-    }
-  ]
-}
+[
+  {
+    "n": "Sey Coffee",
+    "a": "18 Grattan St, East Williamsburg",
+    "w": "~20 min walk · 8 bike",
+    "why": "The light-roast pole of Brooklyn: rotating single origins, a big quiet room with high ceilings, pour-over is the point. Closest match to your anaerobic / co-ferment taste; ask what's on that isn't on the menu.",
+    "tags": [
+      "light roast",
+      "pour-over",
+      "best for reading"
+    ],
+    "u": "https://www.seycoffee.com/"
+  },
+  {
+    "n": "Devoción",
+    "a": "69 Grand St, Williamsburg",
+    "w": "~15 min walk",
+    "why": "Colombian direct-trade, roasted on site, skylit room full of plants. Roast sits a touch darker than Sey; the space is the draw for a long read.",
+    "tags": [
+      "roaster",
+      "big room",
+      "reading"
+    ],
+    "u": "https://www.devocion.com/"
+  },
+  {
+    "n": "Café Grumpy",
+    "a": "193 Meserole Ave, Greenpoint",
+    "w": "~15 min walk",
+    "why": "The 2005 original beside its own roastery. Pour-over is still the best thing here; unfussy, plenty of seats, 7–6 daily.",
+    "tags": [
+      "roaster",
+      "pour-over",
+      "laptop-tolerant"
+    ],
+    "u": "https://cafegrumpy.com/"
+  },
+  {
+    "n": "Variety Coffee Roasters",
+    "a": "368 Grand St, Williamsburg · 142 Driggs Ave, Greenpoint",
+    "w": "~10 / ~12 min walk",
+    "why": "The reliable one: solid roast program, tables, outlets, Driggs is open until 9. Not a tasting destination; the place you go when you want to be sure you'll get a seat.",
+    "tags": [
+      "roaster",
+      "seats",
+      "open late"
+    ],
+    "u": "https://www.varietycoffeeroasters.com/"
+  },
+  {
+    "n": "Partners Coffee (ex-Toby's)",
+    "a": "125 N 6th St, Williamsburg",
+    "w": "~15 min walk",
+    "why": "Aussie-style roastery with a proper pour-over bar. Beautiful room, but crowded by 10 on weekends — go on your Tuesday.",
+    "tags": [
+      "roaster",
+      "pour-over",
+      "busy"
+    ],
+    "u": "https://www.partnerscoffee.com/"
+  },
+  {
+    "n": "Pueblo Querido",
+    "a": "195 Greenpoint Ave, Greenpoint",
+    "w": "~20 min walk",
+    "why": "Family-run Colombian roaster, roasts on site, Colombian pastries. Small and early — weekdays 6:30–3 — so it's a Friday-morning place, not an afternoon one.",
+    "tags": [
+      "roaster",
+      "early",
+      "small"
+    ],
+    "u": "https://www.pueblo-querido.com/"
+  },
+  {
+    "n": "Homecoming",
+    "a": "107 Franklin St, Greenpoint",
+    "w": "~20 min walk",
+    "why": "Flowers and coffee in one room; calm, good light, the kind of place a book actually gets read. Coffee is good rather than serious.",
+    "tags": [
+      "calm",
+      "reading"
+    ],
+    "u": "https://www.home-coming.com/"
+  },
+  {
+    "n": "Oslo Coffee Roasters",
+    "a": "133 Roebling St, Williamsburg",
+    "w": "~8 min walk",
+    "why": "The nearest real roaster to the apartment. Norwegian-leaning, small, no fuss. Your default when the morning is short.",
+    "tags": [
+      "roaster",
+      "closest"
+    ],
+    "u": "https://www.oslocoffee.com/"
+  },
+  {
+    "n": "Coffee Project NY (LIC)",
+    "a": "Long Island City (roastery / tasting lab)",
+    "w": "pair with Kotofit Saturdays",
+    "why": "Tasting flights and experimental processes are their whole thing — the most anaerobic-forward program in the city. Badminton mornings put you ten minutes away.",
+    "tags": [
+      "flights",
+      "experimental",
+      "pair: badminton"
+    ],
+    "u": "https://coffeeprojectny.com/"
+  },
+  {
+    "n": "La Cabra",
+    "a": "152 2nd Ave, East Village",
+    "w": "pair with Vital LES Thursdays",
+    "why": "Aarhus light-roast Nordic style, the closest thing here to the Tokyo omakase shops. Bakery is half the reason people go.",
+    "tags": [
+      "Nordic",
+      "light roast",
+      "pair: LES climb"
+    ],
+    "u": "https://lacabra.dk/"
+  },
+  {
+    "n": "Sweetleaf",
+    "a": "159 Freeman St, Greenpoint",
+    "w": "~25 min walk · 10 bike",
+    "why": "Greenpoint roaster with a real pour-over bar on Freeman. Worth one Friday when you want a longer walk.",
+    "tags": [
+      "roaster",
+      "pour-over"
+    ],
+    "u": "https://sweetleafcoffee.com/"
+  },
+  {
+    "n": "Loveless Coffee",
+    "a": "Bushwick (look up current address)",
+    "w": "pair with a Sey morning",
+    "why": "Small Brooklyn team roasting light-to-medium in a New York–Nordic style; keeps coming up next to Sey in current guides. Do both in one Bushwick morning.",
+    "tags": [
+      "light roast",
+      "verify"
+    ],
+    "u": "https://www.google.com/search?q=Loveless+Coffee+Bushwick"
+  },
+  {
+    "n": "Cadet Coffee",
+    "a": "Greenpoint (look up current address)",
+    "w": "walk",
+    "why": "New Greenpoint bar pouring Sey on espresso plus guest pour-overs from other roasters — a multi-roaster program a few blocks from home.",
+    "tags": [
+      "multi-roaster",
+      "new",
+      "verify"
+    ],
+    "u": "https://www.google.com/search?q=Cadet+Coffee+Greenpoint"
+  },
+  {
+    "n": "Devoción public classes",
+    "a": "69 Grand St, Williamsburg",
+    "w": "~15 min walk",
+    "why": "Their training lab runs pour-over classes and cuppings. One cupping during the sabbatical fits the competition-barista curiosity without becoming a project.",
+    "tags": [
+      "cupping",
+      "class"
+    ],
+    "u": "https://www.devocion.com/"
+  }
+]

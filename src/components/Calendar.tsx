@@ -34,7 +34,7 @@ export function Calendar(o: CalOpts) {
             const first = w.find(Boolean)!
             const n = weekNo(first)
             const bars = [
-              ...(o.showOnline ? coursesForWeek(n).map(c => ({ id: c.id, label: c.short, url: OS_URL, title: c.feeds, phase: false })) : []),
+              ...(o.showOnline ? coursesForWeek(n).map(c => ({ id: c.id, label: c.short, url: c.url, title: c.feeds, phase: false })) : []),
               ...phasesForWeek(n).filter(p => o.phaseProgs.includes(p.prog)).map(p => ({ id: p.id, label: p.short, url: undefined, title: p.text, phase: true })),
             ]
             return (
@@ -65,7 +65,7 @@ export function Calendar(o: CalOpts) {
                         ))}
                         {vids.map((v, i) => {
                           const c = courses.find(x => x.id === v.course)
-                          return <a key={i} className="chip online" style={{ '--c': `var(--${v.course})` } as CSSProperties} href={OS_URL} target="_blank" rel="noreferrer"><b>{c?.short}</b><span>{v.what}{v.pdf ? ` · ${v.pdf}` : ''}</span></a>
+                          return <a key={i} className="chip online" style={{ '--c': `var(--${v.course})` } as CSSProperties} href={c?.url ?? OS_URL} target="_blank" rel="noreferrer"><b>{c?.short}</b><span>{v.what}{v.pdf ? ` · ${v.pdf}` : ''}</span></a>
                         })}
                       </div>
                     </div>

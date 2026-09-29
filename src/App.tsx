@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react'
-import { programs, trips } from './data'
+import { programs } from './data'
 import { Calendar } from './components/Calendar'
 import { CheckIn } from './components/CheckIn'
-import { Today } from './components/Today'
+import { Today, clampDay } from './components/Today'
+import { WeekView } from './components/Week'
+import { LogView } from './components/LogView'
+import { Settings } from './components/Settings'
 import { Weekly } from './components/Weekly'
 import { Coffee } from './components/Coffee'
 import { ProgressStrip } from './components/Progress'
+import { today, weekNo } from './dates'
 import { AbsTables, Counts, OnlineTables, Template, Where } from './components/Tables'
-import { exportJson, importJson, update, useUser } from './storage'
-import { downloadIcs } from './ics'
-import { canNotify, enableReminders, startReminders } from './reminders'
-import { logOut, signIn, useSync } from './sync'
+import { useUser } from './storage'
+import { startReminders } from './reminders'
 import type { Program } from './types'
 
-type View = 'today' | 'full' | 'jazz' | 'abs' | 'coffee' | 'review'
+type View = 'today' | 'week' | 'full' | 'jazz' | 'abs' | 'coffee' | 'log' | 'review' | 'settings'
 type Sub = 'inperson' | 'online' | 'plan'
 const inPerson = programs.filter(p => p.kind === 'inperson')
 const plan = programs.filter(p => p.plan)
@@ -29,43 +31,34 @@ function useTheme() {
 }
 
 export default function App() {
-  const user = useUser()
   const [theme, cycle] = useTheme()
-  const sync = useSync()
   const userRef = useUser()
   useEffect(() => startReminders(() => userRef), [userRef])
   const [view, setView] = useState<View>('today')
+  const [day, setDay] = useState(clampDay(today()))
+  const [wk, setWk] = useState(Math.min(11, Math.max(1, weekNo(clampDay(today())))))
+  const openDay = (d: string) => { setDay(d); setView('today'); window.scrollTo(0, 0) }
   const [sub, setSub] = useState<Sub>('plan')
   const [open, setOpen] = useState<{ p: Program; d: string } | null>(null)
   const [groups, setGroups] = useState<Record<string, boolean>>({ online: true, inperson: true, abs: true, read: true, travel: true })
   const g = (k: string) => groups[k]
   const flip = (k: string) => setGroups({ ...groups, [k]: !groups[k] })
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
-  const tabs: [View, string][] = [['today', 'Today'], ['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs'], ['coffee', 'Coffee shops'], ['review', 'Review']]
+  const tabs: [View, string][] = [['today', 'Today'], ['week', 'Week'], ['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs'], ['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Settings']]
 
   return (
     <div className="wrap">
       <header>
-        <h1>Project ooo <small>· Jas fine tuning</small></h1>
+        <h1>PROJECT OOO <small>· jas fine tuning</small></h1>
         <p>Sabbatical, Oct 5 – Dec 23. Tap any session to check in.</p>
-        <div className="hdr-actions">
-          {sync.user
-            ? <button className="btn" onClick={logOut} title={sync.error}>{sync.state === 'synced' ? '☁ Synced' : sync.state === 'error' ? '⚠ Sync error' : '☁ Syncing…'} · Sign out</button>
-            : <button className="btn primary" onClick={signIn}>Sign in with Google to sync</button>}
-          {sync.error && !sync.user && <span className="sub">{sync.error}</span>}
-          <button className="btn" onClick={cycle}>Theme: {theme}</button>
-          <button className="btn" onClick={() => { const b = new Blob([exportJson()], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'ooo-backup.json'; a.click() }}>Export</button>
-          <button className="btn" onClick={() => downloadIcs(user)}>Calendar (.ics)</button>
-          {canNotify() && <button className="btn" onClick={async () => alert((await enableReminders()) ? 'Reminders on while the app is open.' : 'Notifications blocked.')}>Reminders</button>}
-          <label className="btn">Import<input type="file" accept="application/json" hidden onChange={async e => { const f = e.target.files?.[0]; if (f) importJson(await f.text()) }} /></label>
-        </div>
       </header>
 
       <div className="tabs" role="tablist">
         {tabs.map(([v, l]) => <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}>{l}</button>)}
       </div>
 
-      {view === 'today' && <Today onOpen={onOpen} />}
+      {view === 'today' && <Today date={day} setDate={setDay} onOpen={onOpen} onNav={setView} />}
+      {view === 'week' && <WeekView wk={wk} setWk={setWk} onOpen={onOpen} onOpenDay={openDay} onNav={setView} />}
 
       {view === 'full' && <>
         <div className="legend">
@@ -98,14 +91,9 @@ export default function App() {
 
       {view === 'coffee' && <Coffee />}
       {view === 'review' && <Weekly />}
+      {view === 'log' && <LogView onOpenDay={openDay} />}
+      {view === 'settings' && <Settings theme={theme} cycleTheme={cycle} />}
 
-      <footer className="foot">
-        Trips: {trips.map(t => t.name).join(' · ')}
-        {user.settings.tripsOff.length > 0 && <> · ignoring: {user.settings.tripsOff.join(', ')}</>}
-        <div className="row"><label className="inl">Taipei start <input type="date" value={user.settings.taipeiStart ?? ''} min="2026-12-01" max="2026-12-28" onChange={e => update(u => ({ ...u, settings: { ...u.settings, taipeiStart: e.target.value || undefined } }))} /></label></div>
-        <div className="row">{trips.map(t => <label key={t.name} className="inl"><input type="checkbox" checked={!user.settings.tripsOff.includes(t.name)}
-          onChange={e => update(u => ({ ...u, settings: { ...u.settings, tripsOff: e.target.checked ? u.settings.tripsOff.filter(x => x !== t.name) : [...u.settings.tripsOff, t.name] } }))} /> {t.name}</label>)}</div>
-      </footer>
       {open && <CheckIn p={open.p} date={open.d} onClose={() => setOpen(null)} />}
     </div>
   )

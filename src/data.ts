@@ -12,6 +12,6 @@ export const dayByDay = onlineJson.dayByDay as DayVideo[]
 export const phases = phasesJson.phases as Phase[]
 export const phasePrograms = phasesJson.programs as PhaseProgram[]
 export const trips = tripsJson as Trip[]
-export const shops = coffeeJson as { readHere: Shop[]; checkOut: Shop[] }
+export const shops = coffeeJson as Shop[]
 export const OS_URL = 'https://app.openstudiojazz.com/courses'
 export const byId = (id: string) => programs.find(p => p.id === id)

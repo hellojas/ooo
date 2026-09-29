@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { courses, dayByDay, phasePrograms, phases, skipCourses, OS_URL } from '../data'
+import { courses, dayByDay, phasePrograms, phases, skipCourses } from '../data'
 import { setTaipeiStart, sessionsAttendable, WEEK_TEMPLATE } from '../model'
 import { useUser } from '../storage'
 import type { Program } from '../types'
@@ -44,7 +44,7 @@ export function OnlineTables() {
       <section className="panel">
         <h2>Open Studio curriculum</h2>
         <div className="tblwrap"><table className="t"><thead><tr><th>Course</th><th>Weeks</th><th>Length</th><th>Why now</th></tr></thead><tbody>
-          {courses.map(c => <tr key={c.id}><td><span className="sw" style={sw(c.id)} /><a href={OS_URL} target="_blank" rel="noreferrer">{c.name}</a></td><td>{c.wk[0] === c.wk[1] ? c.wk[0] : `${c.wk[0]}–${c.wk[1]}`}</td><td>{c.hrs}</td><td>{c.feeds}</td></tr>)}
+          {courses.map(c => <tr key={c.id}><td><span className="sw" style={sw(c.id)} /><a href={c.url} target="_blank" rel="noreferrer">{c.name}</a></td><td>{c.wk[0] === c.wk[1] ? c.wk[0] : `${c.wk[0]}–${c.wk[1]}`}</td><td>{c.hrs}</td><td>{c.feeds}</td></tr>)}
           {skipCourses.map(s => <tr key={s.name} className="skip"><td>{s.name}</td><td>skip</td><td /><td>{s.why}</td></tr>)}
         </tbody></table></div>
       </section>

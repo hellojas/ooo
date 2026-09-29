@@ -1,4 +1,4 @@
-# Project ooo — Jas fine tuning
+# PROJECT OOO — jas fine tuning
 
 Personal calendar + tracker for the sabbatical (Oct 5 – Dec 23, 2026).
 Vite + React + TypeScript, installable as a PWA (Add to Home Screen on iPhone).
