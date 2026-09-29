@@ -10,7 +10,7 @@ import { WeekView } from './components/Week'
 import { LogView } from './components/LogView'
 import { Settings } from './components/Settings'
 import { Weekly } from './components/Weekly'
-import { Coffee } from './components/Coffee'
+import { Resources } from './components/Resources'
 import { ProgressStrip } from './components/Progress'
 import { today, weekNo } from './dates'
 import { AbsTables, Counts, OnlineTables, Template, Where } from './components/Tables'
@@ -18,7 +18,7 @@ import { useUser } from './storage'
 import { startReminders } from './reminders'
 import type { Program } from './types'
 
-type View = 'today' | 'week' | 'full' | 'jazz' | 'abs' | 'coffee' | 'log' | 'review' | 'settings'
+type View = 'today' | 'week' | 'full' | 'jazz' | 'abs' | 'resources' | 'log' | 'review' | 'settings'
 type Sub = 'inperson' | 'online' | 'plan'
 const inPerson = programs.filter(p => p.kind === 'inperson')
 const plan = programs.filter(p => p.plan)
@@ -50,11 +50,11 @@ export default function App() {
   const flip = (k: string) => setGroups({ ...groups, [k]: !groups[k] })
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
   const groups2: Record<'plan' | 'more', [View, string][]> = {
-    plan: [['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs']],
-    more: [['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']],
+    plan: [['full', 'Sabbatical Planning'], ['jazz', 'Music'], ['abs', 'Abs']],
+    more: [['resources', 'Resources'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']],
   }
   const inGroup = (k: 'plan' | 'more') => groups2[k].some(([v]) => v === view)
-  const tabs: [View, string][] = [['today', 'Today'], ['week', 'Week'], ['full', 'Full sabbatical'], ['jazz', 'Jazz'], ['abs', 'Abs'], ['coffee', 'Coffee'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']]
+  const tabs: [View, string][] = [['today', 'Today'], ['week', 'Week'], ['full', 'Sabbatical Planning'], ['jazz', 'Music'], ['abs', 'Abs'], ['resources', 'Resources'], ['log', 'Log'], ['review', 'Review'], ['settings', 'Configure']]
 
   return (
     <div className="wrap">
@@ -96,7 +96,7 @@ export default function App() {
             ? <Calendar showTravel={g('travel')} showOnline={g('online')} showVideos={false} phaseProgs={g('abs') ? ['c25k', 'pull', 'v8'] : []} visible={visible} onOpen={onOpen} />
             : <Agenda visible={visible} showTravel={g('travel')} onOpen={onOpen} />
         })()}
-        <Template title="Full sabbatical week" />
+        <Template title="Sabbatical week" />
       </>}
 
       {view === 'jazz' && <>
@@ -118,7 +118,7 @@ export default function App() {
         <Where pool={abs} /><Counts pool={abs} /><AbsTables />
       </>}
 
-      {view === 'coffee' && <Coffee />}
+      {view === 'resources' && <Resources />}
       {view === 'review' && <Weekly />}
       {view === 'log' && <LogView onOpenDay={openDay} />}
       {view === 'settings' && <Settings theme={theme} cycleTheme={cycle} />}
