@@ -5,6 +5,7 @@ import { DOW, addDays, key, parse, today, weekNo, weekStart } from '../dates'
 import { DAY_TYPES, dayTypeFor, stateOf, type DayType } from '../model'
 import { update, useUser } from '../storage'
 import { WeekProgress } from './WeekProgress'
+import { ProgressStrip } from './Progress'
 import { replan } from '../replan'
 import { standardOfWeek } from '../tasks'
 import { LogView } from './LogView'
@@ -31,6 +32,7 @@ export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
             <h2>Week {wk} review <small>{weekStart(wk)}</small></h2>
             <button className="btn" onClick={() => setWk(Math.min(10, wk + 1))}>›</button>
           </div>
+          <ProgressStrip kind="jazz" />
           <WeekProgress wk={wk} />
           <h3>Five minutes, three prompts</h3>
           <label className="block">What’s starting to sound like music?<textarea rows={2} value={w.improved ?? ''} onChange={e => set(wk, { improved: e.target.value })} /></label>

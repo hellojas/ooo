@@ -8,7 +8,7 @@ type Item = { t: string; n: string }
 const decode = (): { dates: Item[]; games: Item[] } => JSON.parse(decodeURIComponent(escape(atob(jawn.blob))))
 
 export function Jawn() {
-  const [ok, setOk] = useState(() => { try { return sessionStorage.getItem(KEY) === '1' } catch { return false } })
+  const [ok, setOk] = useState(false)   // always asks; nothing remembered
   const [pw, setPw] = useState(''), [bad, setBad] = useState(false)
   const [ideas, setIdeas] = useState<Item[]>(() => { try { return JSON.parse(localStorage.getItem(KEY + ':mine') ?? '[]') } catch { return [] } })
   const [t, setT] = useState(''), [n, setN] = useState('')
@@ -16,7 +16,7 @@ export function Jawn() {
     <section className="plain gate">
       <h2 className="serif">Jawn</h2>
       <p className="meta">The non-sabbatical list: date nights, games, things to do together this fall. Password-protected, lightly.</p>
-      <form onSubmit={e => { e.preventDefault(); if (pw === PW) { setOk(true); try { sessionStorage.setItem(KEY, '1') } catch { /* */ } } else setBad(true) }} className="row">
+      <form onSubmit={e => { e.preventDefault(); if (pw === PW) setOk(true); else setBad(true) }} className="row">
         <input type="password" placeholder="password" value={pw} onChange={e => { setPw(e.target.value); setBad(false) }} autoFocus />
         <button className="btn primary">Open</button>{bad && <span className="meta">nope</span>}
       </form>
