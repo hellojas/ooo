@@ -23,7 +23,7 @@ export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const touch = (name: string) => set(name, { last: today() })
   return (
     <>
-      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Library</button><button aria-pressed={tab === 'byear'} onClick={() => setTab('byear')}>By ear</button></div>
+      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Curriculum</button><button aria-pressed={tab === 'byear'} onClick={() => setTab('byear')}>By ear</button></div>
       {tab === 'byear' && <ByEar />}
       {tab === 'library' && <QueueView onOpenDay={onOpenDay} />}
       {tab === 'repertoire' && <>
