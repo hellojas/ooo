@@ -109,7 +109,7 @@ export default function App() {
         </>}
       </>}
 
-      {['resources', 'jawn', 'configure'].includes(view) && <div className="subnav mob">
+      {['play', 'configure'].includes(view) && <div className="subnav mob">
         {([['play', 'Play'], ['configure', 'Configure']] as [Top, string][]).map(([v, l]) => <button key={v} aria-pressed={view === v} onClick={() => setView(v)}>{l}</button>)}
       </div>}
       {view === 'practice' && <Practice />}
