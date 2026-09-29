@@ -572,3 +572,8 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
 .btn.primary.big.wide,.links .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px}
 .btn svg{width:18px;height:18px}
 .weekbar svg{color:var(--ink-3)}
+.daytag{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.daytag b{font-family:"Instrument Serif",serif;font-size:22px;font-weight:400}
+.daytag .meta{margin:0}
+.replan li{color:var(--ink-2);font-size:14px;padding:4px 0;border-top:1px solid var(--line)}
+@media (max-width:760px){.daytag{align-items:flex-start;text-align:left}}

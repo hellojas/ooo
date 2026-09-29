@@ -26,7 +26,7 @@ export interface UserData {
   tunes: Record<string, Tune>
   transcriptions: Transcription[]
   sessions: Session[]
-  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; improved?: string; standard?: string; byEar?: string; recordingUrl?: string; pullupMax?: number; milestones?: string[] }>
+  weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; improved?: string; standard?: string; byEar?: string; recordingUrl?: string; pullupMax?: number; replan?: string[]; milestones?: string[] }>
 }
 export interface Take { date: string; url: string; rubric?: Record<string, number> }
 export interface Tune { checks: string[]; recordingUrl?: string; last?: string; takes?: Take[]; rubric?: Record<string, number> }

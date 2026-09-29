@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DOW, END, MONTHS, key, parse, START, today as todayKey, weekNo, weekStart } from '../dates'
 import { courses } from '../data'
-import { DAY_TYPES, blocksForType, classWindows, coursesForWeek, dayTypeFor, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, type Block, type DayType } from '../model'
+import { DAY_TYPES, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, type Block } from '../model'
 import { span } from '../time'
 import { update, useUser } from '../storage'
 import { useSync } from '../sync'
@@ -50,10 +50,9 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const now = useNow()
   const real = todayKey(), wk = weekNo(date), isToday = date === real
   const trip = tripOn(date, user.settings.tripsOff)
-  const type = dayTypeFor(user, date, real)
+  const { type, why } = dayTypeWhy(user, date, real)
   const pr = user.practice[date] ?? {}
   const setPr = (v: object) => update(u => ({ ...u, practice: { ...u.practice, [date]: { ...u.practice[date], ...v } } }))
-  const setType = (t: DayType) => setPr({ dayType: t })
   const nowMin = isToday ? now.getHours() * 60 + now.getMinutes() : undefined
   const std = standardOfWeek(user, wk)
   const [sel, setSel] = useState<string | null>(null)
@@ -114,13 +113,15 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <div>
             <h2 className="serif big">{fmtLong(date)}</h2>
             <p className="meta">{wk >= 1 ? `Week ${wk}` : date < START ? 'Before the sabbatical' : 'After'} · New York{trip ? ` · ✈ ${trip.name}` : ''}{!isToday ? (date < real ? ' · past' : ' · preview') : ''}
-              {!pr.dayType && type === 'light' && ' · yesterday was a miss, so today is Light'}</p>
+</p>
           </div>
           <button className="btn icon" onClick={() => setDate(shiftDay(date, 1))} aria-label="Next day">›</button>
           {!isToday && <button className="btn small" onClick={() => setDate(clampDay(real))}>Today</button>}
         </div>
-        <div className="seg types compact" role="group" aria-label="Day type">
-          {DAY_TYPES.map(t => <button key={t.id} aria-pressed={type === t.id} title={t.hint} onClick={() => setType(t.id)}>{t.label}</button>)}
+        <div className="daytag" title={DAY_TYPES.find(t => t.id === type)?.hint}>
+          <span className="eyebrow">Today is a</span>
+          <b>{DAY_TYPES.find(t => t.id === type)?.label} day</b>
+          <span className="meta">{why}{pr.dayType && <> · <button className="linkbtn quiet" onClick={() => setPr({ dayType: undefined })}>let the app decide</button></>}</span>
         </div>
       </div>
 

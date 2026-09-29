@@ -5,6 +5,7 @@ import { DOW, addDays, key, parse, today, weekNo, weekStart } from '../dates'
 import { DAY_TYPES, MILESTONES, dayTypeFor, stateOf, type DayType } from '../model'
 import { update, useUser } from '../storage'
 import { WeekProgress } from './WeekProgress'
+import { replan } from '../replan'
 import { standardOfWeek } from '../tasks'
 import { LogView } from './LogView'
 
@@ -51,8 +52,14 @@ export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
           <label className="block">The takes <input type="url" placeholder="Drive / Voice Memos link" value={w.recordingUrl ?? ''} onChange={e => set(wk, { recordingUrl: e.target.value })} /></label>
         </section>
         <section className="plain">
+          <h3>Adjust next week from this one</h3>
+          <p className="meta">One button. It keeps the tune if it isn’t memorized, nudges the piano guideline up or down by how the week went, and eases next week if your body complained. You can still change anything below.</p>
+          <button className="btn primary" onClick={() => { const r = replan(user, wk); update(() => r.user) }}>Replan week {wk + 1}</button>
+          {w.replan && <ul className="checks replan">{w.replan.map((c, i) => <li key={i}>{c}</li>)}</ul>}
+        </section>
+        <section className="plain">
           <h3>Set up week {wk + 1}</h3>
-          <p className="meta">Pre-decide now so weekday-you doesn’t have to. “auto” means the app infers it: trips → Travel, a class that day → Class, weekends have no practice template.</p>
+          <p className="meta">The app decides each day: trips → Travel, weekends → Rest, a class that afternoon → Class, a missed day or a tired/sore body → Light, five days in a row → Light. Override a day here only if you already know something it doesn’t.</p>
           <div className="daytypes">{nextDays.map(d => { const t = dayTypeFor(user, d, today()); return (
             <div key={d} className="dt"><span>{DOW[parse(d).getDay()]} {parse(d).getDate()}</span>
               <select value={user.practice[d]?.dayType ?? ''} onChange={e => update(u => ({ ...u, practice: { ...u.practice, [d]: { ...u.practice[d], dayType: (e.target.value || undefined) as DayType | undefined } } }))}>

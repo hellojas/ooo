@@ -197,18 +197,29 @@ export function classWindows(user: UserData, k: string) {
     return { p: x.p, start: t[0], end: until, from: t[0] - b, to: until + b }
   }).filter(Boolean) as { p: Program; start: number; end: number; from: number; to: number }[]
 }
-/** Explicit choice, else inferred: trip → Travel; a class that day → Class; a missed yesterday → Light; else Full. */
-export function dayTypeFor(user: UserData, k: string, real: string): DayType {
+/** The app decides the day. Rules, in order: trip → Travel; weekend → Rest (Sunday keeps the review);
+ *  a class before 5:30 → Class; yesterday missed, or body said tired/sore → Light; 5 practice days in a row → Light; else Full.
+ *  A per-date override (set in Review's week setup) wins over all of it. */
+export function dayTypeWhy(user: UserData, k: string, real: string): { type: DayType; why: string } {
   const set = user.practice[k]?.dayType
-  if (set) return set
-  if (tripOn(k, user.settings.tripsOff)) return 'travel'
+  if (set) return { type: set, why: 'set by you' }
+  const trip = tripOn(k, user.settings.tripsOff)
+  if (trip) return { type: 'travel', why: trip.name }
   const dow = parse(k).getDay()
+  if (dow === 0) return { type: 'rest', why: 'Sunday · review + record' }
+  if (dow === 6) return { type: 'rest', why: 'Saturday' }
   const prev = key(addDays(parse(k), -1))
-  if (k <= real && prev >= START && !tripOn(prev, user.settings.tripsOff) && user.practice[prev]?.dayType !== 'rest'
-    && parse(prev).getDay() >= 1 && parse(prev).getDay() <= 5 && !hasMusic(user, prev)) return 'light'
-  if (dow >= 1 && dow <= 5 && classWindows(user, k).some(c => c.from < H(17, 30))) return 'class'
-  return 'full'
+  const pp = user.practice[prev]
+  if (k <= real && prev >= START && parse(prev).getDay() >= 1 && parse(prev).getDay() <= 5 && !tripOn(prev, user.settings.tripsOff) && pp?.dayType !== 'rest' && !hasMusic(user, prev)) return { type: 'light', why: 'yesterday was a miss — never miss twice' }
+  if (pp?.feel === 'tired' || pp?.feel === 'sore') return { type: 'light', why: `you logged “${pp.feel}” yesterday` }
+  let run = 0
+  for (let d = prev; d >= START && hasMusic(user, d) && run < 6; d = key(addDays(parse(d), -1))) run++
+  if (run >= 5) return { type: 'light', why: `${run} practice days in a row` }
+  if (classWindows(user, k).some(c => c.from < H(17, 30))) return { type: 'class', why: 'class this afternoon' }
+  return { type: 'full', why: 'a normal practice day' }
 }
+export const dayTypeFor = (user: UserData, k: string, real: string): DayType => dayTypeWhy(user, k, real).type
+
 /** Blocks for a day given its type, with per-block overrides (moved / shortened) applied. */
 export function blocksForType(k: string, type: DayType, startTime: string, user?: UserData): Block[] {
   const dow = parse(k).getDay()
