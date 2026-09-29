@@ -652,3 +652,76 @@ h2.serif.big{font-weight:500;letter-spacing:-0.02em}
 .subtabs button{display:inline-flex;align-items:center;gap:6px}.subtabs button svg{width:16px;height:16px}
 .mgrid.wk .mday{min-height:420px}
 @media(max-width:850px){.mgrid.wk{grid-template-columns:1fr}.mgrid.wk .mday{min-height:0;border-right:0}.mgrid.wk+.mdow{display:none}}
+
+/* ==== global modernize: every section is a card, every switcher is a pill row, every table/chip matches the calendar ==== */
+.plain,.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:0 0 14px;box-shadow:0 8px 30px rgba(0,0,0,.03)}
+.plain:last-child,.panel:last-child{border-bottom:1px solid var(--line)}
+.plain h2,.panel h2{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.plain h3,.panel h3{font-family:"Inter",sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:18px 0 8px}
+.plain h3:first-of-type{margin-top:10px}
+.plain h4{font-size:14px;font-weight:600;margin:10px 0 4px}
+/* pill switchers */
+.subtabs{border:0;background:transparent;padding:0;display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.subtabs button{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 14px;border-radius:999px;font-weight:500;font-size:13.5px}
+.subtabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.subtabs.small button{padding:6px 12px;font-size:13px}
+/* stat strips */
+.counts,.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:0 0 14px}
+.counts div,.strip div{flex-direction:column;align-items:flex-start;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.counts div b,.strip div b{font-size:12.5px;color:var(--ink-3);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.counts div span,.strip div span{font-size:20px;font-weight:700;color:var(--ink);white-space:normal}
+.strip .dim{background:transparent;border:0;justify-content:flex-end}.strip .dim span{font-size:12px;font-weight:400;color:var(--ink-3)}
+/* legacy month grids (Music / Fitness drill-downs) */
+.month{border-radius:18px;padding:0;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.04)}
+.month h2{font-family:"Inter",sans-serif;font-size:16px;font-weight:700;padding:14px 16px 10px;margin:0;border-bottom:1px solid var(--line)}
+.dow{margin:0;gap:0;background:var(--paper);border-bottom:1px solid var(--line)}.dow div{padding:8px 10px;font-weight:600;color:var(--ink-2)}
+.grid{gap:0}
+.day{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:8px;min-height:130px}
+.day:nth-child(7n){border-right:0}
+.day.pad{background:var(--paper)}
+.day.trip{background:repeating-linear-gradient(135deg,transparent 0 8px,color-mix(in srgb,#e06060 8%,transparent) 8px 16px)}
+.day .n{font-size:13px;font-weight:700}
+.wk{border-radius:0;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--paper)}
+.wk.online{background:var(--paper);border:0;border-bottom:1px solid var(--line)}
+.wk .pill{border-radius:999px;font-size:11px}
+.chip{border-radius:7px;font-size:11px;padding:5px 6px 5px 8px;border:1px solid rgba(0,0,0,.08);border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel))}
+.chip b{font-size:11.5px}.chip span{font-size:10.5px}
+.chip.life{background:color-mix(in srgb,var(--c) 10%,var(--panel));border-style:solid}
+.chip.online{background:color-mix(in srgb,var(--c) 8%,var(--panel));border-style:solid}
+.chip.maybe{opacity:.7;border-style:dashed;border-left-style:solid}
+/* tables */
+table.t{font-size:13.5px}
+table.t th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--line);padding:8px}
+table.t td{padding:10px 8px}
+/* shops + links */
+.shops{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.shop{border-radius:14px;padding:14px 16px}.shop h4{font-size:15px}.shop h4 a{text-decoration:none}.shop h4 a:hover{text-decoration:underline}
+.shop input{width:18px;height:18px;accent-color:var(--accent)}
+.linklist li{padding:10px 0}.linklist a{text-decoration:none}.linklist a:hover{text-decoration:underline}
+/* repertoire */
+.tune-row{border-top:1px solid var(--line);padding:14px 0}
+.tune-row.current{border-left:0;padding-left:14px;margin-left:0;background:color-mix(in srgb,var(--accent) 6%,var(--panel));border-radius:12px;border-top:0}
+.tune-head .serif{font-size:28px;font-weight:500}
+/* review + configure forms */
+.daynav{margin-bottom:10px}
+.daynav h2{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:26px}
+.daynav h2 small{font-family:"Inter",sans-serif;font-size:13px;color:var(--ink-3);margin-left:8px}
+label.block{max-width:760px}
+label.block>span,label{font-size:12.5px}
+input:not([type=checkbox]),select,textarea{background:var(--panel);border-radius:10px;padding:8px 10px}
+.checks li{padding:6px 0;border-top:1px solid var(--line)}.checks li:first-child{border-top:0}
+.checks label{font-size:14.5px}
+.checks input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.checks label .sub{margin-left:6px}
+.seg.small{gap:8px}.seg.small button{border-radius:999px;border:1px solid var(--line);padding:8px 14px;font-weight:500}
+.seg.small button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.setrow{padding:12px 0}
+.settings{max-width:820px}
+.daytypes .dt select{border-radius:8px}
+.hero-stat .num{font-family:"Inter",sans-serif}
+/* log view */
+.logrow{padding:10px 0}
+.focus-row{padding:10px 2px}
+.daynav{justify-content:flex-start;gap:8px}
+.daynav .btn{padding:4px 10px;font-size:16px;line-height:1.2}
+.settings{max-width:none}
