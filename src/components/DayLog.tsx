@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { DEFAULT_TARGETS } from '../model'
 import { update, useUser } from '../storage'
 import { useEffect, useRef } from 'react'
 import { weekNo } from '../dates'
@@ -24,8 +23,8 @@ export function DayLog({ date }: { date: string }) {
     <>
       <h3>Practice log</h3>
       <div className="blocks">
-        <Block label="Sax" target={user.settings.targets?.sax ?? DEFAULT_TARGETS.sax} mins={pr.sax ?? 0} onAdd={m => addMin('sax', m)} />
-        <Block label="Piano" target={user.settings.targets?.piano ?? DEFAULT_TARGETS.piano} mins={(pr.piano1 ?? 0) + (pr.piano2 ?? 0)} onAdd={m => addMin('piano1', m)} />
+        <Block label="Sax" mins={pr.sax ?? 0} onAdd={m => addMin('sax', m)} />
+        <Block label="Piano" mins={(pr.piano1 ?? 0) + (pr.piano2 ?? 0)} onAdd={m => addMin('piano1', m)} />
         <div className="block-card"><b>Transcribe</b><span>{pr.transcribe ?? 0} min</span><div className="row">
           <button className="btn" onClick={() => addMin('transcribe', 15)}>+15</button><button className="btn" onClick={() => addMin('transcribe', 30)}>+30</button><button className="btn" onClick={() => addMin('transcribe', -15)}>−15</button></div></div>
         <div className="block-card"><b>Arrangement</b><span>{pr.arrange ?? 0} min</span><div className="row">
@@ -75,7 +74,7 @@ export function DayLog({ date }: { date: string }) {
   )
 }
 
-function Block({ label, target, mins, onAdd }: { label: string; target: number; mins: number; onAdd: (m: number) => void }) {
+function Block({ label, mins, onAdd }: { label: string; mins: number; onAdd: (m: number) => void }) {
   const [start, setStart] = useState<number | null>(null)
   const [, tick] = useState(0)
   const t = useRef<number>()
@@ -84,8 +83,7 @@ function Block({ label, target, mins, onAdd }: { label: string; target: number; 
   return (
     <div className="block-card">
       <b>{label}</b>
-      <div className="bar"><i style={{ width: `${Math.min(100, (mins / target) * 100)}%` }} /></div>
-      <span>{mins} / {target} min</span>
+      <span>{mins} min today</span>
       <div className="row">
         {start
           ? <button className="btn primary" onClick={() => { onAdd(Math.max(1, Math.round(running / 60))); setStart(null) }}>Stop {Math.floor(running / 60)}:{String(running % 60).padStart(2, '0')}</button>

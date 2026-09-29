@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { programs, trips } from '../data'
 import { downloadIcs } from '../ics'
-import { DEFAULT_START, DEFAULT_TARGETS } from '../model'
+import { DEFAULT_START, WEEKLY_METRICS } from '../model'
 import { canNotify, enableReminders } from '../reminders'
 import { exportJson, importJson, update, useUser } from '../storage'
 import { logOut, signIn, useSync } from '../sync'
@@ -39,10 +39,11 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
         <h3>Day start</h3>
         <p className="sub">When your first block (sax) begins. Every practice block and the gym slot shifts to match. You can also change it for a single day on Today.</p>
         <label className="inl">Default start <input type="time" value={s.startTime ?? DEFAULT_START} onChange={e => set({ startTime: e.target.value || undefined })} /></label>
-        <h3>Daily targets (minutes)</h3>
+        <h3>Weekly guidelines</h3>
+        <p className="sub">Targets per week, not per day — hit them however the week allows. They scale down automatically for travel days.</p>
         <div className="row">
-          {(['sax', 'piano'] as const).map(k => <label key={k}>{k === 'sax' ? 'Sax' : 'Piano'}<input type="number" min={0} value={s.targets?.[k] ?? DEFAULT_TARGETS[k]}
-            onChange={e => set({ targets: { ...s.targets, [k]: Number(e.target.value) } })} /></label>)}
+          {WEEKLY_METRICS.map(m => <label key={m.id}>{m.label} ({m.unit === 'min' ? 'min' : '×'})<input type="number" min={0} value={s.targets?.[m.id] ?? m.def}
+            onChange={e => set({ targets: { ...s.targets, [m.id]: Number(e.target.value) } })} /></label>)}
         </div>
       </section>
 

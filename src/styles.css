@@ -203,3 +203,9 @@ a.chip.online{display:block}
 .setrow>div:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
 .setrow .row{margin:0}
 .panel h3:first-of-type{margin-top:8px}
+.wprog{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 14px;margin-bottom:12px}
+.wprog>.sub{grid-column:1/-1;margin:0}
+.wp-row{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid var(--line);border-radius:10px}
+.wp-top{display:flex;justify-content:space-between;font-size:13px}.wp-top span{color:var(--ink-2)}
+.wp-row small{color:var(--ink-2);font-size:12px}
+.wp-row.met .bar i{background:var(--badm)}

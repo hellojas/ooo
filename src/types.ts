@@ -13,7 +13,7 @@ export interface Shop { n: string; a: string; w: string; why: string; tags: stri
 
 export type Attendance = 'went' | 'missed' | 'skipped'
 export interface UserData {
-  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: { sax?: number; piano?: number }; startTime?: string }
+  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string }
   attendance: Record<string, Attendance>            // `${programId}|${date}`
   practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'transcribe'|'arrange', number>> & {
     notes?: string; startTime?: string; standardOfWeek?: string; songTranscribed?: string }>

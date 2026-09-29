@@ -4,6 +4,7 @@ import { coursesForWeek, DEFAULT_START, phasesForWeek, setTaipeiStart, startFor,
 import { update, useUser } from '../storage'
 import { DaySchedule } from './DaySchedule'
 import { DayLog } from './DayLog'
+import { WeekProgress } from './WeekProgress'
 import type { Program } from '../types'
 
 export const clampDay = (k: string) => (k < START ? START : k > END ? END : k)
@@ -33,6 +34,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
         <button className="btn" onClick={() => setDate(shiftDay(date, 1))} aria-label="Next day">›</button>
       </div>
       <p>{wk >= 1 ? `Week ${wk}` : 'Before week 1'}{trip ? ` · ✈ ${trip.name}` : ''}</p>
+      {wk >= 1 && <><h3>Week {wk} so far</h3><WeekProgress wk={wk} from={date} /></>}
       <h3>This week’s focus</h3>
       <WeekFocus wk={wk} onNav={onNav} />
       <div className="row" style={{ justifyContent: 'space-between' }}>

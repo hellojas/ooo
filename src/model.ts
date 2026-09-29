@@ -1,5 +1,5 @@
 import { programs, trips, phases, courses, dayByDay } from './data'
-import { key, parse, weekNo, START, END } from './dates'
+import { addDays, key, parse, weekNo, weekStart, START, END } from './dates'
 import type { Program, UserData } from './types'
 
 let taipeiStart: string | undefined
@@ -116,4 +116,43 @@ export const WEEK_TEMPLATE: { day: string; items: { t: string; c?: string; opt?:
   { day: 'Sun', items: [{ t: 'Quick run 10a (optional 2nd)', c: 'run2', opt: true }, { t: 'Weekly review · record' }, { t: 'Barry Harris 6–10p', c: 'bhSun' }] },
 ]
 
-export const DEFAULT_TARGETS = { sax: 30, piano: 210 }
+export type TargetId = 'sax' | 'piano' | 'transcribe' | 'arrange' | 'climbs' | 'runs' | 'pullups' | 'reading'
+/** Weekly guidelines (from docs/plan.md): minutes for practice, sessions for the rest. Editable in Configure. */
+export const WEEKLY_METRICS: { id: TargetId; label: string; unit: 'min' | 'sessions'; def: number; note: string }[] = [
+  { id: 'piano', label: 'Piano', unit: 'min', def: 1050, note: '≈3½ h × 5 days' },
+  { id: 'transcribe', label: 'Ear / transcription', unit: 'min', def: 300, note: 'part of the piano time' },
+  { id: 'arrange', label: 'Arrangement', unit: 'min', def: 150, note: 'part of the piano time' },
+  { id: 'sax', label: 'Sax', unit: 'min', def: 150, note: '15–30 min a day' },
+  { id: 'climbs', label: 'Climbing', unit: 'sessions', def: 3, note: '3 floor, 4 ceiling' },
+  { id: 'runs', label: 'Runs', unit: 'sessions', def: 2, note: 'Tue fixed, Sun optional' },
+  { id: 'pullups', label: 'Pull-up sessions', unit: 'sessions', def: 3, note: 'after runs + Friday climb' },
+  { id: 'reading', label: 'Coffee + reading', unit: 'sessions', def: 2, note: 'Tue + Fri mornings' },
+]
+
+export function weekTotals(user: UserData, wk: number): Record<TargetId, number> {
+  const inWk = (d: string) => weekNo(d) === wk
+  const t: Record<TargetId, number> = { sax: 0, piano: 0, transcribe: 0, arrange: 0, climbs: climbDays(user, wk), runs: 0, pullups: 0, reading: 0 }
+  for (const [d, p] of Object.entries(user.practice)) if (inWk(d)) {
+    t.sax += p.sax ?? 0; t.piano += (p.piano1 ?? 0) + (p.piano2 ?? 0); t.transcribe += p.transcribe ?? 0; t.arrange += p.arrange ?? 0
+  }
+  const runDays = new Set(Object.entries(user.running).filter(([d, r]) => inWk(d) && (r.minutes || r.c25kWeek)).map(([d]) => d))
+  const pullDays = new Set(Object.entries(user.pullups).filter(([d, r]) => inWk(d) && (r.sets?.length || r.maxTest)).map(([d]) => d))
+  for (const [a, v] of Object.entries(user.attendance)) {
+    const [id, d] = a.split('|'); if (v !== 'went' || !inWk(d)) continue
+    if (id === 'run' || id === 'run2') runDays.add(d)
+    if (id === 'coffee') t.reading++
+  }
+  t.runs = runDays.size; t.pullups = pullDays.size
+  return t
+}
+
+/** Days in week `wk` (Sun–Sat) inside the sabbatical, not lost to a trip; `from` limits to days on/after that date. */
+export function freeDays(user: UserData, wk: number, from?: string): number {
+  let n = 0
+  for (let i = 0; i < 7; i++) {
+    const k = key(addDays(parse(weekStart(wk)), i))
+    if (k < START || k > END || (from && k < from) || tripOn(k, user.settings.tripsOff)) continue
+    n++
+  }
+  return n
+}

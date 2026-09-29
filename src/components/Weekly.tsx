@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MILESTONES, phasesForWeek, progress } from '../model'
 import { update, useUser } from '../storage'
 import { today, weekNo, weekStart } from '../dates'
+import { WeekProgress } from './WeekProgress'
 
 export function Weekly() {
   const user = useUser()
@@ -18,6 +19,7 @@ export function Weekly() {
           <h2>Weekly review · week {wk} <small>({weekStart(wk)})</small></h2>
           <button className="btn" onClick={() => setWk(Math.min(10, wk + 1))}>›</button>
         </div>
+        <WeekProgress wk={wk} />
         <ul className="checks">
           <li><label><input type="checkbox" checked={!!w.recordedStandard} onChange={e => set({ recordedStandard: e.target.checked })} /> Standard memorized + recorded</label></li>
           <li><label><input type="checkbox" checked={!!w.recordedArrangement} onChange={e => set({ recordedArrangement: e.target.checked })} /> Arrangement recorded</label></li>
