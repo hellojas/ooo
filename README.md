@@ -25,7 +25,7 @@ Abs · Coffee shops · Weekly review + milestones · check-in sheet on every chi
 ## Next
 
 1. Deploy (GitHub Pages or Firebase Hosting) so it can be installed on the phone.
-2. Firebase Auth + Firestore behind `Storage` for sync between laptop and phone.
+2. ~~Firebase sync~~ done: Google sign-in + Firestore (`src/sync.ts`, `firestore.rules`). Deploy rules with `firebase deploy --only firestore:rules,hosting`.
 3. Reminders: iOS supports Web Push for home-screen PWAs (iOS 16.4+), which needs a small
    push backend (Firebase Cloud Messaging + a scheduled function). Alternative: a native
    iOS app with local notifications if we outgrow the PWA.

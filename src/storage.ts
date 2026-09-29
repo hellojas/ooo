@@ -23,8 +23,13 @@ let state: UserData = adapter.load()
 const subs = new Set<() => void>()
 
 export const setStorage = (s: Storage) => { adapter = s; state = s.load(); subs.forEach(f => f()) }
+let remoteSave: ((d: UserData) => void) | null = null
+export const setRemoteSaver = (f: ((d: UserData) => void) | null) => { remoteSave = f }
+export const getState = () => state
+/** Apply data that came from the server (does not echo back). */
+export const replace = (d: UserData) => { state = d; adapter.save(state); subs.forEach(f => f()) }
 export const update = (fn: (d: UserData) => UserData) => {
-  state = fn(state); adapter.save(state); subs.forEach(f => f())
+  state = fn(state); adapter.save(state); remoteSave?.(state); subs.forEach(f => f())
 }
 export const useUser = (): UserData =>
   useSyncExternalStore(f => { subs.add(f); return () => { subs.delete(f) } }, () => state)

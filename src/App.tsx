@@ -8,6 +8,7 @@ import { Coffee } from './components/Coffee'
 import { ProgressStrip } from './components/Progress'
 import { AbsTables, Counts, OnlineTables, Template, Where } from './components/Tables'
 import { exportJson, importJson, update, useUser } from './storage'
+import { logOut, signIn, useSync } from './sync'
 import type { Program } from './types'
 
 type View = 'today' | 'full' | 'jazz' | 'abs' | 'coffee' | 'review'
@@ -28,6 +29,7 @@ function useTheme() {
 export default function App() {
   const user = useUser()
   const [theme, cycle] = useTheme()
+  const sync = useSync()
   const [view, setView] = useState<View>('today')
   const [sub, setSub] = useState<Sub>('plan')
   const [open, setOpen] = useState<{ p: Program; d: string } | null>(null)
@@ -43,6 +45,10 @@ export default function App() {
         <h1>Project ooo <small>· Jas fine tuning</small></h1>
         <p>Sabbatical, Oct 5 – Dec 23. Tap any session to check in.</p>
         <div className="hdr-actions">
+          {sync.user
+            ? <button className="btn" onClick={logOut} title={sync.error}>{sync.state === 'synced' ? '☁ Synced' : sync.state === 'error' ? '⚠ Sync error' : '☁ Syncing…'} · Sign out</button>
+            : <button className="btn primary" onClick={signIn}>Sign in with Google to sync</button>}
+          {sync.error && !sync.user && <span className="sub">{sync.error}</span>}
           <button className="btn" onClick={cycle}>Theme: {theme}</button>
           <button className="btn" onClick={() => { const b = new Blob([exportJson()], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'ooo-backup.json'; a.click() }}>Export</button>
           <label className="btn">Import<input type="file" accept="application/json" hidden onChange={async e => { const f = e.target.files?.[0]; if (f) importJson(await f.text()) }} /></label>
