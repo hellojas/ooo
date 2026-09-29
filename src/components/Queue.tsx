@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { DOW, MONTHS, parse, today } from '../dates'
 import { MASTER, laneEta, laneProgress, project, type Lane } from '../queue'
 import { update, useUser } from '../storage'
+import { Ic } from './Icons'
 
 const LANES: [Lane, string][] = [['piano', 'Piano'], ['sax', 'Sax'], ['workout', 'Workout']]
 const fmt = (d?: string) => d ? `${DOW[parse(d).getDay()]} ${MONTHS[parse(d).getMonth()].slice(0, 3)} ${parse(d).getDate()}` : '—'
@@ -24,7 +25,7 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
       <div className="row between">
         <div><h2>Library</h2><p className="meta">The whole curriculum as a queue, in order. Dates are where each item lands right now; they move as you tick things off. Classes aren’t here — they’re fixed.</p></div>
       </div>
-      <div className="subtabs">{LANES.map(([id, l]) => <button key={id} aria-pressed={lane === id} onClick={() => setLane(id)}>{l} <small>{laneProgress(user, id).done}/{laneProgress(user, id).total}</small></button>)}</div>
+      <div className="subtabs">{LANES.map(([id, l]) => { const Icon = { piano: Ic.piano, sax: Ic.sax, workout: Ic.workout }[id]; return <button key={id} aria-pressed={lane === id} onClick={() => setLane(id)}><Icon /> {l} <small>{laneProgress(user, id).done}/{laneProgress(user, id).total}</small></button> })}</div>
       <p className="meta">{eta.pct}% ({eta.done}/{eta.total}) · {items.filter(x => skip.has(x.id)).length} skipped{eta.pace != null && eta.practiceDays > 0 ? ` · ${eta.pace}/day so far` : ''}{eta.eta ? ` · on track to finish ${fmt(eta.eta)}` : eta.short ? ` · ~${eta.short} past Dec 23 at this pace — fine, pull extra on good days` : ''}
         <label className="inl" style={{ marginLeft: 12 }}><input type="checkbox" checked={showDone} onChange={e => setShowDone(e.target.checked)} /> show done</label></p>
       <ol className="qlist">

@@ -18,6 +18,7 @@ export const clampDay = (k: string) => (k < START ? START : k > END ? END : k)
 export const shiftDay = (k: string, n: number) => { const d = parse(k); d.setDate(d.getDate() + n); return clampDay(key(d)) }
 export const fmtDate = (k: string) => { const d = parse(k); return `${DOW[d.getDay()]}, ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}` }
 const fmtLong = (k: string) => { const d = parse(k); return `${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}` }
+const LANE_ICON = { piano: Ic.piano, sax: Ic.sax, workout: Ic.workout }
 const LANES: { id: Lane; label: string; blocks: string[]; minutes: 'piano1' | 'sax' | null }[] = [
   { id: 'piano', label: 'piano', blocks: ['Piano block 1', 'Piano (light)', 'Piano block 2'], minutes: 'piano1' },
   { id: 'sax', label: 'sax', blocks: ['Sax'], minutes: 'sax' },
@@ -175,7 +176,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
         <section className="card main">
           <div className="lanes">
             <span className="eyebrow">On the</span>
-            {LANES.map(l => <button key={l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}>{l.label}{laneDone(l.id) ? ' ✓' : ''}</button>)}
+            {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label}{laneDone(l.id) ? ' ✓' : ''}</button> })}
             <span className="eyebrow">today</span>
           </div>
           {curTasks.length > 0 || curBlock ? <>
