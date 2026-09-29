@@ -67,8 +67,9 @@ const H = (h: number, m = 0) => h * 60 + m
 const BASE_START = '09:30' // the template below is written for a 9:30 start
 export const DEFAULT_START = '10:00'
 export const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + (m || 0) }
-/** Start time for a day: per-day override, else the default from Configure. */
-export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || user.settings.startTime || DEFAULT_START
+/** Start time for a day: that date's override, else the weekday default from Configure, else the global default. */
+export const defaultStartFor = (user: UserData, k: string) => user.settings.startTimes?.[parse(k).getDay()] || user.settings.startTime || DEFAULT_START
+export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || defaultStartFor(user, k)
 export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
   const dow = parse(k).getDay()
   const shift = toMin(startTime) - toMin(BASE_START)

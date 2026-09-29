@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { programs, trips } from '../data'
+import { DOW } from '../dates'
 import { downloadIcs } from '../ics'
 import { DEFAULT_START, WEEKLY_METRICS } from '../model'
 import { canNotify, enableReminders } from '../reminders'
@@ -36,9 +37,12 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
           onChange={e => set({ tripsOff: e.target.checked ? s.tripsOff.filter(x => x !== t.name) : [...s.tripsOff, t.name] })} />
           {t.name} <span className="sub">{t.name.startsWith('Taipei') ? `${s.taipeiStart ?? t.from} → ${t.to}` : `${t.from} → ${t.to}`}</span></label></li>)}</ul>
         <label className="inl">Taipei start <input type="date" value={s.taipeiStart ?? taipei.from} min="2026-12-01" max="2026-12-28" onChange={e => set({ taipeiStart: e.target.value || undefined })} /></label>
-        <h3>Day start</h3>
-        <p className="sub">When your first block (sax) begins. Every practice block and the gym slot shifts to match. You can also change it for a single day on Today.</p>
-        <label className="inl">Default start <input type="time" value={s.startTime ?? DEFAULT_START} onChange={e => set({ startTime: e.target.value || undefined })} /></label>
+        <h3>Day start by weekday</h3>
+        <p className="sub">When your first block (sax) begins on each weekday. Everything in the day shifts to match. You can still change a single day on Today.</p>
+        <div className="row">
+          {DOW.map((d, i) => <label key={d}>{d}<input type="time" value={s.startTimes?.[i] ?? s.startTime ?? DEFAULT_START}
+            onChange={e => set({ startTimes: { ...s.startTimes, [i]: e.target.value || DEFAULT_START } })} /></label>)}
+        </div>
         <h3>Weekly guidelines</h3>
         <p className="sub">Targets per week, not per day — hit them however the week allows. They scale down automatically for travel days.</p>
         <div className="row">
