@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { DOW, MONTHS, parse, today } from '../dates'
-import { MASTER, laneProgress, project, type Lane } from '../queue'
+import { MASTER, laneEta, laneProgress, project, type Lane } from '../queue'
 import { update, useUser } from '../storage'
 
 const LANES: [Lane, string][] = [['piano', 'Piano'], ['sax', 'Sax'], ['workout', 'Workout']]
@@ -15,6 +15,7 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const projected = useMemo(() => project(user, real), [user, real])
   const items = MASTER.filter(x => x.lane === lane)
   const prog = laneProgress(user, lane)
+  const eta = laneEta(user, lane, projected)
   const skip = new Set(user.queueSkip ?? [])
   const toggleSkip = (id: string) => update(u => ({ ...u, queueSkip: (u.queueSkip ?? []).includes(id) ? u.queueSkip.filter(x => x !== id) : [...(u.queueSkip ?? []), id] }))
   const markDone = (id: string, on: boolean) => update(u => { const qd = { ...u.queueDone }; if (on) qd[id] = real; else delete qd[id]; return { ...u, queueDone: qd } })
@@ -25,7 +26,7 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
         <div><h2>Library</h2><p className="meta">The whole curriculum as a queue, in order. Dates are where each item lands right now; they move as you tick things off. Classes aren’t here — they’re fixed.</p></div>
       </div>
       <div className="subtabs">{LANES.map(([id, l]) => <button key={id} aria-pressed={lane === id} onClick={() => setLane(id)}>{l} <small>{laneProgress(user, id).done}/{laneProgress(user, id).total}</small></button>)}</div>
-      <p className="meta">{prog.done} done · {items.length - prog.done - items.filter(x => skip.has(x.id)).length} to go · {items.filter(x => skip.has(x.id)).length} skipped{projected.remaining[lane] ? ` · ${projected.remaining[lane]} won’t fit before Dec 23 at this pace — fine, pull extra on good days` : ''}
+      <p className="meta">{eta.pct}% ({eta.done}/{eta.total}) · {items.filter(x => skip.has(x.id)).length} skipped{eta.pace != null && eta.practiceDays > 0 ? ` · ${eta.pace}/day so far` : ''}{eta.eta ? ` · on track to finish ${fmt(eta.eta)}` : eta.short ? ` · ~${eta.short} past Dec 23 at this pace — fine, pull extra on good days` : ''}
         <label className="inl" style={{ marginLeft: 12 }}><input type="checkbox" checked={showDone} onChange={e => setShowDone(e.target.checked)} /> show done</label></p>
       <ol className="qlist">
         {items.map((x, i) => {

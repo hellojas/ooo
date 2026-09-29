@@ -76,3 +76,25 @@ export const currentTune = (user: UserData) => MASTER.find(x => x.kind === 'stan
 export const nextIn = (user: UserData, lane: Lane, exclude: Set<string>) => MASTER.find(x => x.lane === lane && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && !exclude.has(x.id))
 /** Progress per lane. */
 export const laneProgress = (user: UserData, lane: Lane) => { const all = MASTER.filter(x => x.lane === lane); return { done: all.filter(x => user.queueDone?.[x.id]).length, total: all.length } }
+
+/** Progress + ETA for a lane: % done, items/day so far, and the date the projection finishes (or how far past Dec 23 it runs). */
+export function laneEta(user: UserData, lane: Lane, projected = project(user)) {
+  const all = MASTER.filter(x => x.lane === lane && !(user.queueSkip ?? []).includes(x.id))
+  const done = all.filter(x => user.queueDone?.[x.id]).length
+  const total = all.length
+  const pct = total ? Math.round((done / total) * 100) : 0
+  const last = all.filter(x => !user.queueDone?.[x.id]).map(x => projected.dateOf[x.id]).filter(Boolean).sort().pop()
+  const short = projected.remaining[lane]
+  // pace: items done per practice day since the sabbatical started (days with capacity in this lane)
+  const real = today()
+  let practiceDays = 0
+  for (let d = START; d < real && d <= END; d = key(addDays(parse(d), 1))) {
+    const type = dayTypeFor(user, d, real)
+    const blocks = blocksForType(d, type, startFor(user, d), user).map(b => b.title)
+    const cap = capacity(type, parse(d).getDay(), blocks)
+    const laneCap = lane === 'piano' ? cap.lesson + cap.technique + cap.standard : lane === 'sax' ? cap.sax : cap.climb + cap.run + cap.pull
+    if (laneCap > 0) practiceDays++
+  }
+  const pace = practiceDays ? Math.round((done / practiceDays) * 10) / 10 : null
+  return { done, total, pct, pace, practiceDays, eta: short ? null : last, short }
+}

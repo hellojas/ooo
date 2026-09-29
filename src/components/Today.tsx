@@ -6,7 +6,7 @@ import { span } from '../time'
 import { update, useUser } from '../storage'
 import { signIn, useSync } from '../sync'
 import { standardOfWeek, tasksFor, type Task } from '../tasks'
-import { byId, laneProgress, nextIn, project, type Lane } from '../queue'
+import { byId, laneEta, nextIn, project, type Lane } from '../queue'
 import { courseLinks, pdfLinks } from '../drive'
 import { DayLog } from './DayLog'
 import { WeekProgress } from './WeekProgress'
@@ -108,7 +108,8 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const lessonQ = lessonItem?.qid ? byId(lessonItem.qid) : undefined
   const course = courses.find(c => c.id === (lessonQ?.course ?? coursesForWeek(wk)[0]?.id))
   const chart = (lessonQ ? pdfLinks(lessonQ.pdf) : courseLinks(course?.id ?? ''))[0]
-  const prog = laneProgress(user, lane)
+  const eta = laneEta(user, lane, projected)
+  const etaText = `${eta.pct}% (${eta.done}/${eta.total})` + (eta.pace != null && eta.practiceDays > 0 ? ` · ${eta.pace}/day so far` : '') + (eta.eta ? ` · on track to finish ${fmtDate(eta.eta)}` : eta.short ? ` · ~${eta.short} past Dec 23 at this pace` : '')
   const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Workout'
   const focusLine = lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s')).map(t => t.label.split(': ')[1]).join('. ') : curTasks[0]?.label.replace(/ \(\d+\/\d+\)$/, '')
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
@@ -180,7 +181,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           {curTasks.length > 0 || curBlock ? <>
             <h1 className="tune">{title}</h1>
             {focusLine && <p className="lede serif">{focusLine}.</p>}
-            {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : <p className="meta">{prog.done} of {prog.total} in the {lane} queue done{projected.remaining[lane] ? ` · ${projected.remaining[lane]} won’t fit before Dec 23 at this pace` : ''}</p>}
+            {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : <p className="meta">{etaText}</p>}
             {laneDef.minutes && curBlock && (isActive
               ? <button className="btn primary big wide" onClick={() => setFinishing(lane)}><Ic.stop /> Finish session · {elapsed} min</button>
               : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: curBlock.title, since: Date.now() } })}><Ic.start /> Start {curBlock.end - curBlock.start}-min session</button>)}
@@ -205,7 +206,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           </> : <>
             <h1 className="tune">{type === 'rest' ? 'Rest' : type === 'travel' ? 'Away' : title}</h1>
             <p className="lede serif">{type === 'rest' ? 'Nothing planned. That’s part of the plan.' : 'Open to interpretation.'}</p>
-            <p className="meta">{prog.done} of {prog.total} in the {lane} queue done{projected.remaining[lane] ? ` · ${projected.remaining[lane]} won’t fit before Dec 23 at this pace` : ''}</p>
+            <p className="meta">{etaText}</p>
           </>}
         </section>
 
