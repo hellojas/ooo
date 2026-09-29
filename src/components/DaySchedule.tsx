@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { parse, weekNo } from '../dates'
 import { courses } from '../data'
-import { attKey, blocksOn, fmtMin, hintFor, itemsOn, setTaipeiStart, videosOn } from '../model'
+import { attKey, blocksOn, startFor, fmtMin, hintFor, itemsOn, setTaipeiStart, videosOn } from '../model'
 import { span } from '../ics'
 import { useUser } from '../storage'
 import { Chip } from './Chip'
@@ -15,7 +15,7 @@ export function DaySchedule({ date, onOpen }: { date: string; onOpen: (p: Progra
   setTaipeiStart(user.settings.taipeiStart)
   const wk = weekNo(date), dow = parse(date).getDay()
   const rows: Row[] = []
-  for (const b of blocksOn(date)) rows.push({ start: b.start, key: 'b' + b.title, node:
+  for (const b of blocksOn(date, startFor(user, date))) rows.push({ start: b.start, key: 'b' + b.title, node:
     <div className="blk"><b>{b.title}</b> <span>{fmtMin(b.start)}–{fmtMin(b.end)}</span>{b.note && <small>{b.note}</small>}</div> })
   for (const { p, missed, maybe } of itemsOn(date, user)) {
     const hint = missed ? undefined : hintFor(p.id, wk, dow)

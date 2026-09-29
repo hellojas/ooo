@@ -73,15 +73,21 @@ export function progress(user: UserData, wk: number) {
 export interface Block { start: number; end: number; title: string; note?: string }
 const H = (h: number, m = 0) => h * 60 + m
 /** The daily template from docs/plan.md (Mon–Fri practice blocks, weekend rows). */
-export function blocksOn(k: string): Block[] {
+export const DEFAULT_START = '09:30'
+export const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + (m || 0) }
+/** Start time for a day: per-day override, else the default from Configure. */
+export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || user.settings.startTime || DEFAULT_START
+export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
   const dow = parse(k).getDay()
-  if (dow >= 1 && dow <= 5) return [
+  const shift = toMin(startTime) - toMin(DEFAULT_START)
+  const moved = (bs: Block[]) => bs.map(b => ({ ...b, start: b.start + shift, end: b.end + shift }))
+  if (dow >= 1 && dow <= 5) return moved([
     { start: H(9, 30), end: H(10), title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' },
     { start: H(10), end: H(12), title: 'Piano block 1', note: 'technique/voicings (45) + standard of the week (75)' },
     { start: H(12), end: H(13, 30), title: 'Lunch + walk' },
     { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'ear/transcription (60) + arrangement (30)' },
     { start: H(15, 30), end: H(17, 30), title: 'Gym slot' },
-  ]
+  ])
   if (dow === 0) return [{ start: H(17), end: H(17, 30), title: 'Weekly review (30 min)', note: 'record the standard + arrangement, one fix, next song' }]
   return []
 }

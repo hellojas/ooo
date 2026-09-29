@@ -13,10 +13,10 @@ export interface Shop { n: string; a: string; w: string; why: string; tags: stri
 
 export type Attendance = 'went' | 'missed' | 'skipped'
 export interface UserData {
-  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: { sax?: number; piano?: number } }
+  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: { sax?: number; piano?: number }; startTime?: string }
   attendance: Record<string, Attendance>            // `${programId}|${date}`
   practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'transcribe'|'arrange', number>> & {
-    notes?: string; standardOfWeek?: string; songTranscribed?: string }>
+    notes?: string; startTime?: string; standardOfWeek?: string; songTranscribed?: string }>
   climbing: Record<string, { gym?: 'BK'|'LES'; sessionType?: 'volume'|'limit'; sends?: { grade: string; style: string }[]; fingerFeel?: number; notes?: string }>
   running: Record<string, { minutes?: number; c25kWeek?: number; felt?: string }>
   pullups: Record<string, { sets?: { reps: number; weightLb: number }[]; maxTest?: number }>

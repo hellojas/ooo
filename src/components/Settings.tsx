@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { programs, trips } from '../data'
 import { downloadIcs } from '../ics'
-import { DEFAULT_TARGETS } from '../model'
+import { DEFAULT_START, DEFAULT_TARGETS } from '../model'
 import { canNotify, enableReminders } from '../reminders'
 import { exportJson, importJson, update, useUser } from '../storage'
 import { logOut, signIn, useSync } from '../sync'
@@ -36,6 +36,9 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
           onChange={e => set({ tripsOff: e.target.checked ? s.tripsOff.filter(x => x !== t.name) : [...s.tripsOff, t.name] })} />
           {t.name} <span className="sub">{t.name.startsWith('Taipei') ? `${s.taipeiStart ?? t.from} → ${t.to}` : `${t.from} → ${t.to}`}</span></label></li>)}</ul>
         <label className="inl">Taipei start <input type="date" value={s.taipeiStart ?? taipei.from} min="2026-12-01" max="2026-12-28" onChange={e => set({ taipeiStart: e.target.value || undefined })} /></label>
+        <h3>Day start</h3>
+        <p className="sub">When your first block (sax) begins. Every practice block and the gym slot shifts to match. You can also change it for a single day on Today.</p>
+        <label className="inl">Default start <input type="time" value={s.startTime ?? DEFAULT_START} onChange={e => set({ startTime: e.target.value || undefined })} /></label>
         <h3>Daily targets (minutes)</h3>
         <div className="row">
           {(['sax', 'piano'] as const).map(k => <label key={k}>{k === 'sax' ? 'Sax' : 'Piano'}<input type="number" min={0} value={s.targets?.[k] ?? DEFAULT_TARGETS[k]}
