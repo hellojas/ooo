@@ -3,7 +3,6 @@ import { programs } from '../data'
 import { stateOf, type PState } from '../model'
 import { update, useUser } from '../storage'
 import { Calendar } from './Calendar'
-import { ProgressStrip } from './Progress'
 import { AbsTables, Counts, OnlineTables, Where } from './Tables'
 import type { Program } from '../types'
 
@@ -32,7 +31,6 @@ export function Programs({ onOpen }: { onOpen: (p: Program, d: string) => void }
               </tr>) })}
           </tbody></table></div>
         </section>
-        <ProgressStrip kind="jazz" />
         <div className="subtabs small">{([['inperson', 'All classes'], ['plan', 'Planned + registered']] as const).map(([k, l]) => <button key={k} aria-pressed={sub === k} onClick={() => setSub(k)}>{l}</button>)}</div>
         <Calendar showTravel showOnline={false} showVideos={false} phaseProgs={[]} showConsidering={sub === 'inperson'} visible={p => p.kind === 'inperson' && (sub === 'inperson' || stateOf(p, user) !== 'considering')} onOpen={onOpen} />
         {sub === 'plan' && <><Where pool={classes.filter(p => stateOf(p, user) !== 'considering')} /><Counts pool={classes.filter(p => stateOf(p, user) !== 'considering')} /></>}
@@ -42,7 +40,6 @@ export function Programs({ onOpen }: { onOpen: (p: Program, d: string) => void }
         <OnlineTables />
       </>}
       {tab === 'fitness' && <>
-        <ProgressStrip kind="abs" />
         <Calendar showTravel showOnline={false} showVideos={false} phaseProgs={['c25k', 'pull', 'v8']} visible={p => p.kind === 'abs'} onOpen={onOpen} />
         <Where pool={programs.filter(p => p.kind === 'abs')} /><Counts pool={programs.filter(p => p.kind === 'abs')} /><AbsTables />
       </>}

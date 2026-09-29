@@ -2,7 +2,7 @@ import { useState } from 'react'
 import plan from '../../data/block-tasks.json'
 import { programs } from '../data'
 import { DOW, addDays, key, parse, today, weekNo, weekStart } from '../dates'
-import { DAY_TYPES, MILESTONES, dayTypeFor, stateOf, type DayType } from '../model'
+import { DAY_TYPES, dayTypeFor, stateOf, type DayType } from '../model'
 import { update, useUser } from '../storage'
 import { WeekProgress } from './WeekProgress'
 import { replan } from '../replan'
@@ -65,14 +65,6 @@ export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
               <select value={user.practice[d]?.dayType ?? ''} onChange={e => update(u => ({ ...u, practice: { ...u.practice, [d]: { ...u.practice[d], dayType: (e.target.value || undefined) as DayType | undefined } } }))}>
                 <option value="">auto ({t})</option>{DAY_TYPES.map(x => <option key={x.id} value={x.id}>{x.label}</option>)}</select></div>) })}</div>
           <p className="meta">Classes next week: {programs.filter(p => p.kind === 'inperson' && stateOf(p, user) !== 'considering' && p.dates.some(d => nextDays.includes(d))).map(p => `${p.short}${stateOf(p, user) === 'registered' ? '' : ' (planned)'}`).join(' · ') || 'none'} — change in Configure.</p>
-        </section>
-        <section className="plain">
-          <h3>Milestones</h3>
-          {MILESTONES.map(m => (
-            <div key={m.wk}><h4>Week {m.wk}</h4>
-              <ul className="checks">{m.items.map(it => { const id = `${m.wk}:${it}`; const on = user.weekly[0]?.milestones?.includes(id)
-                return <li key={id}><label><input type="checkbox" checked={!!on} onChange={e => update(u => { const cur = u.weekly[0]?.milestones ?? []; return { ...u, weekly: { ...u.weekly, 0: { ...u.weekly[0], milestones: e.target.checked ? [...cur, id] : cur.filter(x => x !== id) } } } })} /> {it}</label></li> })}</ul>
-            </div>))}
         </section>
       </>}
     </>
