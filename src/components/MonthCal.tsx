@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { DOW, MONTHS, END, START, parse, today, weekNo } from '../dates'
+import { DOW, MONTHS, END, START, addDays, key, parse, today, weekNo, weekStart } from '../dates'
 import { attKey, itemsOn, monthWeeks, setTaipeiStart, stateOf, tripOn } from '../model'
 import { project, type QItem } from '../queue'
 import { update, useUser } from '../storage'
@@ -14,12 +14,13 @@ const CATS: { id: Cat; color: string }[] = [
 interface Ev { id: string; cat: Cat; time?: string; title: string; desc?: string; optional?: boolean; done?: boolean; missed?: boolean; q?: QItem; p?: Program; url?: string }
 
 /** Month grid in the reference style. Fixed dates are classes and trips; everything else is the queue, projected. */
-export function MonthCal({ onOpenDay }: { onOpenDay: (d: string) => void }) {
+export function MonthCal({ onOpenDay, view = 'month' }: { onOpenDay: (d: string) => void; view?: 'month' | 'week' }) {
   const user = useUser()
   setTaipeiStart(user.settings.taipeiStart)
   const real = today()
   const [m, setM] = useState(() => { const d = parse(real < START ? START : real > END ? END : real); return d.getMonth() })
   const [mode, setMode] = useState<'month' | 'agenda'>('month')
+  const [wk, setWk] = useState(() => Math.min(11, Math.max(1, weekNo(real < START ? START : real))))
   const [showOpt, setShowOpt] = useState(true)
   const [hide, setHide] = useState<Set<Cat>>(new Set())
   const [sel, setSel] = useState<{ ev: Ev; date: string } | null>(null)
@@ -43,10 +44,10 @@ export function MonthCal({ onOpenDay }: { onOpenDay: (d: string) => void }) {
     return out.filter(e => !hide.has(e.cat) && (showOpt || !e.optional))
   }
 
-  const weeks = monthWeeks(2026, m)
+  const weeks = view === 'week' ? [Array.from({ length: 7 }, (_, i) => key(addDays(parse(weekStart(wk)), i)))] : monthWeeks(2026, m)
   const monthKey = `2026-${String(m + 1).padStart(2, '0')}`
-  const inMonth = (d: string) => d.startsWith(monthKey)
   const days = weeks.flat().filter(Boolean) as string[]
+  const inMonth = (d: string) => view === 'week' ? days.includes(d) : d.startsWith(monthKey)
   const stats = useMemo(() => {
     const evs = days.flatMap(d => eventsOn(d).map(e => ({ e, d })))
     const piano = Object.entries(user.practice).filter(([d]) => inMonth(d)).reduce((n, [, p]) => n + (p.piano1 ?? 0) + (p.piano2 ?? 0), 0)
@@ -64,13 +65,19 @@ export function MonthCal({ onOpenDay }: { onOpenDay: (d: string) => void }) {
     <div className="mcal">
       <div className="mcal-head">
         <div>
-          <h2>Fall 2026 sabbatical</h2>
+          <h2>{view === 'week' ? `Week ${wk}` : 'Fall 2026 sabbatical'}</h2>
           <p className="sub">{START} → {END} · classes are fixed; piano, sax and workouts are the queue, projected from today. Tick things off and the rest moves.</p>
           <div className="toolbar">
-            <button className="pill" onClick={() => setM(Math.max(9, m - 1))} disabled={m <= 9}>←</button>
-            <button className="pill active">{MONTHS[m]} 2026</button>
-            <button className="pill" onClick={() => setM(Math.min(11, m + 1))} disabled={m >= 11}>→</button>
-            <button className={'pill' + (mode === 'month' ? ' active' : '')} onClick={() => setMode('month')}>Month</button>
+            {view === 'week' ? <>
+              <button className="pill" onClick={() => setWk(Math.max(1, wk - 1))} disabled={wk <= 1}>←</button>
+              <button className="pill active">Week {wk} · {weekStart(wk)}</button>
+              <button className="pill" onClick={() => setWk(Math.min(11, wk + 1))} disabled={wk >= 11}>→</button>
+            </> : <>
+              <button className="pill" onClick={() => setM(Math.max(9, m - 1))} disabled={m <= 9}>←</button>
+              <button className="pill active">{MONTHS[m]} 2026</button>
+              <button className="pill" onClick={() => setM(Math.min(11, m + 1))} disabled={m >= 11}>→</button>
+            </>}
+            <button className={'pill' + (mode === 'month' ? ' active' : '')} onClick={() => setMode('month')}>{view === 'week' ? 'Grid' : 'Month'}</button>
             <button className={'pill' + (mode === 'agenda' ? ' active' : '')} onClick={() => setMode('agenda')}>Agenda</button>
             <label className="pill"><input type="checkbox" checked={showOpt} onChange={e => setShowOpt(e.target.checked)} /> optional</label>
           </div>
@@ -78,7 +85,7 @@ export function MonthCal({ onOpenDay }: { onOpenDay: (d: string) => void }) {
         </div>
       </div>
       <div className="stats">
-        <div className="stat"><span>Events this month</span><b className="num">{stats.events}</b></div>
+        <div className="stat"><span>Events this {view}</span><b className="num">{stats.events}</b></div>
         <div className="stat"><span>Piano hours logged</span><b className="num">{stats.piano}</b></div>
         <div className="stat"><span>Climbing sessions</span><b className="num">{stats.climbs}</b></div>
         <div className="stat"><span>Live jazz sessions</span><b className="num">{stats.jazz}</b></div>
@@ -87,13 +94,13 @@ export function MonthCal({ onOpenDay }: { onOpenDay: (d: string) => void }) {
       {mode === 'month' ? (
         <section className="mgrid-wrap">
           <div className="mdow">{DOW.map(d => <div key={d}>{d}</div>)}</div>
-          <div className="mgrid">
+          <div className={'mgrid' + (view === 'week' ? ' wk' : '')}>
             {weeks.flat().map((d, i) => {
               if (!d) return <div key={i} className="mday other" />
-              const evs = eventsOn(d), wk = weekNo(d)
+              const evs = eventsOn(d)
               return (
                 <div key={d} className={'mday' + (d === real ? ' today' : '') + (tripOn(d, user.settings.tripsOff) ? ' trip' : '')}>
-                  <div className="mdate" onClick={() => onOpenDay(d)}><span>{parse(d).getDate()}</span>{parse(d).getDay() === 0 && wk >= 1 && wk <= 11 && <small>wk {wk}</small>}</div>
+                  <div className="mdate" onClick={() => onOpenDay(d)}><span>{view === 'week' ? `${DOW[parse(d).getDay()]} ${parse(d).getDate()}` : parse(d).getDate()}</span>{view !== 'week' && parse(d).getDay() === 0 && weekNo(d) >= 1 && weekNo(d) <= 11 && <small>wk {weekNo(d)}</small>}</div>
                   {evs.map(e => <div key={e.id} className={['mev', e.cat, e.optional ? 'optional' : '', e.done ? 'done' : '', e.missed ? 'missed' : ''].join(' ')} style={{ borderLeftColor: CATS.find(c => c.id === e.cat)!.color }} onClick={() => setSel({ ev: e, date: d })}>
                     {e.time && <span className="time">{e.time.split('–')[0]}</span>}{e.title}</div>)}
                 </div>

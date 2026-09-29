@@ -650,3 +650,5 @@ h2.serif.big{font-weight:500;letter-spacing:-0.02em}
 .lanebtn svg{width:20px;height:20px;opacity:.75}
 .lanebtn.on svg{opacity:1;color:var(--accent)}
 .subtabs button{display:inline-flex;align-items:center;gap:6px}.subtabs button svg{width:16px;height:16px}
+.mgrid.wk .mday{min-height:420px}
+@media(max-width:850px){.mgrid.wk{grid-template-columns:1fr}.mgrid.wk .mday{min-height:0;border-right:0}.mgrid.wk+.mdow{display:none}}

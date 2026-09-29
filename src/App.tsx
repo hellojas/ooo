@@ -1,32 +1,23 @@
 import { useEffect, useState } from 'react'
-import { programs } from './data'
-import { Calendar } from './components/Calendar'
 import { CheckIn } from './components/CheckIn'
 import { Today, clampDay } from './components/Today'
-import { WeekView } from './components/Week'
 import { MonthCal } from './components/MonthCal'
 import { Weekly } from './components/Weekly'
 import { Practice } from './components/Practice'
 import { Resources } from './components/Resources'
 import { Settings } from './components/Settings'
-import { ProgressStrip } from './components/Progress'
-import { AbsTables, Counts, OnlineTables, Where } from './components/Tables'
 import { startReminders } from './reminders'
 import { useUser } from './storage'
-import { today, weekNo } from './dates'
+import { today } from './dates'
 import { Ic } from './components/Icons'
 import type { Program } from './types'
 
 // Top-level: Today · Calendar · Practice · Review · Configure. Calendar holds Week / Month / Agenda / Music / Fitness.
 type Top = 'today' | 'calendar' | 'practice' | 'review' | 'play' | 'configure'
-type CalSub = 'week' | 'month' | 'agenda' | 'music' | 'fitness'
-type Sub = 'inperson' | 'online' | 'plan'
+type CalSub = 'week' | 'month'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
 const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, review: Ic.review, play: Ic.play, configure: Ic.gear }
-const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week'], ['music', 'Music'], ['fitness', 'Fitness']]
-const inPerson = programs.filter(p => p.kind === 'inperson')
-const plan = programs.filter(p => p.plan)
-const abs = programs.filter(p => p.kind === 'abs')
+const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week']]
 
 const readHash = (): [Top, CalSub] => {
   const [a, b] = location.hash.replace(/^#\/?/, '').split('/')
@@ -52,12 +43,10 @@ export default function App() {
   useEffect(() => { const f = () => setRoute(readHash()); addEventListener('hashchange', f); return () => removeEventListener('hashchange', f) }, [])
   useEffect(() => startReminders(() => user), [user])
   const [day, setDay] = useState(clampDay(today()))
-  const [wk, setWk] = useState(Math.min(11, Math.max(1, weekNo(clampDay(today())))))
-  const [sub, setSub] = useState<Sub>('plan')
   const [open, setOpen] = useState<{ p: Program; d: string } | null>(null)
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
   const openDay = (d: string) => { setDay(d); setView('today'); window.scrollTo(0, 0) }
-  const toFitness = () => setView('calendar', 'fitness')
+  const toFitness = () => setView('practice')
 
   return (
     <div className="wrap">
@@ -73,30 +62,14 @@ export default function App() {
 
       {view === 'calendar' && <>
         <div className="subtabs">{CALS.map(([c, l]) => <button key={c} aria-pressed={cal === c} onClick={() => setView('calendar', c)}>{l}</button>)}</div>
-        {cal === 'week' && <WeekView wk={wk} setWk={setWk} onOpen={onOpen} onOpenDay={openDay} onNav={toFitness} />}
-        {(cal === 'month' || cal === 'agenda') && <MonthCal onOpenDay={openDay} />}
-        {cal === 'music' && <>
-          <ProgressStrip kind="jazz" />
-          <div className="subtabs small">
-            {([['inperson', 'Classes'], ['online', 'Open Studio'], ['plan', 'My plan']] as [Sub, string][]).map(([s, l]) => <button key={s} aria-pressed={sub === s} onClick={() => setSub(s)}>{l}</button>)}
-          </div>
-          <Calendar showTravel showOnline={sub !== 'inperson'} showVideos={sub === 'online'} phaseProgs={[]} showConsidering={sub === 'inperson'}
-            visible={p => p.kind === 'inperson' && (sub === 'inperson' || (sub === 'plan' && !!p.plan))} onOpen={onOpen} />
-          {sub === 'inperson' && <Where pool={inPerson} />}
-          {sub === 'online' && <OnlineTables />}
-          {sub === 'plan' && <><Where pool={plan} /><Counts pool={plan} /></>}
-        </>}
-        {cal === 'fitness' && <>
-          <ProgressStrip kind="abs" />
-          <Calendar showTravel showOnline={false} showVideos={false} phaseProgs={['c25k', 'pull', 'v8']} visible={p => p.kind === 'abs'} onOpen={onOpen} />
-          <Where pool={abs} /><Counts pool={abs} /><AbsTables />
-        </>}
+        {cal === 'week' && <MonthCal view="week" onOpenDay={openDay} />}
+        {cal === 'month' && <MonthCal onOpenDay={openDay} />}
       </>}
 
       {['play', 'configure'].includes(view) && <div className="subnav mob">
         {([['play', 'Play'], ['configure', 'Configure']] as [Top, string][]).map(([v, l]) => <button key={v} aria-pressed={view === v} onClick={() => setView(v)}>{l}</button>)}
       </div>}
-      {view === 'practice' && <Practice onOpenDay={openDay} />}
+      {view === 'practice' && <Practice onOpenDay={openDay} onOpen={onOpen} />}
       {view === 'review' && <Weekly onOpenDay={openDay} />}
       {view === 'play' && <Resources />}
       {view === 'configure' && <Settings theme={theme} cycleTheme={cycle} />}

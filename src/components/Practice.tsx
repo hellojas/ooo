@@ -4,14 +4,20 @@ import { today, weekNo } from '../dates'
 import { update, useUser } from '../storage'
 import { standardOfWeek } from '../tasks'
 import { QueueView } from './Queue'
+import { Calendar } from './Calendar'
+import { ProgressStrip } from './Progress'
+import { AbsTables, Counts, OnlineTables, Where } from './Tables'
+import { programs } from '../data'
+import type { Program } from '../types'
 
 const STAGES = ['Melody from memory', 'Shells through the form', 'Comping at a recorded tempo', 'Solo without losing the form', 'Complete performance recorded']
 const RUBRIC = ['Time', 'Form', 'Voicings']
 const daysAgo = (d?: string) => d ? Math.floor((Date.now() - new Date(d + 'T12:00').getTime()) / 864e5) : undefined
 
 /** Repertoire pipeline for the 10 standards + the transcription log. */
-export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
-  const [tab, setTab] = useState<'repertoire' | 'library'>('repertoire')
+export function Practice({ onOpenDay, onOpen }: { onOpenDay: (d: string) => void; onOpen: (p: Program, d: string) => void }) {
+  const [tab, setTab] = useState<'library' | 'repertoire' | 'music' | 'fitness'>('library')
+  const [sub, setSub] = useState<'inperson' | 'online' | 'plan'>('plan')
   const user = useUser()
   const wk = Math.max(1, weekNo(today()))
   const current = standardOfWeek(user, wk)
@@ -22,7 +28,20 @@ export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const touch = (name: string) => set(name, { last: today() })
   return (
     <>
-      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Library</button></div>
+      <div className="subtabs"><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Library</button><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'music'} onClick={() => setTab('music')}>Music</button><button aria-pressed={tab === 'fitness'} onClick={() => setTab('fitness')}>Fitness</button></div>
+      {tab === 'music' && <>
+        <ProgressStrip kind="jazz" />
+        <div className="subtabs small">{([['inperson', 'Classes'], ['online', 'Open Studio'], ['plan', 'My plan']] as const).map(([k, l]) => <button key={k} aria-pressed={sub === k} onClick={() => setSub(k)}>{l}</button>)}</div>
+        <Calendar showTravel showOnline={sub !== 'inperson'} showVideos={sub === 'online'} phaseProgs={[]} showConsidering={sub === 'inperson'} visible={p => p.kind === 'inperson' && (sub === 'inperson' || (sub === 'plan' && !!p.plan))} onOpen={onOpen} />
+        {sub === 'inperson' && <Where pool={programs.filter(p => p.kind === 'inperson')} />}
+        {sub === 'online' && <OnlineTables />}
+        {sub === 'plan' && <><Where pool={programs.filter(p => p.plan)} /><Counts pool={programs.filter(p => p.plan)} /></>}
+      </>}
+      {tab === 'fitness' && <>
+        <ProgressStrip kind="abs" />
+        <Calendar showTravel showOnline={false} showVideos={false} phaseProgs={['c25k', 'pull', 'v8']} visible={p => p.kind === 'abs'} onOpen={onOpen} />
+        <Where pool={programs.filter(p => p.kind === 'abs')} /><Counts pool={programs.filter(p => p.kind === 'abs')} /><AbsTables />
+      </>}
       {tab === 'library' && <QueueView onOpenDay={onOpenDay} />}
       {tab === 'repertoire' && <>
       <section className="plain">
