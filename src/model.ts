@@ -188,14 +188,25 @@ export const DAY_TYPES: { id: DayType; label: string; hint: string }[] = [
   { id: 'rest', label: 'Rest', hint: 'Nothing planned. That’s part of the plan.' },
 ]
 const travelMin = (go?: string) => Number(go?.match(/~?(\d+)\s*min/)?.[1] ?? 0)
-/** Classes you're attending on a date (planned/registered, not lost to travel), with your attendance window (+ travel). */
+/** Rough minutes between venues (both directions). Falls back to 30 min for an unknown pair, home→venue uses the program's own estimate. */
+const BETWEEN: Record<string, number> = {
+  'bhTue|kaufTue': 20, 'bhTue|kaufThu': 20, 'nyjwStd|nyjwImp': 0, 'nyjwStd|nyjwSong': 0, 'bhSun|kaufTue': 5, 'nyjwStd|bhSun': 25, 'climbLES|kaufThu': 30, 'badm|nyjwStd': 35,
+}
+const between = (a: string, b: string) => BETWEEN[`${a}|${b}`] ?? BETWEEN[`${b}|${a}`] ?? 30
+/** Classes you're attending on a date (planned/registered, not lost to travel), with your attendance window and travel time.
+ *  Travel is chained: from home for the first, from the previous venue for the rest. */
 export function classWindows(user: UserData, k: string) {
-  return itemsOn(k, user).filter(x => x.p.kind === 'inperson' && !x.missed).map(x => {
+  const list = itemsOn(k, user).filter(x => x.p.kind === 'inperson' && !x.missed).map(x => {
     const t = span(x.p.time); if (!t) return null
     const until = user.practice[k]?.until?.[x.p.id] ?? t[1]
-    const b = travelMin(x.p.go)
-    return { p: x.p, start: t[0], end: until, from: t[0] - b, to: until + b }
-  }).filter(Boolean) as { p: Program; start: number; end: number; from: number; to: number }[]
+    return { p: x.p, start: t[0], end: until }
+  }).filter(Boolean) as { p: Program; start: number; end: number }[]
+  list.sort((a, b) => a.start - b.start)
+  return list.map((c, i) => {
+    const prev = list[i - 1]
+    const lead = prev && prev.end <= c.start ? between(prev.p.id, c.p.id) : travelMin(c.p.go)
+    return { ...c, from: c.start - lead, to: c.end + travelMin(c.p.go), fromWhere: prev && prev.end <= c.start ? prev.p.short : 'home', lead }
+  })
 }
 /** The app decides the day. Rules, in order: trip → Travel; weekend → Rest (Sunday keeps the review);
  *  a class before 5:30 → Class; yesterday missed, or body said tired/sore → Light; 5 practice days in a row → Light; else Full.
@@ -210,8 +221,8 @@ export function dayTypeWhy(user: UserData, k: string, real: string): { type: Day
   if (dow === 6) return { type: 'rest', why: 'Saturday' }
   const prev = key(addDays(parse(k), -1))
   const pp = user.practice[prev]
-  if (k <= real && prev >= START && parse(prev).getDay() >= 1 && parse(prev).getDay() <= 5 && !tripOn(prev, user.settings.tripsOff) && pp?.dayType !== 'rest' && !hasMusic(user, prev)) return { type: 'light', why: 'yesterday was a miss — never miss twice' }
-  if (pp?.feel === 'tired' || pp?.feel === 'sore') return { type: 'light', why: `you logged “${pp.feel}” yesterday` }
+  // Only an explicit “skipped today” counts as a miss. An empty log is unknown, not a miss.
+  if (k <= real && prev >= START && pp?.skippedDay && !tripOn(prev, user.settings.tripsOff)) return { type: 'light', why: 'you skipped yesterday — never miss twice' }
   let run = 0
   for (let d = prev; d >= START && hasMusic(user, d) && run < 6; d = key(addDays(parse(d), -1))) run++
   if (run >= 5) return { type: 'light', why: `${run} practice days in a row` }

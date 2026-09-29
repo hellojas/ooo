@@ -725,3 +725,21 @@ input:not([type=checkbox]),select,textarea{background:var(--panel);border-radius
 .daynav{justify-content:flex-start;gap:8px}
 .daynav .btn{padding:4px 10px;font-size:16px;line-height:1.2}
 .settings{max-width:none}
+
+/* ==== outcomes, quiet days, laptop-first ==== */
+.steps li{align-items:flex-start}
+.steps .lbl{flex:1}
+.outcomes{display:flex;gap:10px;font-size:12px;opacity:0;transition:opacity .15s}
+.steps li:hover .outcomes,.steps li.on .outcomes{opacity:1}
+.outcomes .linkbtn.sel{color:var(--accent);font-weight:600}
+.steps li.rep .n{background:var(--warm);border-color:var(--warm)}
+.steps li.on.rep{text-decoration:none;color:var(--ink-2)}
+select.inline{border:0;background:transparent;color:var(--accent);font:inherit;font-size:12.5px;padding:0;cursor:pointer}
+.quietday{padding:8px 0 20px}
+.tune.small{font-size:clamp(32px,4vw,44px)}
+.prirow{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
+.prirow select{padding:4px 8px;font-size:13px}
+.bottombar,.logbar,.subnav{display:none!important}
+.wrap{max-width:1280px;padding:20px 28px 48px}
+@media (max-width:760px){.tabs.desk{display:flex;overflow-x:auto}.masthead .tabs,.masthead .gear{display:flex}.wrap{padding-bottom:48px}}
+@media (max-width:1000px){.grid3{grid-template-columns:1fr 1fr}.grid3 .main{grid-column:1/-1;order:-1}}

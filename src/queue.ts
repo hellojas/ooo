@@ -29,6 +29,10 @@ export function masterQueue(): QItem[] {
   return q
 }
 export const MASTER = masterQueue()
+export type Priority = 'core' | 'optional' | 'parked'
+/** Default priority by kind: tune steps, technique and sax/workout sessions are core; extra lessons are optional. Override per kind or per id in Configure. */
+export const DEFAULT_PRIORITY: Record<Kind, Priority> = { lesson: 'optional', technique: 'core', standard: 'core', sax: 'core', climb: 'core', run: 'core', pull: 'core' }
+export const priorityOf = (user: UserData, x: QItem): Priority => user.queuePriority?.[x.id] ?? user.queuePriority?.[x.kind] ?? DEFAULT_PRIORITY[x.kind]
 const INDEX = new Map(MASTER.map(x => [x.id, x]))
 export const byId = (id: string) => INDEX.get(id)
 
@@ -53,7 +57,11 @@ export function project(user: UserData, from = today()): { alloc: Allocation; da
   const alloc: Allocation = {}, dateOf: Record<string, string> = {}
   for (const [id, d] of Object.entries(done)) { const it = byId(id); if (it) { (alloc[d] ??= []).push(it); dateOf[id] = d } }
   const lanes: Record<Kind, QItem[]> = { lesson: [], technique: [], standard: [], sax: [], climb: [], run: [], pull: [] }
-  for (const x of MASTER) if (!done[x.id] && !skip.has(x.id)) lanes[x.kind].push(x)
+  // core first within each kind, then optional; parked never schedules
+  const repeat = new Set(user.queueRepeat ?? [])
+  // repeats come back first (they were practiced, but want another pass), then core, then optional
+  for (const x of MASTER) if (repeat.has(x.id) && !skip.has(x.id) && (!done[x.id] || done[x.id] < from)) lanes[x.kind].push(x)
+  for (const pr of ['core', 'optional'] as Priority[]) for (const x of MASTER) if (!done[x.id] && !skip.has(x.id) && !repeat.has(x.id) && priorityOf(user, x) === pr) lanes[x.kind].push(x)
   const start = from < START ? START : from
   for (let d = start; d <= END; d = key(addDays(parse(d), 1))) {
     if (!Object.values(lanes).some(l => l.length)) break
@@ -77,14 +85,14 @@ export const nextIn = (user: UserData, lane: Lane, exclude: Set<string>) => MAST
 /** Progress per lane. */
 export const laneProgress = (user: UserData, lane: Lane) => { const all = MASTER.filter(x => x.lane === lane); return { done: all.filter(x => user.queueDone?.[x.id]).length, total: all.length } }
 
-/** Progress + ETA for a lane: % done, items/day so far, and the date the projection finishes (or how far past Dec 23 it runs). */
+/** Progress + ETA for a lane's CORE items: % done, items/day so far, and the date the projection finishes (or how far past Dec 23 it runs). */
 export function laneEta(user: UserData, lane: Lane, projected = project(user)) {
-  const all = MASTER.filter(x => x.lane === lane && !(user.queueSkip ?? []).includes(x.id))
+  const all = MASTER.filter(x => x.lane === lane && !(user.queueSkip ?? []).includes(x.id) && priorityOf(user, x) === 'core')
   const done = all.filter(x => user.queueDone?.[x.id]).length
   const total = all.length
   const pct = total ? Math.round((done / total) * 100) : 0
   const last = all.filter(x => !user.queueDone?.[x.id]).map(x => projected.dateOf[x.id]).filter(Boolean).sort().pop()
-  const short = projected.remaining[lane]
+  const short = MASTER.filter(x => x.lane === lane && priorityOf(user, x) === 'core' && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && !projected.dateOf[x.id]).length
   // pace: items done per practice day since the sabbatical started (days with capacity in this lane)
   const real = today()
   let practiceDays = 0

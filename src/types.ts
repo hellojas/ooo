@@ -17,7 +17,7 @@ export interface UserData {
   settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string; startTimes?: Record<number, string>; lightMinutes?: number; confirmed?: string[]; programState?: Record<string, 'considering' | 'planned' | 'registered'> }
   attendance: Record<string, Attendance>            // `${programId}|${date}`
   practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'transcribe'|'arrange', number>> & {
-    notes?: string; tasks?: string[]; dayType?: 'full' | 'class' | 'light' | 'travel' | 'rest'; pulled?: string[]; blocks?: Record<string, { start?: number; end?: number }>; until?: Record<string, number>; active?: { block: string; since: number }; skipped?: string[]; startTime?: string; feel?: 'fresh' | 'ok' | 'tired' | 'sore'; standardOfWeek?: string; songTranscribed?: string }>
+    notes?: string; tasks?: string[]; dayType?: 'full' | 'class' | 'light' | 'travel' | 'rest'; pulled?: string[]; blocks?: Record<string, { start?: number; end?: number }>; skippedDay?: boolean; until?: Record<string, number>; active?: { block: string; since: number }; skipped?: string[]; startTime?: string; feel?: 'fresh' | 'ok' | 'tired' | 'sore'; standardOfWeek?: string; songTranscribed?: string }>
   climbing: Record<string, { done?: boolean; gym?: 'BK'|'LES'; sessionType?: 'volume'|'limit'; sends?: { grade: string; style: string }[]; fingerFeel?: number; notes?: string }>
   running: Record<string, { done?: boolean; minutes?: number; c25kWeek?: number; felt?: string }>
   pullups: Record<string, { reps?: number; sets?: { reps: number; weightLb: number }[]; maxTest?: number }>
@@ -27,7 +27,10 @@ export interface UserData {
   transcriptions: Transcription[]
   sessions: Session[]
   queueDone: Record<string, string>   // queue item id → date done
-  queueSkip: string[]
+  queueSkip: string[]                 // parked items
+  queueRepeat: string[]               // practiced, but wants another pass before it counts as done
+  queuePriority: Record<string, 'core' | 'optional' | 'parked'>   // per kind or per id; default per kind
+  staged?: { week: number; changes: { key: string; label: string; from: string; to: string; apply: boolean }[] }
   weekly: Record<string, { recordedStandard?: boolean; recordedArrangement?: boolean; review?: string; improved?: string; standard?: string; byEar?: string; recordingUrl?: string; pullupMax?: number; replan?: string[]; milestones?: string[] }>
 }
 export interface Take { date: string; url: string; rubric?: Record<string, number> }
@@ -36,5 +39,5 @@ export interface Session { date: string; block: string; minutes: number; tune?: 
 export interface Transcription { id: string; date: string; song: string; note: string }
 export const emptyUser = (): UserData => ({
   settings: { hiddenItems: [], tripsOff: [] },
-  attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, customShops: [], tunes: {}, transcriptions: [], sessions: [], queueDone: {}, queueSkip: [], weekly: {},
+  attendance: {}, practice: {}, climbing: {}, running: {}, pullups: {}, coffee: {}, customShops: [], tunes: {}, transcriptions: [], sessions: [], queueDone: {}, queueSkip: [], queueRepeat: [], queuePriority: {}, weekly: {},
 })
