@@ -85,7 +85,6 @@ export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
   if (dow >= 1 && dow <= 5) return moved([
     { start: H(9, 30), end: H(10), title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' },
     { start: H(10), end: H(12), title: 'Piano block 1', note: 'technique/voicings (45) + standard of the week (75)' },
-    { start: H(12), end: H(13, 30), title: 'Lunch + walk' },
     { start: H(13, 30), end: H(15), title: 'Piano block 2', note: 'Ear training lives here: transcription (60) + arrangement (30)' },
     { start: H(15, 30), end: H(17, 30), title: 'Gym slot' },
   ])
