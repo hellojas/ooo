@@ -15,6 +15,7 @@ import { downloadIcs } from './ics'
 import { startReminders } from './reminders'
 import { useUser } from './storage'
 import { today, weekNo } from './dates'
+import { Ic } from './components/Icons'
 import type { Program } from './types'
 
 // Top-level: Today · Calendar · Practice · Review · Configure. Calendar holds Week / Month / Agenda / Music / Fitness.
@@ -22,6 +23,7 @@ type Top = 'today' | 'calendar' | 'practice' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month' | 'agenda' | 'music' | 'fitness'
 type Sub = 'inperson' | 'online' | 'plan'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Practice'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
+const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, review: Ic.review, play: Ic.play, configure: Ic.gear }
 const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month'], ['agenda', 'Agenda'], ['music', 'Music'], ['fitness', 'Fitness']]
 const inPerson = programs.filter(p => p.kind === 'inperson')
 const plan = programs.filter(p => p.plan)
@@ -65,11 +67,11 @@ export default function App() {
   return (
     <div className="wrap">
       <header className="masthead">
-        <h1>PROJECT OOO <span className="tagline">Oct 5 – Dec 23</span></h1>
+        <h1><Ic.logo className="logo" />PROJECT OOO <span className="tagline">jas fine tuning</span></h1>
         <nav className="tabs desk" role="tablist">
-          {TOPS.filter(([v]) => v !== 'configure').map(([v, l]) => <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}>{l}</button>)}
+          {TOPS.filter(([v]) => v !== 'configure').map(([v, l]) => { const Icon = ICON[v]; return <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}><Icon />{l}</button> })}
         </nav>
-        <button className="gear desk" aria-pressed={view === 'configure'} aria-label="Configure" title="Configure" onClick={() => setView('configure')}>⚙</button>
+        <button className="gear desk" aria-pressed={view === 'configure'} aria-label="Configure" title="Configure" onClick={() => setView('configure')}><Ic.gear /></button>
       </header>
 
       {view === 'today' && <Today date={day} setDate={setDay} onOpen={onOpen} onNav={toFitness} />}
@@ -118,11 +120,11 @@ export default function App() {
       {view === 'configure' && <Settings theme={theme} cycleTheme={cycle} />}
 
       <nav className="bottombar mob" aria-label="Main">
-        <button aria-current={view === 'today'} onClick={() => setView('today')}>Today</button>
-        <button aria-current={view === 'calendar'} onClick={() => setView('calendar')}>Calendar</button>
-        <button aria-current={view === 'practice'} onClick={() => setView('practice')}>Practice</button>
-        <button aria-current={view === 'review'} onClick={() => setView('review')}>Review</button>
-        <button aria-current={['play', 'configure'].includes(view)} onClick={() => setView('play')}>More</button>
+        <button aria-current={view === 'today'} onClick={() => setView('today')}><Ic.today />Today</button>
+        <button aria-current={view === 'calendar'} onClick={() => setView('calendar')}><Ic.calendar />Calendar</button>
+        <button aria-current={view === 'practice'} onClick={() => setView('practice')}><Ic.practice />Practice</button>
+        <button aria-current={view === 'review'} onClick={() => setView('review')}><Ic.review />Review</button>
+        <button aria-current={['play', 'configure'].includes(view)} onClick={() => setView('play')}><Ic.play />More</button>
       </nav>
       {open && <CheckIn p={open.p} date={open.d} onClose={() => setOpen(null)} />}
     </div>

@@ -12,6 +12,7 @@ import { DayLog } from './DayLog'
 import { WeekProgress } from './WeekProgress'
 import { Chip } from './Chip'
 import { attKey } from '../model'
+import { Ic } from './Icons'
 import type { Program } from '../types'
 
 export const clampDay = (k: string) => (k < START ? START : k > END ? END : k)
@@ -162,11 +163,11 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
             {focusLine && <p className="lede serif">{focusLine}.</p>}
             {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : null}
             {isActive
-              ? <button className="btn primary big wide" onClick={() => setFinishing(selBlock)}>■ Finish session · {elapsed} min</button>
-              : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: selBlock.title, since: Date.now() } })}>▶ Start {selBlock.end - selBlock.start}-min session</button>}
+              ? <button className="btn primary big wide" onClick={() => setFinishing(selBlock)}><Ic.stop /> Finish session · {elapsed} min</button>
+              : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: selBlock.title, since: Date.now() } })}><Ic.start /> Start {selBlock.end - selBlock.start}-min session</button>}
             <div className="grid2 links">
-              {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer">Open lesson{lesson ? ` · ${lesson.what.slice(0, 28)}${lesson.what.length > 28 ? '…' : ''}` : ''}</a>}
-              {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer">Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer">Find chart</a>}
+              {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer"><Ic.lesson /> Open lesson{lesson ? ` · ${lesson.what.slice(0, 28)}${lesson.what.length > 28 ? '…' : ''}` : ''}</a>}
+              {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
             </div>
             <p className="eyebrow steps-h">Session steps</p>
             <ol className="steps">
@@ -194,7 +195,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
       </div>
 
       <footer className="weekbar">
-        <span>This week</span>
+        <Ic.review /><span>This week</span>
         <b className="num">{h}h {m ? m + 'm' : ''} piano</b>
         <span className="num">{tot.climbs} climb{tot.climbs === 1 ? '' : 's'}</span>
         <span className="num">{saxSessions} sax session{saxSessions === 1 ? '' : 's'}</span>

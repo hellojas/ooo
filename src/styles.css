@@ -563,3 +563,12 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
 .quiet-stats li,.wp-top{font-family:"Inter",sans-serif}
 .hero-stat .num{font-weight:600}
 .num{font-variant-numeric:tabular-nums}
+.masthead h1{display:flex;align-items:center;gap:10px}
+.logo{color:var(--accent)}
+.tabs button,.bottombar button{display:inline-flex;align-items:center;gap:8px}
+.tabs button svg{width:17px;height:17px;opacity:.8}
+.bottombar button{flex-direction:column;gap:3px}.bottombar button svg{width:20px;height:20px}
+.gear svg{width:20px;height:20px}
+.btn.primary.big.wide,.links .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn svg{width:18px;height:18px}
+.weekbar svg{color:var(--ink-3)}
