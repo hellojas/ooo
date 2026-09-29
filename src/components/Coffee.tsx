@@ -32,7 +32,7 @@ export function Coffee() {
   const all = [...user.customShops.map(s => ({ s, custom: true })), ...shops.map(s => ({ s, custom: false }))]
   return (
     <section className="panel">
-      <h2>Coffee shops</h2><p>Read here Tuesday and Friday mornings; rotate through the list.</p>
+      <h2>Coffee shops</h2><p>From your Google Maps “Nyc” list, nearest first. Read here Tuesday and Friday mornings.</p>
       <div className="row">
         <label>Add a shop<input placeholder="Name" value={n} onChange={e => setN(e.target.value)} /></label>
         <label>Address<input value={a} onChange={e => setA(e.target.value)} /></label>
