@@ -1101,3 +1101,35 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .adjust.training summary{white-space:nowrap}
 .adjust.training summary .meta{white-space:normal;text-align:right;line-height:1.3}
 .grid3{grid-template-columns:minmax(300px,.95fr) minmax(0,1.5fr) minmax(250px,.75fr)}
+
+/* ==== phone: single column, scrollable tabs (laptop stays the primary target) ==== */
+@media (max-width:760px){
+  .wrap{padding:10px 14px 40px}
+  .masthead{flex-wrap:wrap;gap:6px 12px}
+  .masthead h1{padding-bottom:8px;flex:1}
+  .masthead .gear{order:2}
+  .masthead .tabs{display:flex!important;order:3;width:100%;overflow-x:auto;gap:0;margin:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .masthead .tabs::-webkit-scrollbar{display:none}
+  .masthead .tabs button{padding:8px 12px 10px;white-space:nowrap}
+  .datebar{flex-direction:column;align-items:stretch;gap:10px}
+  h2.serif.big{font-size:28px}
+  .hdr-actions{flex-wrap:wrap}
+  .grid3{grid-template-columns:1fr!important;gap:12px}
+  .grid3 .main{order:-1;grid-column:auto}
+  .card,.plain,.panel{padding:16px}
+  .main .tune{font-size:34px}
+  .main .lede.serif{font-size:18px}
+  .steps.rows li{padding:10px 12px}
+  .steps.rows .lbl{padding-right:40px}
+  .steps.rows .outcomes{position:static;transform:none;opacity:1;padding:4px 0 0;width:100%;grid-column:2}
+  .steps.rows li{flex-wrap:wrap}
+  .weekbar{gap:8px 14px}.weekbar .wknav{margin-left:0;width:100%;justify-content:space-between}
+  .links{grid-template-columns:1fr}
+  .adjust.training summary .meta{white-space:nowrap}
+  .bigstep .btn{width:48px}
+  .wb-grid{grid-template-columns:1fr}
+  .wb-side{grid-template-columns:1fr}
+  .wb-side .wb-visit,.wb-side .btn.primary.wide,.wb-side>p.meta:last-child{grid-column:1}
+  .stats{grid-template-columns:1fr 1fr}
+  .plan-row{grid-template-columns:52px 20px 1fr auto}
+}
