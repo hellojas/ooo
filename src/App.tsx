@@ -7,6 +7,7 @@ import { Weekly } from './components/Weekly'
 import { Practice } from './components/Practice'
 import { Resources } from './components/Resources'
 import { Settings } from './components/Settings'
+import { Programs } from './components/Programs'
 import { startReminders } from './reminders'
 import { useUser } from './storage'
 import { today } from './dates'
@@ -14,10 +15,10 @@ import { Ic } from './components/Icons'
 import type { Program } from './types'
 
 // Top-level: Today · Calendar · Practice · Review · Configure. Calendar holds Week / Month / Agenda / Music / Fitness.
-type Top = 'today' | 'calendar' | 'practice' | 'review' | 'play' | 'configure'
+type Top = 'today' | 'calendar' | 'practice' | 'programs' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month'
-const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
-const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, review: Ic.review, play: Ic.play, configure: Ic.gear }
+const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['programs', 'Programs'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
+const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, programs: Ic.programs, review: Ic.review, play: Ic.play, configure: Ic.gear }
 const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month']]
 
 const readHash = (): [Top, CalSub] => {
@@ -67,7 +68,8 @@ export default function App() {
         {cal === 'month' && <MonthCal onOpenDay={openDay} />}
       </>}
 
-      {view === 'practice' && <Practice onOpenDay={openDay} onOpen={onOpen} />}
+      {view === 'practice' && <Practice onOpenDay={openDay} />}
+      {view === 'programs' && <Programs onOpen={onOpen} />}
       {view === 'review' && <Weekly onOpenDay={openDay} />}
       {view === 'play' && <Resources />}
       {view === 'configure' && <Settings theme={theme} cycleTheme={cycle} />}
