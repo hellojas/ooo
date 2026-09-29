@@ -3,13 +3,15 @@ import plan from '../../data/block-tasks.json'
 import { today, weekNo } from '../dates'
 import { update, useUser } from '../storage'
 import { standardOfWeek } from '../tasks'
+import { QueueView } from './Queue'
 
 const STAGES = ['Melody from memory', 'Shells through the form', 'Comping at a recorded tempo', 'Solo without losing the form', 'Complete performance recorded']
 const RUBRIC = ['Time', 'Form', 'Voicings']
 const daysAgo = (d?: string) => d ? Math.floor((Date.now() - new Date(d + 'T12:00').getTime()) / 864e5) : undefined
 
 /** Repertoire pipeline for the 10 standards + the transcription log. */
-export function Practice() {
+export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
+  const [tab, setTab] = useState<'repertoire' | 'library'>('repertoire')
   const user = useUser()
   const wk = Math.max(1, weekNo(today()))
   const current = standardOfWeek(user, wk)
@@ -20,6 +22,9 @@ export function Practice() {
   const touch = (name: string) => set(name, { last: today() })
   return (
     <>
+      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Library</button></div>
+      {tab === 'library' && <QueueView onOpenDay={onOpenDay} />}
+      {tab === 'repertoire' && <>
       <section className="plain">
         <h2>Repertoire</h2>
         <p className="meta">One standard a week. Each one goes assigned → learning → memorized → gig-ready → recorded. Anything untouched for 7+ days gets a review flag.</p>
@@ -70,6 +75,7 @@ export function Practice() {
         <p className="meta">{user.transcriptions.length} so far · milestone: 8+ by week 3</p>
         <ul className="translist">{user.transcriptions.map(t => <li key={t.id}><b>{t.song}</b> <span className="meta">{t.date}</span>{t.note && <div>{t.note}</div>}<button className="linkbtn quiet" onClick={() => update(u => ({ ...u, transcriptions: u.transcriptions.filter(x => x.id !== t.id) }))}>remove</button></li>)}</ul>
       </section>
+      </>}
     </>
   )
 }

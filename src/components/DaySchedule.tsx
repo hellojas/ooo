@@ -1,12 +1,11 @@
-import { useState, type CSSProperties } from 'react'
+import { useState } from 'react'
 import { parse, weekNo, today } from '../dates'
-import { courses, shops } from '../data'
-import { attKey, blocksForType, classWindows, dayTypeFor, fmtMin, freeSlot, hintFor, itemsOn, setTaipeiStart, startFor, videosOn, type Block } from '../model'
+import { shops } from '../data'
+import { attKey, blocksForType, classWindows, dayTypeFor, fmtMin, freeSlot, hintFor, itemsOn, setTaipeiStart, startFor, type Block } from '../model'
 import { span } from '../time'
 import { update, useUser } from '../storage'
 import { standardOfWeek, tasksFor } from '../tasks'
 import { Chip } from './Chip'
-import { pdfLinks } from '../drive'
 import type { Program } from '../types'
 
 type Row = { start: number; node: React.ReactNode; key: string }
@@ -100,14 +99,6 @@ export function DaySchedule({ date, onOpen, showTasks, nowMin }: { date: string;
       {until && t && until < t[1] && <small className="hint">Leaving at {fmtMin(until)}</small>}
       {hint && <small className="hint">{hint}</small>}
       {p.id === 'coffee' && showTasks && <CoffeePick date={date} />}</> })
-  }
-  if (!showTasks) for (const [i, v] of videosOn(date).entries()) {
-    const c = courses.find(x => x.id === v.course)
-    rows.push({ start: 9 * 60 + 15, key: 'v' + i, node:
-      <div className="chip online lesson" style={{ '--c': `var(--${v.course})` } as CSSProperties}>
-        <a href={c?.url} target="_blank" rel="noreferrer"><b>{c?.short} · lesson ↗</b></a><span>{v.what}</span>
-        {pdfLinks(v.pdf).map(l => <a key={l.url} className="pdf" href={l.url} target="_blank" rel="noreferrer">📄 {l.label} ↗</a>)}
-      </div> })
   }
   rows.sort((a, b) => a.start - b.start)
   return (

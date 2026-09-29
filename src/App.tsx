@@ -21,7 +21,7 @@ import type { Program } from './types'
 type Top = 'today' | 'calendar' | 'practice' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month' | 'agenda' | 'music' | 'fitness'
 type Sub = 'inperson' | 'online' | 'plan'
-const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Practice'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
+const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
 const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, review: Ic.review, play: Ic.play, configure: Ic.gear }
 const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week'], ['music', 'Music'], ['fitness', 'Fitness']]
 const inPerson = programs.filter(p => p.kind === 'inperson')
@@ -96,7 +96,7 @@ export default function App() {
       {['play', 'configure'].includes(view) && <div className="subnav mob">
         {([['play', 'Play'], ['configure', 'Configure']] as [Top, string][]).map(([v, l]) => <button key={v} aria-pressed={view === v} onClick={() => setView(v)}>{l}</button>)}
       </div>}
-      {view === 'practice' && <Practice />}
+      {view === 'practice' && <Practice onOpenDay={openDay} />}
       {view === 'review' && <Weekly onOpenDay={openDay} />}
       {view === 'play' && <Resources />}
       {view === 'configure' && <Settings theme={theme} cycleTheme={cycle} />}
@@ -104,7 +104,7 @@ export default function App() {
       <nav className="bottombar mob" aria-label="Main">
         <button aria-current={view === 'today'} onClick={() => setView('today')}><Ic.today />Today</button>
         <button aria-current={view === 'calendar'} onClick={() => setView('calendar')}><Ic.calendar />Calendar</button>
-        <button aria-current={view === 'practice'} onClick={() => setView('practice')}><Ic.practice />Practice</button>
+        <button aria-current={view === 'practice'} onClick={() => setView('practice')}><Ic.practice />Roadmap</button>
         <button aria-current={view === 'review'} onClick={() => setView('review')}><Ic.review />Review</button>
         <button aria-current={['play', 'configure'].includes(view)} onClick={() => setView('play')}><Ic.play />More</button>
       </nav>

@@ -627,3 +627,14 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
   .stats{grid-template-columns:repeat(2,1fr)}
   .mday{min-height:110px;padding:5px}.mev{font-size:10px;padding:4px 5px}.mdow div{font-size:10px;padding:6px}
 }
+.qlist{list-style:none;margin:8px 0 0;padding:0}
+.qrow{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:9px 4px;border-top:1px solid var(--line)}
+.qrow .qn{color:var(--ink-3);font-size:12px}
+.qbody{display:flex;flex-direction:column;gap:1px;min-width:0}.qbody b{font-weight:500;font-size:14.5px}.qbody small{color:var(--ink-3);font-size:12.5px}
+.qrow.done .qbody b{text-decoration:line-through;color:var(--ink-3)}
+.qrow.skipped .qbody b{color:var(--ink-3);font-style:italic}
+.qrow.next{background:color-mix(in srgb,var(--accent) 7%,var(--panel));border-radius:8px;border-top-color:transparent}
+.qrow.next .qbody b{color:var(--accent);font-weight:600}
+.qrow.late .qbody small{color:var(--warm)}
+.qacts{display:flex;gap:10px;white-space:nowrap}
+.subtabs button small{font-weight:400;opacity:.7;margin-left:4px}
