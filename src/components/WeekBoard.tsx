@@ -17,12 +17,14 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
   setTaipeiStart(user.settings.taipeiStart)
   const real = today()
   const [wk, setWk] = useState(() => Math.min(11, Math.max(1, weekNo(real < START ? START : real))))
-  const [sel, setSel] = useState<string>(real)
+  const [sel, setSelRaw] = useState<string>(real)
+  const setSel = setSelRaw
   const [show, setShow] = useState({ commitments: true, practice: true, options: false })
   const [drag, setDrag] = useState<{ date: string; title: string; mode: 'move' | 'resize'; start: number; end: number } | null>(null)
   const rowRef = useRef<HTMLDivElement>(null)
   const projected = useMemo(() => project(user, real), [user, real])
   const days = Array.from({ length: 7 }, (_, i) => key(addDays(parse(weekStart(wk)), i)))
+  if (!days.includes(sel)) setTimeout(() => setSelRaw(days.includes(real) ? real : days[1]), 0)
 
   const setBlock = (date: string, title: string, v: { start: number; end: number }) =>
     update(u => ({ ...u, practice: { ...u.practice, [date]: { ...u.practice[date], blocks: { ...u.practice[date]?.blocks, [title]: v } } } }))
@@ -69,7 +71,7 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
             {([['commitments', 'Commitments'], ['practice', 'Practice projections'], ['options', 'Include options']] as const).map(([k, l]) => (
               <label key={k} className="switch"><input type="checkbox" checked={show[k]} onChange={e => setShow({ ...show, [k]: e.target.checked })} /><i /><span>{l}</span></label>))}
           </div>
-          <div className="wb-axis"><span className="wb-day" />{Array.from({ length: (T1 - T0) / 120 + 1 }, (_, i) => <span key={i} style={{ left: pct(T0 + i * 120) + '%' }}>{fmtMin(T0 + i * 120)}</span>)}</div>
+          <div className="wb-axis"><span className="wb-day" />{Array.from({ length: Math.floor((T1 - T0) / 60) + 1 }, (_, i) => <span key={i} className={i % 2 ? 'minor' : ''} style={{ left: pct(T0 + i * 60) + '%' }}>{fmtMin(T0 + i * 60)}</span>)}</div>
           {days.map(date => {
             const { type } = dayTypeWhy(user, date, real)
             const skipped = new Set(user.practice[date]?.skipped ?? [])
@@ -89,14 +91,14 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
                     <div key={w.p.id} className="wb-ev-wrap">
                       <div className="wb-ev ghost" style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} title="Organizer's full event" />
                       {w.lead > 0 && <div className="wb-ev travel" style={{ left: pct(w.from) + '%', width: (pct(w.start) - pct(w.from)) + '%' }} title={`Travel from ${w.fromWhere} · ${w.lead} min`}>travel</div>}
-                      <div className={'wb-ev fixed' + (stateOf(w.p, user) === 'registered' ? '' : ' trial')} style={{ left: pct(w.start) + '%', width: (pct(w.end) - pct(w.start)) + '%' }} onClick={e => { e.stopPropagation(); setSel(date); onOpen(w.p, date) }}>
-                        <b>{w.p.short}</b><span>{fmtMin(w.start)}–{fmtMin(w.end)}</span><i className={'tag ' + (stateOf(w.p, user) === 'registered' ? 'planned' : 'trial')}>{stateOf(w.p, user) === 'registered' ? 'Planned' : 'Trial'}</i>
+                      <div className={'wb-ev fixed' + (stateOf(w.p, user) === 'registered' ? '' : ' trial') + (w.end - w.start < 90 ? ' narrow' : '')} style={{ left: pct(w.start) + '%', width: (pct(w.end) - pct(w.start)) + '%' }} onClick={e => { e.stopPropagation(); setSel(date); onOpen(w.p, date) }} title={`${w.p.name} · ${fmtMin(w.start)}–${fmtMin(w.end)}`}>
+                        <b>{w.p.short}</b><span>{fmtMin(w.start)}–{fmtMin(w.end)}</span>{w.end - w.start >= 120 && <i className={'tag ' + (stateOf(w.p, user) === 'registered' ? 'planned' : 'trial')}>{stateOf(w.p, user) === 'registered' ? 'Planned' : 'Trial'}</i>}
                       </div>
                     </div>) })}
                   {items.map(it => { const t = span(it.p.time); if (!t) return null; return (
-                    <div key={it.p.id} className="wb-ev life" style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} onClick={e => { e.stopPropagation(); onOpen(it.p, date) }}><b>{it.p.short}</b><i className="tag trial">Trial</i></div>) })}
+                    <div key={it.p.id} className={'wb-ev life' + (t[1] - t[0] < 90 ? ' narrow' : '')} style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} onClick={e => { e.stopPropagation(); onOpen(it.p, date) }} title={it.p.name}><b>{it.p.short}</b></div>) })}
                   {optional.map(it => { const t = span(it.p.time); if (!t) return null; return (
-                    <div key={it.p.id} className="wb-ev opt" style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} onClick={e => { e.stopPropagation(); onOpen(it.p, date) }}><b>{it.p.short}</b><i className="tag">Considering</i></div>) })}
+                    <div key={it.p.id} className="wb-ev opt" style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} onClick={e => { e.stopPropagation(); onOpen(it.p, date) }} title={`${it.p.name} · considering`}><b>{it.p.short}</b></div>) })}
                   {blocks.map(b => {
                     const d = drag && drag.date === date && drag.title === b.title ? drag : null
                     const s = d?.start ?? b.start, e2 = d?.end ?? b.end
@@ -104,9 +106,9 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
                     const done = user.practice[date]?.active === undefined && (user.sessions ?? []).some(x => x.date === date && x.block === b.title && x.minutes > 0)
                     const n = lane === 'piano' ? q.filter(x => x.lane === 'piano').length : lane === 'sax' ? q.filter(x => x.lane === 'sax').length : lane === 'gym' ? q.filter(x => x.lane === 'workout').length : 0
                     return (
-                      <div key={b.title} className={`wb-ev flex ${lane}${d ? ' dragging' : ''}${done ? ' done' : ''}`} style={{ left: pct(s) + '%', width: (pct(e2) - pct(s)) + '%' }}
+                      <div key={b.title} className={`wb-ev flex ${lane}${d ? ' dragging' : ''}${done ? ' done' : ''}${e2 - s < 60 ? ' narrow' : ''}`} style={{ left: pct(s) + '%', width: (pct(e2) - pct(s)) + '%' }}
                         onPointerDown={e => onPointerDown(e, date, b.title, 'move', b.start, b.end)} title={`${b.title} · drag to move, pull the edge to resize`}>
-                        <b>{b.title.replace(/ block \d/, '').replace('Gym slot', 'Gym').replace('Lunch + walk', 'Lunch').replace(/ \(light\)/, '')} {e2 - s}</b>{n > 0 && e2 - s >= 90 && <span>{n} queued</span>}
+                        <b>{e2 - s < 60 ? b.title.split(' ')[0] : `${b.title.replace(/ block \d/, '').replace('Gym slot', 'Gym').replace('Lunch + walk', 'Lunch').replace(/ \(light\)/, '')} ${e2 - s}`}</b>{n > 0 && e2 - s >= 90 && <span>{n} queued</span>}
                         {b.note === 'added' && <button className="wb-x" onPointerDown={e => e.stopPropagation()} onClick={e => { e.stopPropagation(); removeAdded(date, b.title) }}>×</button>}
                         <div className="wb-handle" onPointerDown={e => { e.stopPropagation(); onPointerDown(e, date, b.title, 'resize', b.start, b.end) }} />
                       </div>)
