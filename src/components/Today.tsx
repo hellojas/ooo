@@ -129,6 +129,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const [nextNote, setNextNote] = useState('')
   const saveNext = () => { if (nextNote.trim() && curBlock) { update(u => ({ ...u, sessions: [...u.sessions, { date, block: curBlock.title, minutes: 0, tune: lane === 'piano' ? std : undefined, next: nextNote.trim() }] })); setNextNote('') } }
   const todayNext = [...user.sessions].reverse().find(s => s.date === date && s.next)?.next
+  const pianoToday = (pr.piano1 ?? 0) + (pr.piano2 ?? 0)
   const tot = weekTotals(user, wk)
   const saxSessions = Object.entries(user.practice).filter(([d, p]) => weekNo(d) === wk && (p.sax ?? 0) > 0).length
   const h = Math.floor(tot.piano / 60), m = tot.piano % 60
@@ -199,8 +200,8 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
             {focusLine && <p className="lede serif">{focusLine}.</p>}
             {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : <p className="meta">{curTasks.filter(isDone).length} of {curTasks.length} done today</p>}
             {laneDef.minutes && curBlock && (isActive
-              ? <button className="btn primary big wide" onClick={() => setFinishing(lane)}><Ic.stop /> Finish · {elapsed} min so far{elapsed >= 30 ? ' — or keep going' : ''}</button>
-              : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: curBlock.title, since: Date.now() } })}><Ic.start /> Start a 30-min session</button>)}
+              ? <button className="btn primary big wide" onClick={() => setFinishing(lane)}><Ic.stop /> Finish · {elapsed} min</button>
+              : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: curBlock.title, since: Date.now() } })}><Ic.start /> Start session</button>)}
             {lane === 'piano' && <div className="grid2 links">
               {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer"><Ic.lesson /> Open lesson{lessonQ ? ` · ${lessonQ.label.split(': ')[1]?.slice(0, 26)}` : ''}</a>}
               {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
@@ -231,11 +232,16 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           </div>}
         </section>
 
-        <section className="card log">
-          <h3 className="serif">Quick log</h3>
-          <DayLog date={date} />
+        <section className="card log quiet">
+          <h3 className="serif">Logged today</h3>
+          {(() => { const ss = user.sessions.filter(x => x.date === date && x.minutes > 0); return <>
+            {ss.length === 0 && pianoToday === 0 && !(pr.sax) && <p className="meta">Nothing yet. Finish a session and it lands here.</p>}
+            <ul className="sesslist">{ss.map((x, i) => <li key={i}><b className="num">{x.minutes} min</b><span>{x.block.replace(/ block \d/, '')}{x.note ? ` · ${x.note}` : ''}</span></li>)}</ul>
+            <p className="tot num">{pianoToday} min piano · {pr.sax ?? 0} min sax{user.climbing[date]?.done ? ' · climbed' : ''}{user.running[date]?.done ? ' · ran' : ''}</p>
+          </> })()}
+          <details className="adjust"><summary>Adjust / log manually</summary><DayLog date={date} /></details>
           <label className="block">Next time, start with…
-            <textarea rows={3} placeholder={todayNext ?? 'e.g. slower tempo, left hand voicings, or the bridge…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
+            <textarea rows={2} placeholder={todayNext ?? 'e.g. slower tempo, left hand voicings, or the bridge…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
           <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device only · <button className="linkbtn" onClick={signIn}>sign in to sync</button></>}</p>
         </section>
       </div>

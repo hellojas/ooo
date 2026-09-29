@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { CheckIn } from './components/CheckIn'
 import { Today, clampDay } from './components/Today'
 import { MonthCal } from './components/MonthCal'
+import { WeekBoard } from './components/WeekBoard'
 import { Weekly } from './components/Weekly'
 import { Practice } from './components/Practice'
 import { Resources } from './components/Resources'
@@ -17,12 +18,12 @@ type Top = 'today' | 'calendar' | 'practice' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
 const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, review: Ic.review, play: Ic.play, configure: Ic.gear }
-const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week']]
+const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month']]
 
 const readHash = (): [Top, CalSub] => {
   const [a, b] = location.hash.replace(/^#\/?/, '').split('/')
   const top = (TOPS.some(([t]) => t === a) ? a : 'today') as Top
-  const cal = (CALS.some(([c]) => c === b) ? b : 'month') as CalSub
+  const cal = (CALS.some(([c]) => c === b) ? b : 'week') as CalSub
   return [top, cal]
 }
 
@@ -62,7 +63,7 @@ export default function App() {
 
       {view === 'calendar' && <>
         <div className="subtabs">{CALS.map(([c, l]) => <button key={c} aria-pressed={cal === c} onClick={() => setView('calendar', c)}>{l}</button>)}</div>
-        {cal === 'week' && <MonthCal view="week" onOpenDay={openDay} />}
+        {cal === 'week' && <WeekBoard onOpenDay={openDay} onOpen={onOpen} />}
         {cal === 'month' && <MonthCal onOpenDay={openDay} />}
       </>}
 

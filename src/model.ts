@@ -245,8 +245,9 @@ export function blocksForType(k: string, type: DayType, startTime: string, user?
     bs = dow >= 1 && dow <= 5 ? base.filter(b => !b.title.startsWith('Piano block 2') && b.title !== 'Gym slot') : base
   } else bs = blocksOn(k, startTime)
   const ov = user?.practice[k]?.blocks
-  if (ov) bs = bs.map(b => ov[b.title] ? { ...b, start: ov[b.title].start ?? b.start, end: ov[b.title].end ?? b.end } : b).sort((a, b) => a.start - b.start)
-  return bs
+  if (ov) bs = bs.map(b => ov[b.title] ? { ...b, start: ov[b.title].start ?? b.start, end: ov[b.title].end ?? b.end } : b)
+  for (const a of user?.practice[k]?.added ?? []) bs.push({ title: a.title, start: a.start, end: a.end, note: 'added' })
+  return bs.sort((a, b) => a.start - b.start)
 }
 /** Earliest slot of the block's length that doesn't hit a class window, after `after`. */
 export function freeSlot(user: UserData, k: string, len: number, after: number): number {
