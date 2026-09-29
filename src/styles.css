@@ -839,3 +839,107 @@ h2.serif.big{font-weight:600}
 .wb-ev{padding:4px 8px}
 .wb-ev.narrow{padding:4px 3px;text-align:center}.wb-ev.narrow b{font-size:11px}
 .wb-track{background-image:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px calc(100%/14))}
+.warn{color:var(--warm);font-size:12.5px}
+.plan-row .coffeepick{margin:6px 0 0;grid-template-columns:1fr}
+.plan-row .coffeepick a{padding:6px 8px}
+
+/* =====================================================================
+   MODERN TYPE + SPACING PASS — one family (Inter), an 8px rhythm, calmer contrast
+   ===================================================================== */
+:root{--radius:12px;--radius-lg:16px;--gap:16px;--pad:24px}
+html{font-size:15px}
+body,.mcal,.serif,.tune,h2.serif.big,.card h3.serif,.plain h2,.panel h2,.month h2,.sheet h3,.lanebtn,.daytag b,.masthead h1 .tagline,.empty,.main .lede.serif,.wb-side h3.serif,.wb-day b,.wb-empty,.tune-head .serif,.jawn b,.daynav h2,.mcal-head h2,.sheet.modal h2{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;font-style:normal;font-variation-settings:normal}
+body{letter-spacing:-0.01em;line-height:1.5}
+/* display */
+.main .tune{font-weight:800;font-size:clamp(40px,5vw,60px);letter-spacing:-0.035em;line-height:1;margin:6px 0 10px}
+.tune.small{font-size:clamp(30px,3.5vw,40px)}
+.main .lede.serif{font-size:20px;font-weight:500;letter-spacing:-0.015em;color:var(--ink)}
+h2.serif.big{font-size:clamp(26px,3vw,34px);font-weight:700;letter-spacing:-0.03em}
+.card h3.serif,.plain h2,.panel h2,.wb-side h3.serif,.mcal-head h2{font-size:18px;font-weight:700;letter-spacing:-0.02em;margin:0 0 6px}
+.daynav h2{font-size:22px;font-weight:700;letter-spacing:-0.02em}
+.daytag b{font-size:18px;font-weight:700;letter-spacing:-0.02em}
+.masthead h1{font-size:17px;font-weight:800;letter-spacing:-0.01em}
+.masthead h1 .tagline{font-size:13px;font-weight:500;color:var(--ink-3)}
+.lanebtn{font-size:17px;font-weight:600;letter-spacing:-0.01em}
+.lanebtn.on{font-weight:700}
+.empty,.wb-empty{font-size:14px;font-weight:500;color:var(--ink-3)}
+.tune-head .serif{font-size:22px;font-weight:700;letter-spacing:-0.02em}
+.jawn b{font-size:16px;font-weight:600}
+.wb-day b{font-size:15px;font-weight:700}
+.eyebrow{font-size:11px;letter-spacing:.1em;font-weight:700}
+/* text colors: fewer greys */
+.meta{color:var(--ink-3);font-size:13px;line-height:1.45}
+.plain h3,.panel h3{font-size:11px;letter-spacing:.1em;font-weight:700;margin:20px 0 10px}
+/* spacing rhythm */
+.wrap{padding:16px 32px 56px}
+.masthead{margin:0 0 20px;padding:0}
+.masthead h1{padding-bottom:14px}
+.masthead .tabs button{padding:12px 14px 14px;font-size:14px}
+.datebar{margin:8px 0 20px}
+.grid3,.wb-grid{gap:var(--gap)}
+.card,.plain,.panel{padding:var(--pad);border-radius:var(--radius-lg);box-shadow:none;margin-bottom:var(--gap)}
+.card+.card{margin-top:0}
+.subtabs{margin:0 0 20px;gap:6px}
+.subtabs button{padding:8px 14px;font-size:13.5px;font-weight:600}
+.pill{padding:7px 12px;font-weight:500}
+.stats{gap:var(--gap);margin:20px 0}
+.stat{padding:16px 18px;border-radius:var(--radius)}
+.stat b{font-size:26px;font-weight:800;letter-spacing:-0.02em}
+/* controls: one height */
+.btn{min-height:38px;padding:8px 14px;border-radius:10px;font-size:13.5px;font-weight:600;line-height:1.2}
+.btn.icon{min-height:34px;width:34px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.btn.small{min-height:30px;padding:4px 10px;font-size:12.5px}
+.btn.primary.big.wide{min-height:52px;font-size:16px;border-radius:12px;margin:12px 0}
+input:not([type=checkbox]),select,textarea{min-height:38px;padding:8px 12px;border-radius:10px;font-size:14px;border-color:var(--line)}
+input[type=number]{width:88px}
+textarea{min-height:0}
+label{gap:6px}
+label.block{margin:10px 0 16px}
+.row{gap:10px;margin:10px 0}
+/* today */
+.plan-list::before{left:72px}
+.plan-row{grid-template-columns:60px 24px 1fr auto;padding:12px 8px}
+.plan-row .body b{font-size:14.5px}
+.plan-row .t{font-size:12.5px}
+.steps li{padding:12px 6px;font-size:15.5px;gap:14px}
+.steps .n{width:26px;height:26px;font-size:12px}
+.links .btn{min-height:44px;font-size:13.5px;font-weight:600}
+.steps-h{margin:20px 0 8px;padding-top:16px}
+.nowbar{padding:12px 16px;border-radius:var(--radius)}
+.logline{padding:10px 0}
+.stepper{gap:0}.stepper .num{min-width:72px;font-size:15px;font-weight:600}
+.grid2{gap:10px}
+.sesslist li{padding:8px 0;font-size:13.5px}
+.weekbar{margin-top:var(--gap);padding:14px 20px;border-radius:var(--radius-lg);font-size:13.5px}
+.climbrow{padding:12px 14px;margin-bottom:12px}
+/* week board */
+.wb-toggles{padding:14px 20px;gap:28px}
+.wb-row{min-height:80px}
+.wb-day{padding:16px}
+.wb-day small{font-size:12px}
+.wb-ev{top:16px;height:48px;border-radius:10px}
+.wb-side{padding:20px 24px}
+.wb-visit{padding:12px 14px;border-radius:var(--radius)}
+.wb-legend{padding:14px 20px}
+/* calendar */
+.mcal-head .sub{font-size:13.5px}
+.mgrid-wrap{border-radius:var(--radius-lg);box-shadow:none}
+.mday{padding:10px;min-height:150px}
+.mdate{font-size:13px}
+.mev{font-size:11.5px;padding:5px 7px 5px 9px;border-radius:8px;margin:5px 0}
+.magenda-day{border-radius:var(--radius);padding:16px 18px}
+/* forms/tables/lists */
+.checks li{padding:8px 0}
+.checks label{font-size:14px}
+table.t{font-size:13.5px}table.t td{padding:12px 10px}table.t th{padding:10px}
+.shops{gap:var(--gap)}.shop{padding:16px 18px;border-radius:var(--radius)}
+.qrow{padding:10px 6px}.qbody b{font-size:14px}
+.tune-row{padding:16px 0}.tune-row.current{padding:16px;border-radius:var(--radius)}
+.setrow{padding:14px 0}
+.sheet{padding:24px;border-radius:var(--radius-lg)}
+.sheet h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.sheet.modal h2{font-size:20px;font-weight:700}
+.actions{gap:10px;margin-top:20px}
+.focus-row{padding:12px 4px}
+.hero-stat .num{font-size:36px;font-weight:800;letter-spacing:-0.02em}
+.quiet-stats li{padding:8px 0}

@@ -11,6 +11,7 @@ import { courseLinks, pdfLinks } from '../drive'
 import { DayLog } from './DayLog'
 import { WeekProgress } from './WeekProgress'
 import { Chip } from './Chip'
+import { CoffeePick } from './DaySchedule'
 import { Ic } from './Icons'
 import type { Program } from '../types'
 
@@ -180,6 +181,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
                     {r.clash && <small className="clash">Overlaps {r.clash.p.short} · <button className="linkbtn" onClick={e => { e.stopPropagation(); const len = r.end! - r.start; const s = freeSlot(user, date, len, r.clash!.to); setBlock(r.title, { start: s, end: s + len }) }}>move after</button>
                       {r.start < r.clash.from && <> · <button className="linkbtn" onClick={e => { e.stopPropagation(); setBlock(r.title, { end: r.clash!.from }) }}>shorten</button></>} · <button className="linkbtn" onClick={e => { e.stopPropagation(); skip(r.title) }}>skip</button></small>}
                     {r.skipped && <small><button className="linkbtn quiet" onClick={e => { e.stopPropagation(); skip(r.title) }}>restore</button></small>}
+                    {r.p?.id === 'coffee' && <span onClick={e => e.stopPropagation()}><CoffeePick date={date} /></span>}
                   </span>
                   {r.kind === 'block' && r.lane && <span className="chev">›</span>}
                 </li>
@@ -195,13 +197,14 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
             {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label}{laneDone(l.id) ? ' ✓' : ''}</button> })}
             <span className="eyebrow">today</span>
           </div>
-          {curTasks.length > 0 || curBlock ? <>
+          {curTasks.length > 0 || curBlock || (lane === 'workout' && type !== 'travel' && type !== 'rest') ? <>
             <h1 className="tune">{title}</h1>
             {focusLine && <p className="lede serif">{focusLine}.</p>}
             {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : <p className="meta">{curTasks.filter(isDone).length} of {curTasks.length} done today</p>}
             {laneDef.minutes && curBlock && (isActive
               ? <button className="btn primary big wide" onClick={() => setFinishing(lane)}><Ic.stop /> Finish · {elapsed} min</button>
               : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: curBlock.title, since: Date.now() } })}><Ic.start /> Start session</button>)}
+            {lane === 'workout' && !curBlock && <p className="meta">No gym slot today ({DAY_TYPES.find(t => t.id === type)?.label} day). Log a climb or a run anyway if it happens.</p>}
             {lane === 'piano' && <div className="grid2 links">
               {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer"><Ic.lesson /> Open lesson{lessonQ ? ` · ${lessonQ.label.split(': ')[1]?.slice(0, 26)}` : ''}</a>}
               {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
@@ -246,7 +249,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <details className="adjust"><summary>Adjust / log manually</summary><DayLog date={date} /></details>
           <label className="block">Next time, start with…
             <textarea rows={2} placeholder={todayNext ?? 'e.g. slower tempo, left hand voicings, or the bridge…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
-          <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device only · <button className="linkbtn" onClick={signIn}>sign in to sync</button></>}</p>
+          <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device only · <button className="linkbtn" onClick={signIn}>{sync.state === 'syncing' ? 'signing in…' : 'sign in to sync'}</button>{sync.error && <><br /><span className="warn">⚠ {sync.error}</span></>}</>}</p>
         </section>
       </div>
 

@@ -71,8 +71,9 @@ export function project(user: UserData, from = today()): { alloc: Allocation; da
     const blocks = blocksForType(d, type, startFor(user, d), user).map(b => b.title).filter(t => !skipped.has(t))
     const cap = capacity(type, parse(d).getDay(), blocks)
     const pulled = user.practice[d]?.pulled ?? []
+    const already = (alloc[d] ?? []).filter(x => done[x.id] === d)   // things already logged on this day use up its capacity
     for (const kind of Object.keys(lanes) as Kind[]) {
-      let n = cap[kind] + (d === from ? pulled.filter(id => byId(id)?.kind === kind).length : 0)
+      let n = cap[kind] + pulled.filter(id => byId(id)?.kind === kind).length - already.filter(x => x.kind === kind).length
       while (n-- > 0 && lanes[kind].length) { const it = lanes[kind].shift()!; (alloc[d] ??= []).push(it); dateOf[it.id] = d }
     }
   }

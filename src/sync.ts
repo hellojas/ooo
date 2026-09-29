@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth'
+import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from 'firebase/auth'
 import { doc, onSnapshot, setDoc } from 'firebase/firestore'
 import { useSyncExternalStore } from 'react'
 import { auth, db, googleProvider } from './firebase'
@@ -14,7 +14,17 @@ const subs = new Set<() => void>()
 const set = (s: SyncStatus) => { status = s; subs.forEach(f => f()) }
 export const useSync = () => useSyncExternalStore(f => { subs.add(f); return () => { subs.delete(f) } }, () => status)
 
-export const signIn = () => signInWithPopup(auth, googleProvider).catch(e => set({ ...status, state: 'error', error: String(e.message ?? e) }))
+export const signIn = async () => {
+  set({ ...status, state: 'syncing', error: undefined })
+  try { await signInWithPopup(auth, googleProvider) }
+  catch (e) {
+    const code = (e as { code?: string }).code ?? ''
+    if (/popup-blocked|popup-closed|cancelled-popup|operation-not-supported/.test(code)) { try { await signInWithRedirect(auth, googleProvider); return } catch (e2) { e = e2 } }
+    const msg = /unauthorized-domain/.test(code) ? `This domain (${location.hostname}) isn’t authorized in Firebase → Authentication → Settings → Authorized domains.` : String((e as Error).message ?? e)
+    set({ user: null, state: 'error', error: msg })
+  }
+}
+getRedirectResult(auth).catch(e => set({ user: null, state: 'error', error: String(e.message ?? e) }))
 export const logOut = () => signOut(auth)
 
 let unsub: (() => void) | undefined

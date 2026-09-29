@@ -142,7 +142,7 @@ function FinishSheet({ date, block, tune, onClose }: { date: string; block: Bloc
 const NEAR = ['Williamsburg', 'Greenpoint', 'East Williamsburg']
 const nbOf = (loc?: string) => !loc ? undefined : /UWS|W 6\dth|W 65th|Lincoln/.test(loc) ? 'Upper West Side' : /W 46th|W 4\dth/.test(loc) ? 'Midtown West' : /W 13th|W 1\dth/.test(loc) ? 'West Village' : /W 37th|W 3\dth/.test(loc) ? 'Midtown' : /Park Slope/.test(loc) ? 'Prospect Heights' : /Long Island City/.test(loc) ? 'Long Island City' : undefined
 /** Three coffee candidates for a reading morning: nearby, near today's class, somewhere new. */
-function CoffeePick({ date }: { date: string }) {
+export function CoffeePick({ date }: { date: string }) {
   const user = useUser()
   const visited = (n: string) => !!user.coffee[n]?.visited
   const cls = classWindows(user, date)[0]
