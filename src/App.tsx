@@ -18,12 +18,12 @@ import type { Program } from './types'
 type Top = 'today' | 'calendar' | 'practice' | 'programs' | 'review' | 'play' | 'configure'
 type CalSub = 'week' | 'month'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Roadmap'], ['programs', 'Programs'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
-const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month']]
+const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week']]
 
 const readHash = (): [Top, CalSub, string | undefined] => {
   const [a, b] = location.hash.replace(/^#\/?/, '').split('/')
   const top = (TOPS.some(([t]) => t === a) ? a : 'today') as Top
-  const cal = (CALS.some(([c]) => c === b) ? b : 'week') as CalSub
+  const cal = (CALS.some(([c]) => c === b) ? b : 'month') as CalSub
   const day = top === 'today' && /^\d{4}-\d{2}-\d{2}$/.test(b ?? '') ? b : undefined
   return [top, cal, day]
 }
