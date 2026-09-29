@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sabbatical calendar — Oct to Dec 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#EEF1F4; --panel:#FFFFFF; --ink:#17202A; --ink-2:#4B5563; --ink-3:#8A94A3; --line:#D6DCE3;
+  --travel:#E0E5EB; --travel-ink:#5B6573; --onlineband:#F5F7FA;
+  --kaufTue:#5B3FD1; --kaufThu:#8A5CF6; --ny92Imp:#1F6FEB; --ny92Key:#58A6FF;
+  --bhSun:#D9480F; --bhTue:#F08C00; --nyjwStd:#0B7A75; --nyjwImp:#2AA198; --nyjwSong:#6CC5B4; --nyjwBop:#0F5257;
+  --nyja:#C2255C; --nyjaInt:#8E1B44; --bkcm:#2F9E44; --bmsTue:#7C8F1E; --bmsThu:#A9B84A;
+  --osChords:#364FC7; --osLHV:#4263EB; --osScales:#5C7CFA; --osLead:#7048E8; --osHear:#E8590C; --osBebopCh:#0B7285; --osBHSoC:#C92A2A; --osEncl:#1098AD; --osSolo:#862E9C;
+  --climb:#495057; --climbLES:#6C757D; --run:#A61E4D; --run2:#D6336C; --badm:#5C940D; --coffee:#8D5524;
+  --phC25k:#A61E4D; --phPull:#E67700; --phV8:#495057;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141922; --panel:#1C2330; --ink:#E9EDF2; --ink-2:#B7C0CC; --ink-3:#7E8896; --line:#2E3847;
+    --travel:#26303D; --travel-ink:#9AA5B4; --onlineband:#1A212C; --climb:#ADB5BD; --climbLES:#9AA5B4; --phV8:#ADB5BD;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141922; --panel:#1C2330; --ink:#E9EDF2; --ink-2:#B7C0CC; --ink-3:#7E8896; --line:#2E3847;
+  --travel:#26303D; --travel-ink:#9AA5B4; --onlineband:#1A212C; --climb:#ADB5BD; --climbLES:#9AA5B4; --phV8:#ADB5BD;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.45}
+.wrap{max-width:1140px;margin:0 auto;padding:28px 20px 64px}
+header h1{font-size:clamp(28px,4.2vw,44px);line-height:1.02;letter-spacing:-0.02em;font-weight:700;margin:0 0 6px}
+header p{margin:0;color:var(--ink-2);max-width:66ch}
+
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin:22px 0 14px;border-bottom:1.5px solid var(--line)}
+.tabs button{border:0;background:transparent;color:var(--ink-2);font:inherit;font-weight:600;padding:10px 14px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tabs button:focus-visible{outline:2px solid var(--bhSun);outline-offset:2px}
+.subtabs{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:3px;background:var(--panel);margin:0 0 14px}
+.subtabs button{border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer;font-size:14px}
+.subtabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.intro{margin:0 0 14px;color:var(--ink-2);max-width:70ch;font-size:14px}
+
+.legend{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
+.lgroup{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.lgroup .gh{font-size:12px;font-weight:600;color:var(--ink-2);min-width:96px;display:inline-flex;align-items:center;gap:6px}
+.lgroup .gh button.master{border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:inherit;font-size:11px;padding:2px 7px;border-radius:999px;cursor:pointer}
+.lgroup button.item{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-size:13px;padding:5px 10px 5px 7px;border-radius:8px;cursor:pointer}
+.lgroup button.item i{width:12px;height:12px;border-radius:3px;background:var(--c);flex:none}
+.lgroup button.item.online i{border-radius:50%;background:transparent;border:2px dotted var(--c)}
+.lgroup button.item[aria-pressed="false"]{opacity:.42}
+.lgroup button.item[aria-pressed="false"] i{background:var(--line);border-color:var(--line)}
+.lgroup button:focus-visible{outline:2px solid var(--bhSun);outline-offset:2px}
+.lgroup .travelkey i{background:repeating-linear-gradient(135deg,var(--travel-ink) 0 2px,transparent 2px 5px)}
+
+.month{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px 10px;margin:0 0 18px}
+.month h2{margin:0 0 10px;font-size:20px;font-weight:600;letter-spacing:-0.01em;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.month h2 small{font-size:13px;font-weight:400;color:var(--ink-3)}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.dow div{font-size:12px;color:var(--ink-3);padding:0 6px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wk{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;padding:4px 8px;border-radius:6px}
+.wk.online{background:var(--onlineband);border:1px dashed color-mix(in srgb,var(--osChords) 35%,transparent)}
+.wk .lbl{font-size:11px;color:var(--ink-3);margin-right:2px;white-space:nowrap}
+.wk .pill{--c:var(--ink);font-size:11px;line-height:1.2;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,var(--panel));color:var(--ink);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);text-decoration:none}
+.wk.online .pill{border-style:dotted;border-width:1.5px}
+.wk .pill.phase{border-radius:5px}
+.wk .pill.hidden{display:none}
+.wk:empty,.wk.none{display:none}
+a.pill:hover,a.pill:focus-visible{outline:2px solid var(--c);outline-offset:1px}
+.day{min-height:96px;border:1px solid var(--line);border-radius:8px;padding:5px 5px 6px;background:var(--panel);position:relative}
+.day.pad{border-color:transparent;background:transparent}
+.day.trip{background:var(--travel);border-color:transparent}
+.day.trip.tentative{background:repeating-linear-gradient(135deg,var(--travel) 0 6px,var(--panel) 6px 12px)}
+.day .n{font-size:13px;font-weight:600;color:var(--ink-2);display:flex;justify-content:space-between;align-items:baseline;gap:4px}
+.day .n em{font-style:normal;font-size:11px;font-weight:500;color:var(--travel-ink);text-align:right}
+.day.trip .n{color:var(--travel-ink)}
+.chips{display:flex;flex-direction:column;gap:3px;margin-top:4px}
+.chip{--c:var(--ink);font-size:11.5px;line-height:1.25;padding:3px 5px 3px 7px;border-radius:5px;background:color-mix(in srgb,var(--c) 14%,var(--panel));border-left:3px solid var(--c);color:var(--ink)}
+a.chip{text-decoration:none;display:block}
+a.chip:hover,a.chip:focus-visible{outline:2px solid var(--c);outline-offset:1px}
+.chip b{font-weight:600;display:block}
+.chip span{color:var(--ink-2);font-size:10.5px}
+.chip.miss{opacity:.45;text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.chip.maybe{border-left-style:dashed}
+.chip.online{background:transparent;border:1.5px dotted color-mix(in srgb,var(--c) 55%,transparent);border-left:3px solid var(--c)}
+.chip.online span{white-space:normal}
+.chip.life{background:transparent;border:1px dashed color-mix(in srgb,var(--c) 45%,transparent);border-left:3px solid var(--c)}
+.chip.hidden{display:none}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 8px;margin:0 0 18px}
+.panel h2{margin:0 0 4px;font-size:20px;font-weight:600}
+.panel h3{margin:14px 0 6px;font-size:15px;font-weight:600}
+.panel p{margin:0 0 14px;color:var(--ink-2);max-width:72ch}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.week .d{border:1px solid var(--line);border-radius:10px;padding:8px}
+.week .d h3{margin:0 0 6px;font-size:13px;font-weight:600}
+.week .d ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.week .d li{font-size:12px;line-height:1.3;padding:4px 6px;border-radius:6px;background:var(--paper);color:var(--ink-2)}
+.week .d li.cls{--c:var(--ink);background:color-mix(in srgb,var(--c) 14%,var(--panel));color:var(--ink);border-left:3px solid var(--c)}
+.week .d li.opt{border-left-style:dashed;opacity:.85}
+.notes{margin:16px 0 8px;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 18px}
+.notes li{font-size:13px;color:var(--ink-2);padding-left:14px;position:relative}
+.notes li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ink-3)}
+.counts{margin:14px 0 8px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px 14px}
+.counts div{font-size:13px;display:flex;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:6px;background:var(--paper)}
+.counts div b{font-weight:600}
+.counts div span{color:var(--ink-2);white-space:nowrap}
+
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 10px}
+table.t th{text-align:left;font-weight:600;color:var(--ink-2);padding:6px 8px;border-bottom:1px solid var(--line);font-size:12px}
+table.t td{padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t td:first-child{white-space:nowrap}
+table.t .sw{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:-1px}
+table.t tr.skip td{color:var(--ink-3)}
+table.t a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--ink) 35%,transparent);text-underline-offset:2px}
+table.t td.go{white-space:normal;min-width:180px}
+.tblwrap{overflow-x:auto}
+
+.shops{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin:6px 0 14px}
+.shop{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:start}
+.shop input{margin:4px 0 0;width:16px;height:16px;accent-color:var(--coffee)}
+.shop h4{margin:0;font-size:14px;font-weight:600}
+.shop h4 a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--ink) 30%,transparent);text-underline-offset:2px}
+.shop .addr{font-size:12px;color:var(--ink-2);margin:1px 0 4px}
+.shop .why{font-size:12.5px;color:var(--ink);margin:0}
+.shop .tags{margin:6px 0 0;display:flex;flex-wrap:wrap;gap:4px}
+.shop .tags span{font-size:11px;padding:2px 7px;border-radius:999px;background:var(--paper);color:var(--ink-2)}
+.shop.done{opacity:.6}
+.shop.done h4{text-decoration:line-through}
+
+@media (max-width:760px){
+  .wrap{padding:18px 12px 48px}
+  .dow{display:none}
+  .grid{grid-template-columns:1fr;gap:6px}
+  .day.pad{display:none}
+  .day{min-height:0}
+  .day:not(.trip):not(:has(.chip:not(.hidden))){display:none}
+  .day .n{font-size:14px}
+  .day .n::before{content:attr(data-dow) " ";color:var(--ink-3);font-weight:500}
+  .chips{flex-direction:row;flex-wrap:wrap}
+  .chip{flex:1 1 46%}
+  .week{grid-template-columns:1fr 1fr}
+  .lgroup .gh{min-width:0;width:100%}
+}
+@media (prefers-reduced-motion:no-preference){
+  .chip,.lgroup button{transition:opacity .15s ease}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Sabbatical calendar, Oct 5 – Dec 23</h1>
+  <p>Shaded days are trips; the hatched December stretch is the Taipei window that's still flexible. Struck-through sessions are ones you'd miss. Dotted bars above each week are online work; solid bars are training phases. Everything on the calendar links to its page.</p>
+</header>
+
+<div class="tabs" role="tablist" id="tabs">
+  <button role="tab" data-view="full" aria-selected="true">Full sabbatical</button>
+  <button role="tab" data-view="jazz" aria-selected="false">Jazz</button>
+  <button role="tab" data-view="abs" aria-selected="false">Abs</button>
+  <button role="tab" data-view="coffee" aria-selected="false">Coffee shops</button>
+</div>
+<div class="subtabs" id="subtabs" style="display:none" role="group" aria-label="Jazz view">
+  <button data-sub="inperson" aria-pressed="false">In person</button>
+  <button data-sub="online" aria-pressed="false">Online</button>
+  <button data-sub="plan" aria-pressed="true">Suggested plan</button>
+</div>
+<p class="intro" id="intro"></p>
+
+<div class="legend" id="legend"></div>
+
+<div id="months"></div>
+
+<section class="panel" id="dirBox">
+  <h2>Where things are</h2>
+  <p>Links open the program page. Travel is from 505 Union Ave by subway unless noted; times are rough door-to-door estimates.</p>
+  <div class="tblwrap" id="dirTable"></div>
+</section>
+
+<section class="panel" id="courseBox" style="display:none">
+  <h2>Open Studio curriculum, 10 weeks</h2>
+  <p>One course carries each phase, timed to feed the in-person classes that week. Hours are Open Studio's own totals; guided practice sessions count as practice-block time, not extra. Courses at the bottom are ones on your list that you're already past.</p>
+  <div class="tblwrap" id="courseTable"></div>
+</section>
+
+<section class="panel" id="absBox" style="display:none">
+  <h2>Training programs, 10 weeks</h2>
+  <p>Three progressions run side by side. Week 1 = Oct 4–10. Climbing is the priority; the run and pull-up work are scaled so they never cost you a climbing day.</p>
+  <div id="absPrograms"></div>
+</section>
+
+<section class="panel" id="coffeeBox" style="display:none">
+  <h2>Specialty coffee, reading and otherwise</h2>
+  <p>Tuesday and Friday mornings are the reading slot. First group is where a book and a pour-over both work; second group is destination roasters worth a detour, each paired with something you're already doing nearby. Tick them off as you go — the list remembers on this device.</p>
+  <h3>Read here</h3>
+  <div class="shops" id="shopsRead"></div>
+  <h3>Check out</h3>
+  <div class="shops" id="shopsGo"></div>
+  <p style="font-size:12.5px">Walk times are from 505 Union Ave. Hours shift seasonally — check before an early start, especially at the roaster-first spots that close mid-afternoon.</p>
+</section>
+
+<section class="panel" id="planBox" style="display:none">
+  <h2 id="planTitle">Suggested week</h2>
+  <p id="planIntro"></p>
+  <div class="week" id="week"></div>
+  <ul class="notes" id="notes"></ul>
+  <div class="counts" id="counts"></div>
+</section>
+</div>
+
+<script>
+(function(){
+  const Y=2026;
+  const D=(m,d)=>new Date(Y,m-1,d);
+  const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const dows=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const weekly=(dow,from,to)=>{const out=[];for(let d=new Date(from);d<=to;d.setDate(d.getDate()+1)){if(d.getDay()===dow)out.push(new Date(d));}return out;};
+  const list=(m,days)=>days.map(d=>D(m,d));
+  const sunOf=d=>{const s=new Date(d);s.setDate(s.getDate()-s.getDay());return s;};
+  const W=n=>{const s=D(10,4);s.setDate(s.getDate()+7*(n-1));return s;};  // week 1 = Oct 4–10
+  const OS="https://app.openstudiojazz.com/courses";
+
+  const trips=[
+    {name:"SF / Toronto",from:D(9,28),to:D(10,8),tentative:false},
+    {name:"Upstate cabin",from:D(10,24),to:D(10,26),tentative:false},
+    {name:"CoRL (optional)",from:D(11,7),to:D(11,9),tentative:true},
+    {name:"Taipei (flexible)",from:D(12,16),to:D(12,28),tentative:true},
+  ];
+  const tripOn=d=>trips.find(t=>d>=t.from&&d<=t.to);
+
+  // ---------- Day-level items ----------
+  const P=[
+    {id:"kaufTue",kind:"inperson",name:"Kaufman · Jazz Improv & Harmony",short:"Kaufman Harmony",time:"Tue 5:30–7p",dates:[...list(10,[6,13,20,27]),...list(11,[10,17,24]),...list(12,[1,8,15])],plan:true,url:"https://www.kaufmanmusiccenter.org/lms/class/c19715/",loc:"Lucy Moses School, 129 W 67th St (UWS)",go:"~45 min · L to Union Sq, 1 to 66th St"},
+    {id:"kaufThu",kind:"inperson",name:"Kaufman · Blues Jam",short:"Kaufman Blues Jam",time:"Thu 7–9p",dates:[...list(10,[8,15,22,29]),...list(11,[5,12,19]),...list(12,[3,10,17])],plan:true,url:"https://www.kaufmanmusiccenter.org/lms/class/c19707/",loc:"Lucy Moses School, 129 W 67th St (UWS)",go:"~45 min · L to Union Sq, 1 to 66th St"},
+    {id:"bhSun",kind:"inperson",name:"Barry Harris · Sunday series",short:"Barry Harris",time:"Sun 6–10p",dates:[...list(10,[11,18,25]),...list(11,[8,15,22]),...list(12,[6])],plan:true,url:"https://barryharrisinstituteofjazz.org/workshops/",loc:"Lincoln Square Neighborhood Center, 250 W 65th St · Oct 18 & Nov 15 at The New School (The Stone), 55 W 13th St",go:"~45 min to Lincoln Sq (L, 1) · ~25 min to New School (L to 6th Ave)"},
+    {id:"bhTue",kind:"inperson",name:"Barry Harris · free Tue lesson & jam",short:"BH free jam",time:"Tue 2–6p",dates:weekly(2,D(10,1),D(12,31)),drop:true,plan:true,planOpt:true,url:"https://barryharrisinstituteofjazz.org/free-piano-lesson-and-jam-sessions/",loc:"Jazz Cultural, 349 W 46th St",go:"~35 min · L to 8th Ave, A/C/E to 42nd"},
+    {id:"nyjwStd",kind:"inperson",name:"NYJW · Jazz Standards (Wessel)",short:"NYJW Standards",time:"Sat 2–4p",dates:weekly(6,D(10,1),D(12,31)),drop:true,plan:true,uncertain:[D(11,28),D(12,26)],url:"https://newyorkjazzworkshop.com/workshops/jazz-standards-workshop/",loc:"NYJW, 265 W 37th St, 10th fl",go:"~30 min · L to 8th Ave, walk or A/C/E to 34th"},
+    {id:"nyjwImp",kind:"inperson",name:"NYJW · Intro to Jazz Improv",short:"NYJW Intro Improv",time:"Sat 4–6p",dates:weekly(6,D(10,1),D(12,31)),drop:true,uncertain:[D(11,28),D(12,26)],url:"https://newyorkjazzworkshop.com/workshops/intro-to-jazz-improvisation/",loc:"NYJW, 265 W 37th St, 10th fl",go:"~30 min · L to 8th Ave, walk or A/C/E to 34th"},
+    {id:"nyjwSong",kind:"inperson",name:"NYJW · Swinging thru the Songbook",short:"NYJW Songbook",time:"Wed 8–10p",dates:weekly(3,D(10,1),D(12,31)),drop:true,uncertain:[D(11,25),D(12,23),D(12,30)],url:"https://newyorkjazzworkshop.com/workshops/swinging-through-the-american-songbook/",loc:"NYJW, 265 W 37th St, 10th fl",go:"~30 min · L to 8th Ave"},
+    {id:"nyjwBop",kind:"inperson",name:"NYJW · Bebop Winter Intensive",short:"NYJW Bebop Intensive",time:"11a–5p",dates:list(12,[27,28]),url:"https://newyorkjazzworkshop.com/workshops/bebop-improv-winter-intensive-2-days/",loc:"NYJW, 265 W 37th St, 10th fl",go:"~30 min · L to 8th Ave"},
+    {id:"ny92Imp",kind:"inperson",name:"92NY · Intro to Jazz Improv",short:"92NY Intro Improv",time:"Wed 5:30–7p",dates:[...list(10,[7,14,21,28]),...list(11,[4,18]),...list(12,[2,9,16])],url:"https://www.92ny.org/class/intro-to-jazz-improvisation",loc:"92NY, 1395 Lexington Ave (92nd St)",go:"~45 min · L to Union Sq, 4/5/6 to 86th or 96th"},
+    {id:"ny92Key",kind:"inperson",name:"92NY · Jazz Keyboard (Beginner)",short:"92NY Jazz Keyboard",time:"Tue 7–7:55p",dates:[...list(10,[6,13,20,27]),...list(11,[10,17,24]),...list(12,[1,8,15,22])],url:"https://www.92ny.org/class/jazz-keyboard-beginner",loc:"92NY, 1395 Lexington Ave (92nd St)",go:"~45 min · L to Union Sq, 4/5/6 to 86th or 96th"},
+    {id:"bkcm",kind:"inperson",name:"BKCM · Jazz Piano Lab (intermediate)",short:"BKCM Piano Lab",time:"Mon 8–9p",dates:weekly(1,D(10,1),D(12,31)),plan:true,planOpt:true,uncertain:[D(10,12),D(12,28)],url:"https://bkcm.org/class-ensemble/jazz-piano-lab-adults/",loc:"BKCM Prospect Park West, 963 President St (Park Slope)",go:"~35 min · G to 7th Ave + 10 min walk · ~25 min bike"},
+    {id:"bmsTue",kind:"inperson",name:"Brooklyn Music School · Tue Jazz Ensemble",short:"BMS Tue Ensemble",time:"Tue 7–8:30p",dates:weekly(2,D(10,1),D(12,31)),uncertain:[D(11,24),D(12,22),D(12,29)],url:"https://www.brooklynmusicschool.org/adult-ensembles",loc:"Brooklyn Music School, 126 St Felix St (Fort Greene)",go:"~25 min · G to Fulton St · ~20 min bike"},
+    {id:"bmsThu",kind:"inperson",name:"Brooklyn Music School · Thu Jazz Ensemble",short:"BMS Thu Ensemble",time:"Thu 6:30–8p",dates:weekly(4,D(10,1),D(12,31)),uncertain:[D(11,26),D(12,24),D(12,31)],url:"https://www.brooklynmusicschool.org/adult-ensembles",loc:"Brooklyn Music School, 126 St Felix St (Fort Greene)",go:"~25 min · G to Fulton St · ~20 min bike"},
+    {id:"nyja",kind:"inperson",name:"NYJA · Small Ensemble (Fri section)",short:"NYJA Ensemble",time:"Fri 5–7p",dates:[...list(10,[30]),...list(11,[6,13,20]),...list(12,[4,11,18])],url:"https://www.nyjazzacademy.com/program/small-ensemble-late-fall-2026/",loc:"NYJA @ Smash Studios, 307 W 36th St, 18th fl",go:"~30 min · L to 8th Ave, walk or A/C/E to 34th"},
+    {id:"nyjaInt",kind:"inperson",name:"NYJA · Winter Intensive",short:"NYJA Winter Intensive",time:"11a–5p",dates:list(12,[27,28,29,30,31]),url:"https://www.nyjazzacademy.com/program/nyja-winter-jazz-intensives-12-2026/",loc:"NYJA @ Smash Studios, 307 W 36th St, 18th fl",go:"~30 min · L to 8th Ave"},
+    // abs
+    {id:"climb",kind:"abs",name:"Climb · Vital BK (the 3× floor)",short:"Climb BK",time:"3:30–5:30p",dates:[...weekly(1,D(10,5),D(12,23)),...weekly(3,D(10,5),D(12,23)),...weekly(5,D(10,5),D(12,23))],url:"https://www.vitalclimbinggym.com/",loc:"Vital Brooklyn, 221 N 14th St",go:"10 min walk"},
+    {id:"climbLES",kind:"abs",name:"Climb · Vital LES evening (optional 4th)",short:"Climb LES",time:"Thu 4:30–6:30p",dates:weekly(4,D(10,5),D(12,23)),drop:true,url:"https://www.vitalclimbinggym.com/",loc:"Vital Lower East Side, 182 Broome St (Essex Crossing)",go:"~20 min · J/M from Lorimer to Essex · ~15 min bike over the bridge"},
+    {id:"run",kind:"abs",name:"Run (McCarren) + pull-ups",short:"Run + pull-ups",time:"Tue 3:30p",dates:weekly(2,D(10,5),D(12,23)),url:"https://www.nycgovparks.org/parks/mccarren-park",loc:"McCarren Park track",go:"5 min walk"},
+    {id:"run2",kind:"abs",name:"Run · optional 2nd of the week + pull-ups",short:"Run (2nd)",time:"Sun 10a",dates:weekly(0,D(10,5),D(12,23)),drop:true,url:"https://www.nycgovparks.org/parks/mccarren-park",loc:"McCarren Park track",go:"5 min walk"},
+    {id:"badm",kind:"abs",name:"Badminton · Kotofit beginner open play (every other Sat)",short:"Badminton",time:"Sat 10a",dates:[...list(10,[10,31]),...list(11,[14,28]),...list(12,[12])],uncertain:[D(11,28)],url:"https://www.kotofit.com/",loc:"Kotofit LIC, 43-56 10th St, Long Island City",go:"~25 min · G to 21st St + 10 min walk · ~15 min bike via Pulaski Bridge"},
+    // read
+    {id:"coffee",kind:"read",name:"Coffee shop + reading",short:"Coffee + read",time:"8–9:30a",dates:[...weekly(2,D(10,5),D(12,23)),...weekly(5,D(10,5),D(12,23))],loc:"Rotate the shops on the Coffee tab",go:"walk"},
+  ];
+
+  // ---------- Week-level items ----------
+  const O=[
+    {id:"osChords",name:"Jazz Chords for Beginners",short:"Chords for Beginners",wk:[1,1],hrs:"2.5 h · 12 videos",feeds:"Rooted 5-note, rootless 4-note, rootless LH voicings in 12 keys. Do it in week 1 so Kaufman Tuesday has vocabulary to attach to."},
+    {id:"osLHV",name:"Jazz Piano Basics Vol. 2: Left Hand Voicings",short:"LH Voicings",wk:[2,3],hrs:"1 h · 5 videos",feeds:"Five LH voicing types over Oleo / Solar / I Remember You. This is the autopilot left hand your arrangement goal needs."},
+    {id:"osScales",name:"Jazz Scales for Beginners",short:"Scales for Beginners",wk:[2,3],hrs:"short",feeds:"Chord-scale pairing for the chord-tone soloing you're already working on. Pair with the Targetting 3rds worksheet."},
+    {id:"osLead",name:"Jazz Piano Basics Vol. 1: Lead Sheet Breakdown",short:"Lead Sheet Breakdown",wk:[4,5],hrs:"short",feeds:"How to turn a lead sheet into a full two-hand version. This is the template for every standard of the week from here on."},
+    {id:"osHear",name:"Hearing Great Harmony",short:"Hearing Great Harmony",wk:[4,10],hrs:"1 lesson / week",feeds:"The one ear-training course that's about hearing harmony in context, not intervals. Runs alongside your transcription block for 7 weeks."},
+    {id:"osBebopCh",name:"Bebop Chords for Beginners",short:"Bebop Chords",wk:[6,7],hrs:"short",feeds:"Barry Harris–style 6th/diminished movement. Timed to land between Barry Harris Sundays Nov 15 and 22."},
+    {id:"osBHSoC",name:"Barry Harris' Scales of Chords",short:"BH Scales of Chords",wk:[6,7],hrs:"short",feeds:"Same weeks as Bebop Chords; the two are one idea from two angles. Bring questions to the Sunday harmony class."},
+    {id:"osEncl",name:"Bebop Enclosures for Beginners",short:"Bebop Enclosures",wk:[8,9],hrs:"short",feeds:"Chord tones → enclosures. Use on the Blues Jam tune each week; this is what turns the Baker bebop-scale chapter into lines."},
+    {id:"osSolo",name:"Elements of Solo Piano (or Solo Piano Basics: Ballads)",short:"Elements of Solo Piano",wk:[10,11],hrs:"longer",feeds:"Arrangement capstone: LH pattern + RH melody with chord tones underneath, on a ballad you've transcribed. Record it before Taipei."},
+  ];
+  const skips=[
+    {name:"Jazz Piano Jump-Start (7 weeks)",why:"Foundations course for novices. You're past it; the backing tracks are the only useful part."},
+    {name:"Jazz Piano for Beginners / Jazz Piano Foundations",why:"Same ground as Jump-Start. Skip unless a Kaufman voicing week feels shaky, then cherry-pick one guided practice session."},
+  ];
+
+  const A=[
+    {id:"phC25k",prog:"c25k",short:"C25K W1",wk:[1,2],text:"Run 60s / walk 90s × 8 (20 min)"},
+    {id:"phC25k",prog:"c25k",short:"C25K W2",wk:[3,3],text:"Run 90s / walk 2 min × 6"},
+    {id:"phC25k",prog:"c25k",short:"C25K W3",wk:[4,4],text:"90s/90s, then 3 min/3 min — twice through"},
+    {id:"phC25k",prog:"c25k",short:"C25K W4",wk:[5,5],text:"3 min, walk 90s, 5 min, walk 2.5, 3 min, walk 90s, 5 min"},
+    {id:"phC25k",prog:"c25k",short:"C25K W5",wk:[6,6],text:"5/3/5/3/5 → 8/5/8 → 20 min continuous"},
+    {id:"phC25k",prog:"c25k",short:"C25K W6",wk:[7,7],text:"5/3/8/3/5 → 10/3/10 → 25 min continuous"},
+    {id:"phC25k",prog:"c25k",short:"C25K W7",wk:[8,8],text:"25 min continuous, both runs"},
+    {id:"phC25k",prog:"c25k",short:"C25K W8–9",wk:[9,10],text:"28 min, then 30 min ≈ 5K"},
+    {id:"phPull",prog:"pull",short:"Pull-ups · Build",wk:[1,3],text:"3×/wk after runs + Fri post-climb: 5×5 bodyweight (or +5 lb), 2 in reserve"},
+    {id:"phPull",prog:"pull",short:"Pull-ups · Load",wk:[4,7],text:"5×5 weighted, +2.5–5 lb each week; Sunday max set"},
+    {id:"phPull",prog:"pull",short:"Pull-ups · Peak + archer",wk:[8,10],text:"3×3 heavy + 3×3 archer each side; max test week 10"},
+    {id:"phV8",prog:"v8",short:"Climb · Rebuild",wk:[1,3],text:"Volume at flash level, open-hand only, no crimps, 3 sessions"},
+    {id:"phV8",prog:"v8",short:"Climb · Project purples",wk:[4,7],text:"2 limit sessions on finger-friendly styles + 1–2 volume"},
+    {id:"phV8",prog:"v8",short:"Climb · V8 attempts",wk:[8,10],text:"1 V8 session, 1 purple session, 1 volume, LES 4th if the finger is quiet"},
+  ];
+  const absPrograms=[
+    {id:"phV8",name:"Vital → V8",goal:"Back to purples by week 6, V8 attempts by week 8.",rows:[
+      ["Wk 1–3","Rebuild","Volume only at flash level: 30–40 problems a session, open-hand, zero crimps. Get the PIP finger looked at by a hand PT in week 1. 3 sessions; no 4th until the finger has been checked."],
+      ["Wk 4–7","Project purples","Two limit sessions a week (slopers, pinches, compression, dynos first; crimps last), one or two volume sessions. Add the Thursday LES session for style variety. Finger check-in end of week 4 and 7."],
+      ["Wk 8–10","V8 attempts","One dedicated V8 session, one purple session, one volume session; LES Thursday for volume only. If the finger flares, drop back a phase — that's the plan working, not failing."],
+    ]},
+    {id:"phPull",name:"Pull-ups → 10+ / weighted",goal:"10 clean, or +20 lb × 5, by week 10. One-arm is a 12-month goal; archers in weeks 8–10 are its first step.",rows:[
+      ["Wk 1–3","Build","5×5 bodyweight after each run (Tue, Sun) and after Friday climbing. Two reps in reserve on every set. If you're under 10 now, grease the groove instead: 4 sets of 5 spread through non-climb days."],
+      ["Wk 4–7","Load","5×5 weighted starting +10 lb, +2.5–5 lb a week. Sunday max set unweighted, logged."],
+      ["Wk 8–10","Peak + archer","3×3 heavy, then 3×3 archer pull-ups each side as skill work. Retest max reps on the Sunday of week 10."],
+    ]},
+    {id:"phC25k",name:"Couch to 5K (two runs a week)",goal:"A comfortable 25–30 min continuous run by week 10. The standard plan wants 3 runs a week; at 2 you'll land around week 7–8 of it, which is the point where it stops feeling like intervals.",rows:[
+      ["Tue fixed","Run + pull-ups","The one run that always happens. Start 20 min, +5 min a week."],
+      ["Sun optional","Quick run + pull-ups","Take it on weeks the finger wants a wall-free day. Skip it on weeks you add the 4th climb."],
+      ["Weeks","Prescription","Follow the C25K bars on the calendar; each week's intervals are in the bar tooltip and the table below."],
+    ]},
+    {id:"badm",name:"Badminton",goal:"Twice a month at Kotofit's Saturday beginner open play. It's the fun one — no progression, no tracking.",rows:[
+      ["Oct 10, Oct 31","",""],["Nov 14, Nov 28 (confirm)","",""],["Dec 12","",""],
+    ]},
+  ];
+
+  // ---------- Coffee ----------
+  const shopsRead=[
+    {n:"Sey Coffee",a:"18 Grattan St, East Williamsburg",w:"~20 min walk · 8 bike",why:"The light-roast pole of Brooklyn: rotating single origins, a big quiet room with high ceilings, pour-over is the point. Closest match to your anaerobic / co-ferment taste; ask what's on that isn't on the menu.",tags:["light roast","pour-over","best for reading"],u:"https://www.seycoffee.com/"},
+    {n:"Devoción",a:"69 Grand St, Williamsburg",w:"~15 min walk",why:"Colombian direct-trade, roasted on site, skylit room full of plants. Roast sits a touch darker than Sey; the space is the draw for a long read.",tags:["roaster","big room","reading"],u:"https://www.devocion.com/"},
+    {n:"Café Grumpy",a:"193 Meserole Ave, Greenpoint",w:"~15 min walk",why:"The 2005 original beside its own roastery. Pour-over is still the best thing here; unfussy, plenty of seats, 7–6 daily.",tags:["roaster","pour-over","laptop-tolerant"],u:"https://cafegrumpy.com/"},
+    {n:"Variety Coffee Roasters",a:"368 Grand St, Williamsburg · 142 Driggs Ave, Greenpoint",w:"~10 / ~12 min walk",why:"The reliable one: solid roast program, tables, outlets, Driggs is open until 9. Not a tasting destination; the place you go when you want to be sure you'll get a seat.",tags:["roaster","seats","open late"],u:"https://www.varietycoffeeroasters.com/"},
+    {n:"Partners Coffee (ex-Toby's)",a:"125 N 6th St, Williamsburg",w:"~15 min walk",why:"Aussie-style roastery with a proper pour-over bar. Beautiful room, but crowded by 10 on weekends — go on your Tuesday.",tags:["roaster","pour-over","busy"],u:"https://www.partnerscoffee.com/"},
+    {n:"Pueblo Querido",a:"195 Greenpoint Ave, Greenpoint",w:"~20 min walk",why:"Family-run Colombian roaster, roasts on site, Colombian pastries. Small and early — weekdays 6:30–3 — so it's a Friday-morning place, not an afternoon one.",tags:["roaster","early","small"],u:"https://www.pueblo-querido.com/"},
+    {n:"Homecoming",a:"107 Franklin St, Greenpoint",w:"~20 min walk",why:"Flowers and coffee in one room; calm, good light, the kind of place a book actually gets read. Coffee is good rather than serious.",tags:["calm","reading"],u:"https://www.home-coming.com/"},
+    {n:"Oslo Coffee Roasters",a:"133 Roebling St, Williamsburg",w:"~8 min walk",why:"The nearest real roaster to the apartment. Norwegian-leaning, small, no fuss. Your default when the morning is short.",tags:["roaster","closest"],u:"https://www.oslocoffee.com/"},
+  ];
+  const shopsGo=[
+    {n:"Coffee Project NY (LIC)",a:"Long Island City (roastery / tasting lab)",w:"pair with Kotofit Saturdays",why:"Tasting flights and experimental processes are their whole thing — the most anaerobic-forward program in the city. Badminton mornings put you ten minutes away.",tags:["flights","experimental","pair: badminton"],u:"https://coffeeprojectny.com/"},
+    {n:"La Cabra",a:"152 2nd Ave, East Village",w:"pair with Vital LES Thursdays",why:"Aarhus light-roast Nordic style, the closest thing here to the Tokyo omakase shops. Bakery is half the reason people go.",tags:["Nordic","light roast","pair: LES climb"],u:"https://lacabra.dk/"},
+    {n:"Sweetleaf",a:"159 Freeman St, Greenpoint",w:"~25 min walk · 10 bike",why:"Greenpoint roaster with a real pour-over bar on Freeman. Worth one Friday when you want a longer walk.",tags:["roaster","pour-over"],u:"https://sweetleafcoffee.com/"},
+    {n:"Loveless Coffee",a:"Bushwick (look up current address)",w:"pair with a Sey morning",why:"Small Brooklyn team roasting light-to-medium in a New York–Nordic style; keeps coming up next to Sey in current guides. Do both in one Bushwick morning.",tags:["light roast","verify"],u:"https://www.google.com/search?q=Loveless+Coffee+Bushwick"},
+    {n:"Cadet Coffee",a:"Greenpoint (look up current address)",w:"walk",why:"New Greenpoint bar pouring Sey on espresso plus guest pour-overs from other roasters — a multi-roaster program a few blocks from home.",tags:["multi-roaster","new","verify"],u:"https://www.google.com/search?q=Cadet+Coffee+Greenpoint"},
+    {n:"Devoción public classes",a:"69 Grand St, Williamsburg",w:"~15 min walk",why:"Their training lab runs pour-over classes and cuppings. One cupping during the sabbatical fits the competition-barista curiosity without becoming a project.",tags:["cupping","class"],u:"https://www.devocion.com/"},
+  ];
+
+  // ---------- Online day-by-day (video + PDF) ----------
+  const OD=[
+    ["2026-10-08","osChords","Welcome · Rooted 5-Note Voicings lesson","JCB – Piano.pdf (Drive › openstudiojazz)"],
+    ["2026-10-09","osChords","Rooted 5-Note GPS #1–3","JCB – Piano.pdf"],
+    ["2026-10-10","osChords","Rootless 4-Note lesson · GPS #4–6","JCB – Piano.pdf"],
+    ["2026-10-11","osChords","Rootless LH lesson · GPS #7–9","JCB – Piano.pdf"],
+    ["2026-10-12","osLHV","Video 1 of 5 (rooted LH)","LHV workbook.pdf (Drive › openstudiojazz)"],
+    ["2026-10-13","osLHV","Video 2 of 5","LHV workbook.pdf"],
+    ["2026-10-14","osLHV","Video 3 of 5","LHV workbook.pdf"],
+    ["2026-10-15","osLHV","Video 4 of 5 (4ths)","LHV workbook.pdf"],
+    ["2026-10-16","osLHV","Video 5 of 5 (clusters) — run all five over Oleo / Solar / I Remember You","LHV workbook.pdf"],
+    ["2026-10-17","osScales","Welcome · 1. Modes (and how to use them)","Jazz Scales workbook (download from OS)"],
+    ["2026-10-18","osScales","2. The Art of Scale Running","Jazz Scales workbook"],
+    ["2026-10-19","osScales","3. Adding Gravity","Jazz Scales workbook · Gorman Targetting 3rds.pdf"],
+    ["2026-10-20","osScales","4. The Magic Dominant Scale","Jazz Scales workbook"],
+    ["2026-10-21","osScales","5. Diminished Scale Basics","Jazz Scales workbook"],
+    ["2026-10-22","osScales","6. Lydian Dominants & Tritone Substitutions","Jazz Scales workbook"],
+    ["2026-10-23","osScales","7. Rhythm Changes Recap","Jazz Scales workbook · Gorman Rhythm changes solo.pdf"],
+    ["2026-10-27","osScales","8. Minor 2-5-1s over Autumn Leaves · Play-along","Jazz Scales workbook · 2a/2b Autumn Leaves (Drive › standards lab)"],
+    ["2026-10-28","osScales","9. The Blues is Your Best Friend","Jazz Scales workbook · Baker The Blues (browse)"],
+    ["2026-10-29","osScales","10. More Advanced Practice Techniques","Jazz Scales workbook"],
+    ["2026-10-30","osLead","Lesson 1 — reading the lead sheet","Vol. 1 worksheets (download) · catbus fake book"],
+    ["2026-10-31","osHear","Lesson 1","HGH workbook (download)"],
+    ["2026-11-02","osLead","Lesson 2 — bass + shells","Vol. 1 worksheets · Gorman Harmonising a melody.pdf"],
+    ["2026-11-03","osLead","Lesson 3 — melody on top","Vol. 1 worksheets · Gorman Skylark top-note worksheet.pdf"],
+    ["2026-11-04","osLead","Lesson 4 — filling the middle","Vol. 1 worksheets"],
+    ["2026-11-05","osLead","Lesson 5 — full two-hand version; apply to this week's standard","Vol. 1 worksheets"],
+    ["2026-11-06","osHear","Lesson 2 (moved off CoRL Saturday)","HGH workbook"],
+    ["2026-11-10","osBebopCh","Intro · Lesson 1 — the 6th chord","Bebop Chords worksheets (download)"],
+    ["2026-11-11","osBebopCh","Lessons 2–3 — 6th / diminished movement","Bebop Chords worksheets · Barry Harris Method.pdf (Drive › soloing technique)"],
+    ["2026-11-12","osBebopCh","Lessons 4–5","Bebop Chords worksheets"],
+    ["2026-11-13","osBebopCh","Lessons 6–7","Bebop Chords worksheets"],
+    ["2026-11-14","osBebopCh","GPS 1 · HGH lesson 3","Bebop Chords worksheets · HGH workbook"],
+    ["2026-11-15","osBebopCh","GPS 2 — then Barry Harris Sunday tonight","Bebop Chords worksheets"],
+    ["2026-11-16","osBebopCh","Lessons 8–9","Bebop Chords worksheets"],
+    ["2026-11-17","osBebopCh","Lessons 10–11","Bebop Chords worksheets"],
+    ["2026-11-18","osBebopCh","GPS 3–4","Bebop Chords worksheets"],
+    ["2026-11-19","osBebopCh","Play-alongs — apply to the Blues Jam tune","Bebop Chords worksheets"],
+    ["2026-11-20","osBHSoC","Scales of Chords, first half","course PDF (download) · Barry Harris Method.pdf"],
+    ["2026-11-21","osBHSoC","Scales of Chords, second half · HGH lesson 4 — questions for tomorrow's harmony class","course PDF · HGH workbook"],
+    ["2026-11-23","osEncl","Getting Started · Broken 7th Chords GPS","Bebop Enclosures workbook (download)"],
+    ["2026-11-24","osEncl","Broken 7th Inversion GPS","Bebop Enclosures workbook"],
+    ["2026-11-25","osEncl","Diatonic/Chromatic Surround tutorial · GPS 1","Bebop Enclosures workbook · Baker How to Play Bebop ch. 1"],
+    ["2026-11-26","osEncl","Diatonic/Chromatic Surround GPS 2 (short day)","Bebop Enclosures workbook"],
+    ["2026-11-27","osEncl","Surround Etude GPS","Bebop Enclosures workbook"],
+    ["2026-11-28","osEncl","Run-Through Enclosure tutorial · GPS 1 · HGH lesson 5","Bebop Enclosures workbook · HGH workbook"],
+    ["2026-11-30","osEncl","Run-Through Enclosure GPS 2 · etude","Bebop Enclosures workbook"],
+    ["2026-12-01","osEncl","Videos 12–13 — remaining enclosure types","Bebop Enclosures workbook · Gorman Progressive vocabulary.pdf"],
+    ["2026-12-02","osEncl","Videos 14–15","Bebop Enclosures workbook"],
+    ["2026-12-03","osEncl","Videos 16–17 — tune etudes (Groovin' High / Scrapple)","Bebop Enclosures workbook"],
+    ["2026-12-04","osEncl","Video 18 — Oleo etude, all 12 keys","Bebop Enclosures workbook"],
+    ["2026-12-05","osHear","Lesson 6","HGH workbook"],
+    ["2026-12-07","osSolo","Intro · 1. \"Nearness of You\" performance","Solo Piano PDFs (download) · 1000 Arrangements (browse)"],
+    ["2026-12-08","osSolo","2. Groove","Solo Piano PDFs"],
+    ["2026-12-09","osSolo","3. Using Both Hands Equally","Solo Piano PDFs"],
+    ["2026-12-10","osSolo","4. \"Middle Hand\" Ideas & Dynamics","Solo Piano PDFs"],
+    ["2026-12-11","osSolo","5. Orchestration","Solo Piano PDFs"],
+    ["2026-12-12","osSolo","6. Using the Whole Piano · HGH lesson 7 (last)","Solo Piano PDFs · HGH workbook"],
+    ["2026-12-13","osSolo","7. Developing a Legato Touch","Solo Piano PDFs"],
+    ["2026-12-14","osSolo","GPS 1–2","Solo Piano PDFs"],
+    ["2026-12-15","osSolo","GPS 3–4 — record the ballad arrangement","Solo Piano PDFs"],
+  ].map(r=>({date:r[0],course:r[1],what:r[2],pdf:r[3]}));
+
+  // ---------- State ----------
+  const state={view:"full",sub:"plan",on:{},travel:true};
+  P.forEach(p=>state.on[p.id]=true);O.forEach(o=>state.on[o.id]=true);
+  ["phC25k","phPull","phV8"].forEach(id=>state.on[id]=true);
+
+  function cfg(){
+    const v=state.view;
+    if(v==="full")return{intro:"The whole sabbatical on one grid. Music is split into online (dotted bars) and in person (chips); Abs is the gym; Read is the two coffee-shop mornings. Untick a group to quiet it.",inperson:p=>p.plan,online:true,abs:true,read:true,phases:false,plan:"full",groups:true};
+    if(v==="jazz"&&state.sub==="inperson")return{intro:"Every in-person class you're considering, laid over your trips. Same-evening pairs to watch: Kaufman Tue vs 92NY Keyboard vs BMS Tue; Kaufman Thu vs BMS Thu; the two NYJW Saturdays stack fine (2–6p).",inperson:p=>true,online:false,abs:false,read:false,phases:false,plan:false};
+    if(v==="jazz"&&state.sub==="online")return{intro:"Open Studio only. Each dotted bar is the course you're working through that week; the table above says what it feeds. Nothing here is tied to a clock, so trips cost you nothing except the week itself.",inperson:p=>false,online:true,abs:false,read:false,phases:false,plan:false};
+    if(v==="jazz")return{intro:"The jazz plan: four fixed in-person classes, one pending, one drop-in, and the online curriculum underneath. Dashed items are optional.",inperson:p=>p.plan,online:true,abs:false,read:false,phases:false,plan:"jazz"};
+    if(v==="abs")return{intro:"Climbing, running, pull-ups and badminton. The solid bars are training phases; the chips are sessions. Three sessions of climbing a week is the floor, four the ceiling — everything else bends around it.",inperson:p=>false,online:false,abs:true,read:false,phases:true,plan:"abs"};
+    return{intro:"",inperson:p=>false,online:false,abs:false,read:false,phases:false,plan:false,coffee:true};
+  }
+
+  // ---------- Legend ----------
+  const legend=document.getElementById("legend");
+  function mkItem(item,cls){
+    const b=document.createElement("button");b.type="button";b.className="item"+(cls?" "+cls:"");b.style.setProperty("--c",`var(--${item.id})`);b.setAttribute("aria-pressed",String(state.on[item.id]));b.dataset.id=item.id;
+    b.innerHTML=`<i></i>${item.short}`;b.title=item.name+(item.time?" · "+item.time:"");
+    b.addEventListener("click",()=>{state.on[item.id]=!state.on[item.id];render();});
+    return b;
+  }
+  function group(title,items,cls,masterIds){
+    const g=document.createElement("div");g.className="lgroup";
+    const h=document.createElement("div");h.className="gh";h.textContent=title;
+    if(masterIds&&masterIds.length){
+      const allOn=masterIds.every(id=>state.on[id]);
+      const m=document.createElement("button");m.className="master";m.type="button";m.textContent=allOn?"hide all":"show all";
+      m.addEventListener("click",()=>{masterIds.forEach(id=>state.on[id]=!allOn);render();});
+      h.appendChild(m);
+    }
+    g.appendChild(h);
+    items.forEach(it=>g.appendChild(mkItem(it,cls)));
+    return g;
+  }
+  function renderLegend(c){
+    legend.innerHTML="";
+    if(c.coffee)return;
+    const inP=P.filter(p=>p.kind==="inperson"&&c.inperson(p));
+    if(c.online)legend.appendChild(group("Music · online",O,"online",O.map(o=>o.id)));
+    if(inP.length)legend.appendChild(group(c.online?"Music · in person":"In person",inP,"",inP.map(p=>p.id)));
+    if(c.abs){const abs=P.filter(p=>p.kind==="abs");legend.appendChild(group("Abs",abs,"",abs.map(p=>p.id)));}
+    if(c.phases){const ph=[{id:"phV8",short:"Climb phases",name:"Vital → V8"},{id:"phPull",short:"Pull-up phases",name:"Pull-ups"},{id:"phC25k",short:"C25K weeks",name:"Couch to 5K"}];legend.appendChild(group("Phases",ph,"",ph.map(p=>p.id)));}
+    if(c.read){const r=P.filter(p=>p.kind==="read");legend.appendChild(group("Read",r,"",r.map(p=>p.id)));}
+    const tg=document.createElement("div");tg.className="lgroup";
+    const th=document.createElement("div");th.className="gh";th.textContent="Travel";tg.appendChild(th);
+    const tb=document.createElement("button");tb.type="button";tb.className="item travelkey";tb.setAttribute("aria-pressed",String(state.travel));tb.innerHTML="<i></i>Trips";tb.title="Shade travel days and strike missed sessions";
+    tb.addEventListener("click",()=>{state.travel=!state.travel;render();});tg.appendChild(tb);
+    legend.appendChild(tg);
+  }
+
+  function chipVisible(p,c){
+    if(p.kind==="inperson")return c.inperson(p)&&state.on[p.id];
+    if(p.kind==="abs")return c.abs&&state.on[p.id];
+    if(p.kind==="read")return c.read&&state.on[p.id];
+    return false;
+  }
+
+  // ---------- Tables ----------
+  function courseTable(){
+    const rows=O.map(o=>`<tr><td><span class="sw" style="--c:var(--${o.id})"></span>Wk ${o.wk[0]===o.wk[1]?o.wk[0]:o.wk[0]+"–"+o.wk[1]}</td><td><a href="${OS}" target="_blank" rel="noopener">${o.name}</a><br><span style="color:var(--ink-3)">${o.hrs}</span></td><td>${o.feeds}</td></tr>`).join("");
+    const sk=skips.map(s=>`<tr class="skip"><td>Skip</td><td>${s.name}</td><td>${s.why}</td></tr>`).join("");
+    document.getElementById("courseTable").innerHTML=`<table class="t"><thead><tr><th>Weeks</th><th>Course</th><th>What it feeds</th></tr></thead><tbody>${rows}${sk}</tbody></table>
+    <p style="font-size:13px">Week 1 = Oct 4–10 (you're back Oct 8). Week 10 = Dec 6–12. Week 11 = Dec 13–19 is a buffer for recording and packing.</p>
+    <h3>Day by day — which videos, which PDF</h3>
+    <p style="font-size:13px">One or two videos a day, inside the technique block (or the arrangement block for the solo-piano weeks). Lesson titles for Jazz Chords, Scales, Enclosures and Solo Piano are from the Open Studio catalog; LH Voicings, Lead Sheet Breakdown, Hearing Great Harmony and Bebop Chords show video numbers — swap in the exact titles from the app. Drive PDFs are in your jazz folder; "download" means grab the course workbook from the OS lesson page.</p>
+    <div class="tblwrap"><table class="t"><thead><tr><th>Date</th><th>Course</th><th>Watch / do</th><th>PDF</th></tr></thead><tbody>${OD.map(od=>{const o=O.find(x=>x.id===od.course);const d=new Date(od.date+"T12:00:00");const lbl=d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});return `<tr><td>${lbl}</td><td><span class="sw" style="--c:var(--${o.id})"></span><a href="${OS}" target="_blank" rel="noopener">${o.short}</a></td><td>${od.what}</td><td>${od.pdf}</td></tr>`;}).join("")}</tbody></table></div>`;
+  }
+  function absTable(){
+    const html=absPrograms.map(pr=>{
+      const rows=pr.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]?`<b>${r[1]}</b>`:""}</td><td>${r[2]}</td></tr>`).join("");
+      return `<h3><span class="sw" style="--c:var(--${pr.id});display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--c);margin-right:6px"></span>${pr.name}</h3><p>${pr.goal}</p><div class="tblwrap"><table class="t"><tbody>${rows}</tbody></table></div>`;
+    }).join("");
+    const c25=A.filter(a=>a.prog==="c25k").map(a=>`<tr><td>Wk ${a.wk[0]===a.wk[1]?a.wk[0]:a.wk[0]+"–"+a.wk[1]}</td><td><b>${a.short}</b></td><td>${a.text}</td></tr>`).join("");
+    document.getElementById("absPrograms").innerHTML=html+`<h3>C25K week by week</h3><div class="tblwrap"><table class="t"><tbody>${c25}</tbody></table></div>`;
+  }
+  function renderDir(c){
+    const items=[];
+    P.forEach(p=>{if((p.kind==="inperson"&&c.inperson(p))||(p.kind==="abs"&&c.abs)||(p.kind==="read"&&c.read))items.push(p);});
+    if(c.online)items.unshift({name:"Open Studio (all courses in the curriculum)",url:OS,loc:"Online",go:"—",time:"your practice blocks",id:"osChords"});
+    document.getElementById("dirTable").innerHTML=`<table class="t"><thead><tr><th>Program</th><th>When</th><th>Where</th><th>From 505 Union</th></tr></thead><tbody>${items.map(p=>`<tr><td><span class="sw" style="--c:var(--${p.id})"></span>${p.url?`<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`:p.name}</td><td>${p.time}</td><td>${p.loc}</td><td class="go">${p.go}</td></tr>`).join("")}</tbody></table>`;
+  }
+
+  // ---------- Coffee ----------
+  let visited={};
+  try{visited=JSON.parse(localStorage.getItem("sabb-coffee-visited")||"{}")||{};}catch(e){visited={};}
+  function shopCard(sh){
+    const id=sh.n.replace(/\W+/g,"-").toLowerCase();
+    const d=document.createElement("div");d.className="shop"+(visited[id]?" done":"");
+    d.innerHTML=`<input type="checkbox" aria-label="Visited ${sh.n}" ${visited[id]?"checked":""}><div><h4><a href="${sh.u}" target="_blank" rel="noopener">${sh.n}</a></h4><div class="addr">${sh.a} · ${sh.w}</div><p class="why">${sh.why}</p><div class="tags">${sh.tags.map(t=>`<span>${t}</span>`).join("")}</div></div>`;
+    d.querySelector("input").addEventListener("change",e=>{visited[id]=e.target.checked;d.classList.toggle("done",e.target.checked);try{localStorage.setItem("sabb-coffee-visited",JSON.stringify(visited));}catch(err){}});
+    return d;
+  }
+  function renderCoffee(){
+    const r=document.getElementById("shopsRead");r.innerHTML="";shopsRead.forEach(s=>r.appendChild(shopCard(s)));
+    const g=document.getElementById("shopsGo");g.innerHTML="";shopsGo.forEach(s=>g.appendChild(shopCard(s)));
+  }
+
+  // ---------- Week bars ----------
+  function weekBar(weekStart,c){
+    const frag=document.createDocumentFragment();
+    const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);
+    const n=Math.round((weekStart-D(10,4))/(7*864e5))+1;
+    const overlaps=(a,b)=>{const s=W(a),e=W(b);e.setDate(e.getDate()+6);return !(weekEnd<s||weekStart>e);};
+    if(c.online){
+      const bar=document.createElement("div");bar.className="wk online";let any=false;
+      O.forEach(o=>{if(!overlaps(o.wk[0],o.wk[1]))return;const a=document.createElement("a");a.href=OS;a.target="_blank";a.rel="noopener";a.className="pill"+(state.on[o.id]?"":" hidden");a.style.setProperty("--c",`var(--${o.id})`);a.textContent=o.short;a.title=o.name+" — online, Open Studio";bar.appendChild(a);any=true;});
+      if(any){const l=document.createElement("span");l.className="lbl";l.textContent="Online · wk "+n;bar.prepend(l);}else bar.classList.add("none");
+      frag.appendChild(bar);
+    }
+    if(c.phases){
+      const bar=document.createElement("div");bar.className="wk";let any=false;
+      A.forEach(a=>{if(!overlaps(a.wk[0],a.wk[1]))return;const s=document.createElement("span");s.className="pill phase"+(state.on[a.id]?"":" hidden");s.style.setProperty("--c",`var(--${a.id})`);s.textContent=a.short;s.title=a.text;bar.appendChild(s);any=true;});
+      if(any){const l=document.createElement("span");l.className="lbl";l.textContent="Phase · wk "+n;bar.prepend(l);}else bar.classList.add("none");
+      frag.appendChild(bar);
+    }
+    return frag;
+  }
+
+  // ---------- Render ----------
+  function render(){
+    const c=cfg();
+    document.getElementById("intro").textContent=c.intro;
+    document.getElementById("subtabs").style.display=state.view==="jazz"?"":"none";
+    document.querySelectorAll("#subtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sub===state.sub)));
+    renderLegend(c);
+    document.getElementById("courseBox").style.display=(state.view==="jazz"&&state.sub==="online")?"":"none";
+    if(state.view==="jazz"&&state.sub==="online")courseTable();
+    document.getElementById("absBox").style.display=state.view==="abs"?"":"none";
+    if(state.view==="abs")absTable();
+    document.getElementById("coffeeBox").style.display=c.coffee?"":"none";
+    document.getElementById("dirBox").style.display=c.coffee?"none":"";
+    document.getElementById("months").style.display=c.coffee?"none":"";
+    document.getElementById("planBox").style.display=c.plan?"":"none";
+    if(c.coffee){renderCoffee();return;}
+    renderDir(c);
+
+    const months=document.getElementById("months");months.innerHTML="";
+    for(const m of [10,11,12]){
+      const first=D(m,1);const last=new Date(Y,m,0);
+      const sec=document.createElement("section");sec.className="month";
+      const label=first.toLocaleString("en-US",{month:"long",year:"numeric"});
+      let sub="";if(m===10)sub="Sabbatical starts Mon Oct 5";if(m===12)sub="Sabbatical ends Wed Dec 23";
+      sec.innerHTML=`<h2>${label}<small>${sub}</small></h2><div class="dow">${dows.map(d=>`<div>${d}</div>`).join("")}</div>`;
+      const grid=document.createElement("div");grid.className="grid";
+      grid.appendChild(weekBar(sunOf(first),c));
+      for(let i=0;i<first.getDay();i++){const pad=document.createElement("div");pad.className="day pad";grid.appendChild(pad);}
+      for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1)){
+        if(d.getDay()===0&&d.getDate()!==1)grid.appendChild(weekBar(new Date(d),c));
+        const cell=document.createElement("div");cell.className="day";cell.dataset.dow=dows[d.getDay()];
+        const t=state.travel?tripOn(d):null;
+        if(t){cell.classList.add("trip");if(t.tentative)cell.classList.add("tentative");}
+        const showTripName=t&&(key(d)===key(t.from)||(d.getDate()===1));
+        cell.innerHTML=`<div class="n"><span>${d.getDate()}</span>${showTripName?`<em>${t.name}</em>`:""}</div><div class="chips"></div>`;
+        const chips=cell.querySelector(".chips");
+        if(state.view==="jazz"&&state.sub==="online"){
+          for(const od of OD.filter(x=>x.date===key(d))){
+            const o=O.find(x=>x.id===od.course);
+            const el=document.createElement("a");el.href=OS;el.target="_blank";el.rel="noopener";el.className="chip online"+(state.on[o.id]?"":" hidden");el.style.setProperty("--c",`var(--${o.id})`);
+            el.innerHTML=`<b>${o.short}</b><span>${od.what}</span>`;el.title=o.name+"\n"+od.what+"\nPDF: "+od.pdf;
+            chips.appendChild(el);
+          }
+        }
+        for(const p of P){
+          const hit=p.dates.find(x=>key(x)===key(d));if(!hit)continue;
+          if(p.kind!=="inperson"&&t)continue;
+          const el=document.createElement(p.url?"a":"div");if(p.url){el.href=p.url;el.target="_blank";el.rel="noopener";}
+          el.className="chip"+(p.kind!=="inperson"?" life":"");el.style.setProperty("--c",`var(--${p.id})`);
+          if(!chipVisible(p,c))el.classList.add("hidden");
+          const miss=!!t&&p.kind==="inperson";if(miss)el.classList.add("miss");
+          const unc=(p.uncertain||[]).some(x=>key(x)===key(d));if(unc||p.drop)el.classList.add("maybe");
+          let tag="";if(unc)tag=" · confirm";else if(p.drop)tag=" · flex";
+          el.innerHTML=`<b>${p.short}</b><span>${p.time}${tag}</span>`;
+          el.title=p.name+" — "+p.time+"\n"+(p.loc||"")+"\nFrom 505 Union: "+(p.go||"")+(miss?"\nYou're away ("+t.name+")":"")+(unc?"\nHoliday week, check it runs":"");
+          chips.appendChild(el);
+        }
+        grid.appendChild(cell);
+      }
+      sec.appendChild(grid);months.appendChild(sec);
+    }
+    if(c.plan)renderPlan(c.plan);
+  }
+
+  function renderPlan(mode){
+    const week=document.getElementById("week");week.innerHTML="";
+    const jazz={
+      Mon:[{t:"BKCM Piano Lab 8–9p",c:"bkcm",opt:true}],
+      Tue:[{t:"BH free jam 2–6p (some weeks)",c:"bhTue",opt:true},{t:"Kaufman Harmony 5:30–7p",c:"kaufTue"}],
+      Wed:[{t:"Free — NYJW Songbook 8–10p if you want a 4th class",c:"nyjwSong",opt:true}],
+      Thu:[{t:"Kaufman Blues Jam 7–9p",c:"kaufThu"}],
+      Fri:[{t:"Free evening"}],
+      Sat:[{t:"NYJW Standards 2–4p",c:"nyjwStd"},{t:"Intro Improv 4–6p if you want more playing",c:"nyjwImp",opt:true}],
+      Sun:[{t:"Weekly review + record"},{t:"Barry Harris 6–10p",c:"bhSun"}],
+    };
+    const full={
+      Mon:[{t:"9:30 sax · 10–12 piano · 1:30–3 piano"},{t:"Climb BK 3:30p",c:"climb"},{t:"BKCM Piano Lab 8–9p",c:"bkcm",opt:true}],
+      Tue:[{t:"Coffee shop + read 8a",c:"coffee"},{t:"sax · piano · piano"},{t:"Run + pull-ups",c:"run"},{t:"BH free jam 2–6p (some weeks)",c:"bhTue",opt:true},{t:"Kaufman Harmony 5:30–7p",c:"kaufTue"}],
+      Wed:[{t:"sax · piano · piano"},{t:"Climb BK 3:30p",c:"climb"},{t:"NYJW Songbook 8–10p (optional)",c:"nyjwSong",opt:true}],
+      Thu:[{t:"sax · piano · piano"},{t:"Climb LES 4:30–6:30p (optional 4th)",c:"climbLES",opt:true},{t:"Kaufman Blues Jam 7–9p",c:"kaufThu"}],
+      Fri:[{t:"Coffee shop + read 8a",c:"coffee"},{t:"sax · piano · piano"},{t:"Climb BK 3:30p + pull-ups",c:"climb"},{t:"Free evening"}],
+      Sat:[{t:"Badminton 10a, every other week",c:"badm",opt:true},{t:"NYJW Standards 2–4p",c:"nyjwStd"},{t:"Intro Improv 4–6p (optional)",c:"nyjwImp",opt:true}],
+      Sun:[{t:"Quick run 10a (optional 2nd)",c:"run2",opt:true},{t:"Weekly review · record"},{t:"Barry Harris 6–10p",c:"bhSun"}],
+    };
+    const abs={
+      Mon:[{t:"Climb BK 3:30p",c:"climb"}],
+      Tue:[{t:"Run + pull-ups 3:30p",c:"run"}],
+      Wed:[{t:"Climb BK 3:30p",c:"climb"}],
+      Thu:[{t:"Climb LES 4:30–6:30p (optional 4th)",c:"climbLES",opt:true}],
+      Fri:[{t:"Climb BK 3:30p",c:"climb"},{t:"pull-ups after"}],
+      Sat:[{t:"Badminton 10a (every other week)",c:"badm",opt:true}],
+      Sun:[{t:"Quick run + pull-ups 10a (optional)",c:"run2",opt:true},{t:"Rest"}],
+    };
+    const days=mode==="full"?full:mode==="abs"?abs:jazz;
+    document.getElementById("planTitle").textContent=mode==="full"?"Full sabbatical week":mode==="abs"?"Training week":"Suggested jazz week";
+    document.getElementById("planIntro").textContent=mode==="full"
+      ?"Mornings are practice, afternoons are the gym, evenings are class. Climbing: Mon/Wed/Fri at Vital BK is the floor, Thursday at Vital LES is the optional fourth. Badminton every other Saturday; one fixed Tuesday run with a quick Sunday one if you want a second."
+      :mode==="abs"?"Three climbs are fixed; the Thursday fourth is earned by a quiet finger. Runs and pull-ups live on the non-climb days so they never compete with the wall."
+      :"Daytime is practice (sax 9:30, piano 10–12 and 1:30–3). Classes sit in the evenings and weekends. Dashed items are drop-in or pending.";
+    for(const [d,items] of Object.entries(days)){
+      const box=document.createElement("div");box.className="d";
+      box.innerHTML=`<h3>${d}</h3><ul>${items.map(i=>`<li class="${i.c?"cls":""}${i.opt?" opt":""}" style="${i.c?`--c:var(--${i.c})`:""}">${i.t}</li>`).join("")}</ul>`;
+      week.appendChild(box);
+    }
+    const notes=mode==="full"?[
+      "Register: Kaufman Tue ($515) + Thu ($640); Barry Harris full series ($100); NYJW Standards on the flex plan ($355 for chosen dates).",
+      "Email BKCM about a late spot in the Monday 8pm Piano Lab — if they take you, it becomes the fifth fixed class.",
+      "Climbing: 3× is the floor, 4× the ceiling. Hold at 3 through the week 1–3 rebuild; add the LES Thursday only on weeks the finger is quiet. Get it looked at in week 1.",
+      "Thursday LES: 4:30–6:30 leaves 30 min to get from Essex to W 67th for Blues Jam at 7 — tight but fine on the J/M then 1. On weeks that feels like a squeeze, climb 3:30–5:30 instead.",
+      "Sax is daily at 9:30 before piano — long tones weeks 1–3, then the week's standard head from week 4.",
+      "Reading: 3–4 books for the whole stretch, phone in the bag, rotate the shops on the Coffee tab.",
+      "Leave for Taipei Dec 16 or later: the only class you'd lose is Blues Jam Dec 17.",
+    ]:mode==="abs"?[
+      "Finger first: hand PT or sports doc in week 1, then check-ins at the end of weeks 4 and 7 before adding sessions.",
+      "The 4th session (LES Thursday) is a style/volume day, never a limit day.",
+      "Pull-up sets ride on the runs (Tue, Sun) and Friday's climb so they never get their own gym trip.",
+      "Two runs a week means C25K finishes around its week 7–8 mark — a 25 min continuous run — which is the goal that matters.",
+      "Badminton: Oct 10, Oct 31, Nov 14, Nov 28 (confirm Kotofit runs), Dec 12. Swap any for the Saturday before or after.",
+    ]:[
+      "Register: Kaufman Tue ($515) + Thu ($640); Barry Harris full series ($100); NYJW Standards on the flex plan ($355 for chosen dates).",
+      "Email BKCM about a late spot in the Monday 8pm Piano Lab — if they take you, it becomes the fifth fixed class.",
+      "CoRL costs you one Barry Harris Sunday (Nov 8) and one flex Saturday. Go.",
+      "Leave for Taipei Dec 16 or later: Kaufman Tue's last session is Dec 15; the only class you'd lose is Blues Jam Dec 17.",
+      "The two winter intensives (Dec 27–31) only work if Taipei moves earlier and you take Dec 28 off.",
+    ];
+    document.getElementById("notes").innerHTML=notes.map(n=>`<li>${n}</li>`).join("");
+    const sab=[D(10,5),D(12,23)];
+    const pool=mode==="abs"?P.filter(p=>p.kind==="abs"):P.filter(p=>p.plan);
+    const rows=pool.map(p=>{const inWin=p.dates.filter(d=>d>=sab[0]&&d<=sab[1]);const ok=inWin.filter(d=>!tripOn(d)).length;return `<div><b>${p.short}</b><span>${ok} of ${inWin.length} sessions</span></div>`;});
+    document.getElementById("counts").innerHTML=rows.join("");
+  }
+
+  document.querySelectorAll("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+    state.view=b.dataset.view;
+    document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",String(x===b)));
+    render();
+  }));
+  document.querySelectorAll("#subtabs button").forEach(b=>b.addEventListener("click",()=>{state.sub=b.dataset.sub;render();}));
+  render();
+})();
+</script>
+</body>
+</html>

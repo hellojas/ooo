@@ -1,0 +1,235 @@
+{
+  "weekOneStarts": "2026-10-04",
+  "phases": [
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W1",
+      "wk": [
+        1,
+        2
+      ],
+      "text": "Run 60s / walk 90s × 8 (20 min)"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W2",
+      "wk": [
+        3,
+        3
+      ],
+      "text": "Run 90s / walk 2 min × 6"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W3",
+      "wk": [
+        4,
+        4
+      ],
+      "text": "90s/90s, then 3 min/3 min — twice through"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W4",
+      "wk": [
+        5,
+        5
+      ],
+      "text": "3 min, walk 90s, 5 min, walk 2.5, 3 min, walk 90s, 5 min"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W5",
+      "wk": [
+        6,
+        6
+      ],
+      "text": "5/3/5/3/5 → 8/5/8 → 20 min continuous"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W6",
+      "wk": [
+        7,
+        7
+      ],
+      "text": "5/3/8/3/5 → 10/3/10 → 25 min continuous"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W7",
+      "wk": [
+        8,
+        8
+      ],
+      "text": "25 min continuous, both runs"
+    },
+    {
+      "id": "phC25k",
+      "prog": "c25k",
+      "short": "C25K W8–9",
+      "wk": [
+        9,
+        10
+      ],
+      "text": "28 min, then 30 min ≈ 5K"
+    },
+    {
+      "id": "phPull",
+      "prog": "pull",
+      "short": "Pull-ups · Build",
+      "wk": [
+        1,
+        3
+      ],
+      "text": "3×/wk after runs + Fri post-climb: 5×5 bodyweight (or +5 lb), 2 in reserve"
+    },
+    {
+      "id": "phPull",
+      "prog": "pull",
+      "short": "Pull-ups · Load",
+      "wk": [
+        4,
+        7
+      ],
+      "text": "5×5 weighted, +2.5–5 lb each week; Sunday max set"
+    },
+    {
+      "id": "phPull",
+      "prog": "pull",
+      "short": "Pull-ups · Peak + archer",
+      "wk": [
+        8,
+        10
+      ],
+      "text": "3×3 heavy + 3×3 archer each side; max test week 10"
+    },
+    {
+      "id": "phV8",
+      "prog": "v8",
+      "short": "Climb · Rebuild",
+      "wk": [
+        1,
+        3
+      ],
+      "text": "Volume at flash level, open-hand only, no crimps, 3 sessions"
+    },
+    {
+      "id": "phV8",
+      "prog": "v8",
+      "short": "Climb · Project purples",
+      "wk": [
+        4,
+        7
+      ],
+      "text": "2 limit sessions on finger-friendly styles + 1–2 volume"
+    },
+    {
+      "id": "phV8",
+      "prog": "v8",
+      "short": "Climb · V8 attempts",
+      "wk": [
+        8,
+        10
+      ],
+      "text": "1 V8 session, 1 purple session, 1 volume, LES 4th if the finger is quiet"
+    }
+  ],
+  "programs": [
+    {
+      "id": "phV8",
+      "name": "Vital → V8",
+      "goal": "Back to purples by week 6, V8 attempts by week 8.",
+      "rows": [
+        [
+          "Wk 1–3",
+          "Rebuild",
+          "Volume only at flash level: 30–40 problems a session, open-hand, zero crimps. Get the PIP finger looked at by a hand PT in week 1. 3 sessions; no 4th until the finger has been checked."
+        ],
+        [
+          "Wk 4–7",
+          "Project purples",
+          "Two limit sessions a week (slopers, pinches, compression, dynos first; crimps last), one or two volume sessions. Add the Thursday LES session for style variety. Finger check-in end of week 4 and 7."
+        ],
+        [
+          "Wk 8–10",
+          "V8 attempts",
+          "One dedicated V8 session, one purple session, one volume session; LES Thursday for volume only. If the finger flares, drop back a phase — that's the plan working, not failing."
+        ]
+      ]
+    },
+    {
+      "id": "phPull",
+      "name": "Pull-ups → 10+ / weighted",
+      "goal": "10 clean, or +20 lb × 5, by week 10. One-arm is a 12-month goal; archers in weeks 8–10 are its first step.",
+      "rows": [
+        [
+          "Wk 1–3",
+          "Build",
+          "5×5 bodyweight after each run (Tue, Sun) and after Friday climbing. Two reps in reserve on every set. If you're under 10 now, grease the groove instead: 4 sets of 5 spread through non-climb days."
+        ],
+        [
+          "Wk 4–7",
+          "Load",
+          "5×5 weighted starting +10 lb, +2.5–5 lb a week. Sunday max set unweighted, logged."
+        ],
+        [
+          "Wk 8–10",
+          "Peak + archer",
+          "3×3 heavy, then 3×3 archer pull-ups each side as skill work. Retest max reps on the Sunday of week 10."
+        ]
+      ]
+    },
+    {
+      "id": "phC25k",
+      "name": "Couch to 5K (two runs a week)",
+      "goal": "A comfortable 25–30 min continuous run by week 10. The standard plan wants 3 runs a week; at 2 you'll land around week 7–8 of it, which is the point where it stops feeling like intervals.",
+      "rows": [
+        [
+          "Tue fixed",
+          "Run + pull-ups",
+          "The one run that always happens. Start 20 min, +5 min a week."
+        ],
+        [
+          "Sun optional",
+          "Quick run + pull-ups",
+          "Take it on weeks the finger wants a wall-free day. Skip it on weeks you add the 4th climb."
+        ],
+        [
+          "Weeks",
+          "Prescription",
+          "Follow the C25K bars on the calendar; each week's intervals are in the bar tooltip and the table below."
+        ]
+      ]
+    },
+    {
+      "id": "badm",
+      "name": "Badminton",
+      "goal": "Twice a month at Kotofit's Saturday beginner open play. It's the fun one — no progression, no tracking.",
+      "rows": [
+        [
+          "Oct 10, Oct 31",
+          "",
+          ""
+        ],
+        [
+          "Nov 14, Nov 28 (confirm)",
+          "",
+          ""
+        ],
+        [
+          "Dec 12",
+          "",
+          ""
+        ]
+      ]
+    }
+  ]
+}

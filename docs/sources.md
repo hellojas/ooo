@@ -1,0 +1,22 @@
+# Sources (all fetched 2026-09-29)
+- https://www.kaufmanmusiccenter.org/lms/class/c19715/ (Jazz Improv & Harmony)
+- https://www.kaufmanmusiccenter.org/lms/class/c19707/ (Blues Jam)
+- https://www.92ny.org/class/intro-to-jazz-improvisation
+- https://www.92ny.org/class/jazz-keyboard-beginner
+- 92NY School of Music Fall 2026 calendar: https://www.92ny.org/getmedia/2ec89e1f-f790-4177-a4ad-6f4123803cd4/92NY-SOM-Fall-2026-Calendar.pdf
+- https://barryharrisinstituteofjazz.org/workshops/
+- https://barryharrisinstituteofjazz.org/free-piano-lesson-and-jam-sessions/
+- https://newyorkjazzworkshop.com/workshops/intro-to-jazz-improvisation/
+- https://newyorkjazzworkshop.com/workshops/swinging-through-the-american-songbook/
+- https://newyorkjazzworkshop.com/workshops/jazz-standards-workshop/
+- https://newyorkjazzworkshop.com/workshops/bebop-improv-winter-intensive-2-days/
+- https://www.nyjazzacademy.com/program/small-ensemble-late-fall-2026/
+- https://www.nyjazzacademy.com/program/nyja-winter-jazz-intensives-12-2026/
+- https://bkcm.org/class-ensemble/jazz-piano-lab-adults/
+- https://www.brooklynmusicschool.org/adult-ensembles
+- https://catalog.juilliard.edu/index.php?catoid=78 (Juilliard Extension Fall 2026)
+- https://app.openstudiojazz.com/courses
+- https://www.openstudiojazz.com/courses/jazz-chords-for-beginners/
+- https://www.vitalclimbinggym.com/ — Vital BK 221 N 14th St; Vital LES 182 Broome St
+- Kotofit LIC: 43-56 10th St, Long Island City — https://www.kotofit.com/
+- Coffee: https://brooklyncoffeeshops.com/greenpoint, https://mycoffeeexplorer.com/guides/new-york

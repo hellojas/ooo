@@ -1,0 +1,26 @@
+[
+  {
+    "name": "SF / Toronto",
+    "from": "2026-09-28",
+    "to": "2026-10-08",
+    "tentative": false
+  },
+  {
+    "name": "Upstate cabin",
+    "from": "2026-10-24",
+    "to": "2026-10-26",
+    "tentative": false
+  },
+  {
+    "name": "CoRL (optional)",
+    "from": "2026-11-07",
+    "to": "2026-11-09",
+    "tentative": true
+  },
+  {
+    "name": "Taipei (flexible)",
+    "from": "2026-12-16",
+    "to": "2026-12-28",
+    "tentative": true
+  }
+]

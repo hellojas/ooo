@@ -1,0 +1,470 @@
+{
+  "weekOneStarts": "2026-10-04",
+  "courses": [
+    {
+      "id": "osChords",
+      "name": "Jazz Chords for Beginners",
+      "short": "Chords for Beginners",
+      "wk": [
+        1,
+        1
+      ],
+      "hrs": "2.5 h · 12 videos",
+      "feeds": "Rooted 5-note, rootless 4-note, rootless LH voicings in 12 keys. Do it in week 1 so Kaufman Tuesday has vocabulary to attach to."
+    },
+    {
+      "id": "osLHV",
+      "name": "Jazz Piano Basics Vol. 2: Left Hand Voicings",
+      "short": "LH Voicings",
+      "wk": [
+        2,
+        3
+      ],
+      "hrs": "1 h · 5 videos",
+      "feeds": "Five LH voicing types over Oleo / Solar / I Remember You. This is the autopilot left hand your arrangement goal needs."
+    },
+    {
+      "id": "osScales",
+      "name": "Jazz Scales for Beginners",
+      "short": "Scales for Beginners",
+      "wk": [
+        2,
+        3
+      ],
+      "hrs": "short",
+      "feeds": "Chord-scale pairing for the chord-tone soloing you're already working on. Pair with the Targetting 3rds worksheet."
+    },
+    {
+      "id": "osLead",
+      "name": "Jazz Piano Basics Vol. 1: Lead Sheet Breakdown",
+      "short": "Lead Sheet Breakdown",
+      "wk": [
+        4,
+        5
+      ],
+      "hrs": "short",
+      "feeds": "How to turn a lead sheet into a full two-hand version. This is the template for every standard of the week from here on."
+    },
+    {
+      "id": "osHear",
+      "name": "Hearing Great Harmony",
+      "short": "Hearing Great Harmony",
+      "wk": [
+        4,
+        10
+      ],
+      "hrs": "1 lesson / week",
+      "feeds": "The one ear-training course that's about hearing harmony in context, not intervals. Runs alongside your transcription block for 7 weeks."
+    },
+    {
+      "id": "osBebopCh",
+      "name": "Bebop Chords for Beginners",
+      "short": "Bebop Chords",
+      "wk": [
+        6,
+        7
+      ],
+      "hrs": "short",
+      "feeds": "Barry Harris–style 6th/diminished movement. Timed to land between Barry Harris Sundays Nov 15 and 22."
+    },
+    {
+      "id": "osBHSoC",
+      "name": "Barry Harris' Scales of Chords",
+      "short": "BH Scales of Chords",
+      "wk": [
+        6,
+        7
+      ],
+      "hrs": "short",
+      "feeds": "Same weeks as Bebop Chords; the two are one idea from two angles. Bring questions to the Sunday harmony class."
+    },
+    {
+      "id": "osEncl",
+      "name": "Bebop Enclosures for Beginners",
+      "short": "Bebop Enclosures",
+      "wk": [
+        8,
+        9
+      ],
+      "hrs": "short",
+      "feeds": "Chord tones → enclosures. Use on the Blues Jam tune each week; this is what turns the Baker bebop-scale chapter into lines."
+    },
+    {
+      "id": "osSolo",
+      "name": "Elements of Solo Piano (or Solo Piano Basics: Ballads)",
+      "short": "Elements of Solo Piano",
+      "wk": [
+        10,
+        11
+      ],
+      "hrs": "longer",
+      "feeds": "Arrangement capstone: LH pattern + RH melody with chord tones underneath, on a ballad you've transcribed. Record it before Taipei."
+    }
+  ],
+  "skip": [
+    {
+      "name": "Jazz Piano Jump-Start (7 weeks)",
+      "why": "Foundations course for novices. You're past it; the backing tracks are the only useful part."
+    },
+    {
+      "name": "Jazz Piano for Beginners / Jazz Piano Foundations",
+      "why": "Same ground as Jump-Start. Skip unless a Kaufman voicing week feels shaky, then cherry-pick one guided practice session."
+    }
+  ],
+  "dayByDay": [
+    {
+      "date": "2026-10-08",
+      "course": "osChords",
+      "what": "Welcome · Rooted 5-Note Voicings lesson",
+      "pdf": "JCB – Piano.pdf (Drive › openstudiojazz)"
+    },
+    {
+      "date": "2026-10-09",
+      "course": "osChords",
+      "what": "Rooted 5-Note GPS #1–3",
+      "pdf": "JCB – Piano.pdf"
+    },
+    {
+      "date": "2026-10-10",
+      "course": "osChords",
+      "what": "Rootless 4-Note lesson · GPS #4–6",
+      "pdf": "JCB – Piano.pdf"
+    },
+    {
+      "date": "2026-10-11",
+      "course": "osChords",
+      "what": "Rootless LH lesson · GPS #7–9",
+      "pdf": "JCB – Piano.pdf"
+    },
+    {
+      "date": "2026-10-12",
+      "course": "osLHV",
+      "what": "Video 1 of 5 (rooted LH)",
+      "pdf": "LHV workbook.pdf (Drive › openstudiojazz)"
+    },
+    {
+      "date": "2026-10-13",
+      "course": "osLHV",
+      "what": "Video 2 of 5",
+      "pdf": "LHV workbook.pdf"
+    },
+    {
+      "date": "2026-10-14",
+      "course": "osLHV",
+      "what": "Video 3 of 5",
+      "pdf": "LHV workbook.pdf"
+    },
+    {
+      "date": "2026-10-15",
+      "course": "osLHV",
+      "what": "Video 4 of 5 (4ths)",
+      "pdf": "LHV workbook.pdf"
+    },
+    {
+      "date": "2026-10-16",
+      "course": "osLHV",
+      "what": "Video 5 of 5 (clusters) — run all five over Oleo / Solar / I Remember You",
+      "pdf": "LHV workbook.pdf"
+    },
+    {
+      "date": "2026-10-17",
+      "course": "osScales",
+      "what": "Welcome · 1. Modes (and how to use them)",
+      "pdf": "Jazz Scales workbook (download from OS)"
+    },
+    {
+      "date": "2026-10-18",
+      "course": "osScales",
+      "what": "2. The Art of Scale Running",
+      "pdf": "Jazz Scales workbook"
+    },
+    {
+      "date": "2026-10-19",
+      "course": "osScales",
+      "what": "3. Adding Gravity",
+      "pdf": "Jazz Scales workbook · Gorman Targetting 3rds.pdf"
+    },
+    {
+      "date": "2026-10-20",
+      "course": "osScales",
+      "what": "4. The Magic Dominant Scale",
+      "pdf": "Jazz Scales workbook"
+    },
+    {
+      "date": "2026-10-21",
+      "course": "osScales",
+      "what": "5. Diminished Scale Basics",
+      "pdf": "Jazz Scales workbook"
+    },
+    {
+      "date": "2026-10-22",
+      "course": "osScales",
+      "what": "6. Lydian Dominants & Tritone Substitutions",
+      "pdf": "Jazz Scales workbook"
+    },
+    {
+      "date": "2026-10-23",
+      "course": "osScales",
+      "what": "7. Rhythm Changes Recap",
+      "pdf": "Jazz Scales workbook · Gorman Rhythm changes solo.pdf"
+    },
+    {
+      "date": "2026-10-27",
+      "course": "osScales",
+      "what": "8. Minor 2-5-1s over Autumn Leaves · Play-along",
+      "pdf": "Jazz Scales workbook · 2a/2b Autumn Leaves (Drive › standards lab)"
+    },
+    {
+      "date": "2026-10-28",
+      "course": "osScales",
+      "what": "9. The Blues is Your Best Friend",
+      "pdf": "Jazz Scales workbook · Baker The Blues (browse)"
+    },
+    {
+      "date": "2026-10-29",
+      "course": "osScales",
+      "what": "10. More Advanced Practice Techniques",
+      "pdf": "Jazz Scales workbook"
+    },
+    {
+      "date": "2026-10-30",
+      "course": "osLead",
+      "what": "Lesson 1 — reading the lead sheet",
+      "pdf": "Vol. 1 worksheets (download) · catbus fake book"
+    },
+    {
+      "date": "2026-10-31",
+      "course": "osHear",
+      "what": "Lesson 1",
+      "pdf": "HGH workbook (download)"
+    },
+    {
+      "date": "2026-11-02",
+      "course": "osLead",
+      "what": "Lesson 2 — bass + shells",
+      "pdf": "Vol. 1 worksheets · Gorman Harmonising a melody.pdf"
+    },
+    {
+      "date": "2026-11-03",
+      "course": "osLead",
+      "what": "Lesson 3 — melody on top",
+      "pdf": "Vol. 1 worksheets · Gorman Skylark top-note worksheet.pdf"
+    },
+    {
+      "date": "2026-11-04",
+      "course": "osLead",
+      "what": "Lesson 4 — filling the middle",
+      "pdf": "Vol. 1 worksheets"
+    },
+    {
+      "date": "2026-11-05",
+      "course": "osLead",
+      "what": "Lesson 5 — full two-hand version; apply to this week's standard",
+      "pdf": "Vol. 1 worksheets"
+    },
+    {
+      "date": "2026-11-06",
+      "course": "osHear",
+      "what": "Lesson 2 (moved off CoRL Saturday)",
+      "pdf": "HGH workbook"
+    },
+    {
+      "date": "2026-11-10",
+      "course": "osBebopCh",
+      "what": "Intro · Lesson 1 — the 6th chord",
+      "pdf": "Bebop Chords worksheets (download)"
+    },
+    {
+      "date": "2026-11-11",
+      "course": "osBebopCh",
+      "what": "Lessons 2–3 — 6th / diminished movement",
+      "pdf": "Bebop Chords worksheets · Barry Harris Method.pdf (Drive › soloing technique)"
+    },
+    {
+      "date": "2026-11-12",
+      "course": "osBebopCh",
+      "what": "Lessons 4–5",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-13",
+      "course": "osBebopCh",
+      "what": "Lessons 6–7",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-14",
+      "course": "osBebopCh",
+      "what": "GPS 1 · HGH lesson 3",
+      "pdf": "Bebop Chords worksheets · HGH workbook"
+    },
+    {
+      "date": "2026-11-15",
+      "course": "osBebopCh",
+      "what": "GPS 2 — then Barry Harris Sunday tonight",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-16",
+      "course": "osBebopCh",
+      "what": "Lessons 8–9",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-17",
+      "course": "osBebopCh",
+      "what": "Lessons 10–11",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-18",
+      "course": "osBebopCh",
+      "what": "GPS 3–4",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-19",
+      "course": "osBebopCh",
+      "what": "Play-alongs — apply to the Blues Jam tune",
+      "pdf": "Bebop Chords worksheets"
+    },
+    {
+      "date": "2026-11-20",
+      "course": "osBHSoC",
+      "what": "Scales of Chords, first half",
+      "pdf": "course PDF (download) · Barry Harris Method.pdf"
+    },
+    {
+      "date": "2026-11-21",
+      "course": "osBHSoC",
+      "what": "Scales of Chords, second half · HGH lesson 4 — questions for tomorrow's harmony class",
+      "pdf": "course PDF · HGH workbook"
+    },
+    {
+      "date": "2026-11-23",
+      "course": "osEncl",
+      "what": "Getting Started · Broken 7th Chords GPS",
+      "pdf": "Bebop Enclosures workbook (download)"
+    },
+    {
+      "date": "2026-11-24",
+      "course": "osEncl",
+      "what": "Broken 7th Inversion GPS",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-11-25",
+      "course": "osEncl",
+      "what": "Diatonic/Chromatic Surround tutorial · GPS 1",
+      "pdf": "Bebop Enclosures workbook · Baker How to Play Bebop ch. 1"
+    },
+    {
+      "date": "2026-11-26",
+      "course": "osEncl",
+      "what": "Diatonic/Chromatic Surround GPS 2 (short day)",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-11-27",
+      "course": "osEncl",
+      "what": "Surround Etude GPS",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-11-28",
+      "course": "osEncl",
+      "what": "Run-Through Enclosure tutorial · GPS 1 · HGH lesson 5",
+      "pdf": "Bebop Enclosures workbook · HGH workbook"
+    },
+    {
+      "date": "2026-11-30",
+      "course": "osEncl",
+      "what": "Run-Through Enclosure GPS 2 · etude",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-12-01",
+      "course": "osEncl",
+      "what": "Videos 12–13 — remaining enclosure types",
+      "pdf": "Bebop Enclosures workbook · Gorman Progressive vocabulary.pdf"
+    },
+    {
+      "date": "2026-12-02",
+      "course": "osEncl",
+      "what": "Videos 14–15",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-12-03",
+      "course": "osEncl",
+      "what": "Videos 16–17 — tune etudes (Groovin' High / Scrapple)",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-12-04",
+      "course": "osEncl",
+      "what": "Video 18 — Oleo etude, all 12 keys",
+      "pdf": "Bebop Enclosures workbook"
+    },
+    {
+      "date": "2026-12-05",
+      "course": "osHear",
+      "what": "Lesson 6",
+      "pdf": "HGH workbook"
+    },
+    {
+      "date": "2026-12-07",
+      "course": "osSolo",
+      "what": "Intro · 1. \"Nearness of You\" performance",
+      "pdf": "Solo Piano PDFs (download) · 1000 Arrangements (browse)"
+    },
+    {
+      "date": "2026-12-08",
+      "course": "osSolo",
+      "what": "2. Groove",
+      "pdf": "Solo Piano PDFs"
+    },
+    {
+      "date": "2026-12-09",
+      "course": "osSolo",
+      "what": "3. Using Both Hands Equally",
+      "pdf": "Solo Piano PDFs"
+    },
+    {
+      "date": "2026-12-10",
+      "course": "osSolo",
+      "what": "4. \"Middle Hand\" Ideas & Dynamics",
+      "pdf": "Solo Piano PDFs"
+    },
+    {
+      "date": "2026-12-11",
+      "course": "osSolo",
+      "what": "5. Orchestration",
+      "pdf": "Solo Piano PDFs"
+    },
+    {
+      "date": "2026-12-12",
+      "course": "osSolo",
+      "what": "6. Using the Whole Piano · HGH lesson 7 (last)",
+      "pdf": "Solo Piano PDFs · HGH workbook"
+    },
+    {
+      "date": "2026-12-13",
+      "course": "osSolo",
+      "what": "7. Developing a Legato Touch",
+      "pdf": "Solo Piano PDFs"
+    },
+    {
+      "date": "2026-12-14",
+      "course": "osSolo",
+      "what": "GPS 1–2",
+      "pdf": "Solo Piano PDFs"
+    },
+    {
+      "date": "2026-12-15",
+      "course": "osSolo",
+      "what": "GPS 3–4 — record the ballad arrangement",
+      "pdf": "Solo Piano PDFs"
+    }
+  ]
+}
