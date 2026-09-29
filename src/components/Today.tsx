@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { DOW, END, MONTHS, key, parse, START, today as todayKey, weekNo, weekStart } from '../dates'
 import { courses } from '../data'
-import { DAY_TYPES, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, type Block } from '../model'
+import { DAY_TYPES, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, attKey, type Block } from '../model'
 import { span } from '../time'
 import { update, useUser } from '../storage'
-import { useSync } from '../sync'
-import { standardOfWeek, tasksFor } from '../tasks'
+import { signIn, useSync } from '../sync'
+import { standardOfWeek, tasksFor, type Task } from '../tasks'
+import { byId, laneProgress, nextIn, project, type Lane } from '../queue'
 import { courseLinks, pdfLinks } from '../drive'
-import { videosOn } from '../model'
 import { DayLog } from './DayLog'
 import { WeekProgress } from './WeekProgress'
 import { Chip } from './Chip'
-import { attKey } from '../model'
 import { Ic } from './Icons'
 import type { Program } from '../types'
 
@@ -19,8 +18,11 @@ export const clampDay = (k: string) => (k < START ? START : k > END ? END : k)
 export const shiftDay = (k: string, n: number) => { const d = parse(k); d.setDate(d.getDate() + n); return clampDay(key(d)) }
 export const fmtDate = (k: string) => { const d = parse(k); return `${DOW[d.getDay()]}, ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}` }
 const fmtLong = (k: string) => { const d = parse(k); return `${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}` }
-const isPiano = (t: string) => t.startsWith('Piano')
-const minutesKey = (t: string): 'piano1' | 'sax' | null => isPiano(t) ? 'piano1' : t.startsWith('Sax') ? 'sax' : null
+const LANES: { id: Lane; label: string; blocks: string[]; minutes: 'piano1' | 'sax' | null }[] = [
+  { id: 'piano', label: 'piano', blocks: ['Piano block 1', 'Piano (light)', 'Piano block 2'], minutes: 'piano1' },
+  { id: 'sax', label: 'sax', blocks: ['Sax'], minutes: 'sax' },
+  { id: 'workout', label: 'workout', blocks: ['Gym slot'], minutes: null },
+]
 
 const useNow = () => {
   const [n, setN] = useState(() => new Date())
@@ -41,7 +43,7 @@ export function WeekFocus({ wk, onNav }: { wk: number; onNav: (v: 'fitness') => 
   )
 }
 
-type PlanRow = { key: string; start: number; end?: number; title: string; sub?: string; kind: 'block' | 'class' | 'travel' | 'life'; block?: Block; p?: Program; clash?: { p: Program; from: number; to: number }; skipped?: boolean }
+type PlanRow = { key: string; start: number; end?: number; title: string; sub?: string; kind: 'block' | 'class' | 'travel' | 'life'; block?: Block; p?: Program; clash?: { p: Program; from: number; to: number }; skipped?: boolean; lane?: Lane }
 
 export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate: (d: string) => void; onOpen: (p: Program, d: string) => void; onNav: (v: 'fitness') => void }) {
   const user = useUser()
@@ -55,18 +57,19 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const setPr = (v: object) => update(u => ({ ...u, practice: { ...u.practice, [date]: { ...u.practice[date], ...v } } }))
   const nowMin = isToday ? now.getHours() * 60 + now.getMinutes() : undefined
   const std = standardOfWeek(user, wk)
-  const [sel, setSel] = useState<string | null>(null)
-  const [finishing, setFinishing] = useState<Block | null>(null)
+  const [lane, setLane] = useState<Lane>('piano')
+  const [finishing, setFinishing] = useState<Lane | null>(null)
   const [showWeek, setShowWeek] = useState(false)
 
-  // ---- plan rows
-  const tasks = tasksFor(date, user, type)
+  const projected = useMemo(() => project(user, real), [user, real])
+  const tasks = tasksFor(date, user, type, projected)
   const done = pr.tasks ?? [], skipped = pr.skipped ?? []
   const wins = classWindows(user, date)
   const blocks = blocksForType(date, type, startFor(user, date), user)
+  const laneOf = (t: string): Lane | undefined => LANES.find(l => l.blocks.includes(t))?.id
   const rows: PlanRow[] = blocks.map(b => ({
-    key: 'b' + b.title, start: b.start, end: b.end, title: b.title, kind: 'block' as const, block: b, skipped: skipped.includes(b.title),
-    sub: (tasks[b.title]?.length ? `${tasks[b.title].filter(t => done.includes(b.title + ':' + t.id)).length}/${tasks[b.title].length} steps` : b.note),
+    key: 'b' + b.title, start: b.start, end: b.end, title: b.title, kind: 'block' as const, block: b, skipped: skipped.includes(b.title), lane: laneOf(b.title),
+    sub: (tasks[b.title]?.length ? `${tasks[b.title].filter(t => isDone(t)).length}/${tasks[b.title].length} done` : b.note),
     clash: wins.find(w => b.start < w.to && b.end > w.from && !skipped.includes(b.title)),
   }))
   const items = itemsOn(date, user).filter(x => !['climb', 'climbLES', 'run', 'run2'].includes(x.p.id))
@@ -79,28 +82,40 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   }
   rows.sort((a, b) => a.start - b.start)
 
-  // ---- selection: active block, else explicit, else first unfinished piano/sax block
+  // ---- queue-aware done state: queue items are done when queueDone has them on this date; plain tasks live in practice[date].tasks
+  function isDone(t: Task) { return t.qid ? user.queueDone?.[t.qid] === date : done.includes(t.id) }
+  function toggleTask(t: Task) {
+    if (t.qid) update(u => { const qd = { ...u.queueDone }; if (qd[t.qid!] === date) delete qd[t.qid!]; else qd[t.qid!] = date; return { ...u, queueDone: qd } })
+    else setPr({ tasks: done.includes(t.id) ? done.filter(x => x !== t.id) : [...done, t.id] })
+    if (t.qid?.startsWith('wv8') || t.qid?.startsWith('wc25k') ) { /* workout ticks also log the session */
+      const kind = t.qid.startsWith('wv8') ? 'climbing' : 'running'
+      update(u => ({ ...u, [kind]: { ...u[kind], [date]: { ...(u[kind] as Record<string, object>)[date], done: !isDone(t) } } }))
+    }
+  }
+  const laneBlocks = (l: Lane) => blocks.filter(b => laneOf(b.title) === l && !skipped.includes(b.title))
+  const laneTasks = (l: Lane) => laneBlocks(l).flatMap(b => tasks[b.title] ?? [])
+  const curBlock = laneBlocks(lane)[0]
+  const curTasks = laneTasks(lane)
+  const laneDone = (l: Lane) => { const ts = laneTasks(l); return ts.length > 0 && ts.every(isDone) }
+  const onDay = new Set(curTasks.map(t => t.qid).filter(Boolean) as string[])
+  const next = nextIn(user, lane, onDay)
   const active = pr.active
-  const unfinished = (b: Block) => !skipped.includes(b.title) && !!minutesKey(b.title) && (tasks[b.title] ?? []).some(t => !done.includes(b.title + ':' + t.id))
-  const firstOpen = blocks.find(b => unfinished(b) && isPiano(b.title)) ?? blocks.find(unfinished)
-  const selTitle = active?.block ?? (sel && blocks.some(b => b.title === sel) ? sel : firstOpen?.title ?? blocks.find(b => minutesKey(b.title))?.title)
-  const selBlock = blocks.find(b => b.title === selTitle)
-  const selTasks = selBlock ? tasks[selBlock.title] ?? [] : []
-  const isActive = !!active && active.block === selTitle
+  const isActive = !!active && laneOf(active.block) === lane
   const elapsed = isActive ? Math.max(1, Math.round((Date.now() - active!.since) / 60000)) : 0
-  const lastSession = [...user.sessions].reverse().find(s => s.block === selTitle && s.date < date && (selBlock && isPiano(selBlock.title) ? s.tune === std : true))
-  const lesson = videosOn(date)[0]
-  const course = courses.find(c => c.id === (lesson?.course ?? coursesForWeek(wk)[0]?.id))
-  const chart = (lesson ? pdfLinks(lesson.pdf) : courseLinks(course?.id ?? ''))[0]
-  const focusLine = selBlock ? (isPiano(selBlock.title) ? selTasks.filter(t => t.id.startsWith('std')).map(t => t.label.split(': ')[1]).join('. ') || selTasks[0]?.label : selTasks.map(t => t.label).slice(0, 2).join('. ')) : ''
-  const toggle = (id: string) => setPr({ tasks: done.includes(id) ? done.filter(x => x !== id) : [...done, id] })
+  const laneDef = LANES.find(l => l.id === lane)!
+  const lastSession = [...user.sessions].reverse().find(s => laneOf(s.block) === lane && s.date < date && (lane === 'piano' ? s.tune === std : true))
+  const lessonItem = curTasks.find(t => t.qid?.startsWith('v'))
+  const lessonQ = lessonItem?.qid ? byId(lessonItem.qid) : undefined
+  const course = courses.find(c => c.id === (lessonQ?.course ?? coursesForWeek(wk)[0]?.id))
+  const chart = (lessonQ ? pdfLinks(lessonQ.pdf) : courseLinks(course?.id ?? ''))[0]
+  const prog = laneProgress(user, lane)
+  const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Workout'
+  const focusLine = lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s')).map(t => t.label.split(': ')[1]).join('. ') : curTasks[0]?.label.replace(/ \(\d+\/\d+\)$/, '')
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
   const setBlock = (t: string, v: { start?: number; end?: number } | null) => setPr({ blocks: v ? { ...pr.blocks, [t]: v } : Object.fromEntries(Object.entries(pr.blocks ?? {}).filter(([k]) => k !== t)) })
   const [nextNote, setNextNote] = useState('')
-  const saveNext = () => { if (nextNote.trim() && selBlock) { update(u => ({ ...u, sessions: [...u.sessions, { date, block: selBlock.title, minutes: 0, tune: isPiano(selBlock.title) ? std : undefined, next: nextNote.trim() }] })); setNextNote('') } }
+  const saveNext = () => { if (nextNote.trim() && curBlock) { update(u => ({ ...u, sessions: [...u.sessions, { date, block: curBlock.title, minutes: 0, tune: lane === 'piano' ? std : undefined, next: nextNote.trim() }] })); setNextNote('') } }
   const todayNext = [...user.sessions].reverse().find(s => s.date === date && s.next)?.next
-
-  // ---- footer metrics
   const tot = weekTotals(user, wk)
   const saxSessions = Object.entries(user.practice).filter(([d, p]) => weekNo(d) === wk && (p.sax ?? 0) > 0).length
   const h = Math.floor(tot.piano / 60), m = tot.piano % 60
@@ -112,8 +127,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <button className="btn icon" onClick={() => setDate(shiftDay(date, -1))} aria-label="Previous day">‹</button>
           <div>
             <h2 className="serif big">{fmtLong(date)}</h2>
-            <p className="meta">{wk >= 1 ? `Week ${wk}` : date < START ? 'Before the sabbatical' : 'After'} · New York{trip ? ` · ✈ ${trip.name}` : ''}{!isToday ? (date < real ? ' · past' : ' · preview') : ''}
-</p>
+            <p className="meta">{wk >= 1 ? `Week ${wk}` : date < START ? 'Before the sabbatical' : 'After'} · New York{trip ? ` · ✈ ${trip.name}` : ''}{!isToday ? (date < real ? ' · past' : ' · projected') : ''}</p>
           </div>
           <button className="btn icon" onClick={() => setDate(shiftDay(date, 1))} aria-label="Next day">›</button>
           {!isToday && <button className="btn small" onClick={() => setDate(clampDay(real))}>Today</button>}
@@ -131,13 +145,13 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <div className="row between quiet"><label className="inl quiet">Starts <input type="time" value={startFor(user, date)} onChange={e => setPr({ startTime: e.target.value || undefined })} />
             {pr.startTime && <button className="linkbtn quiet" onClick={() => setPr({ startTime: undefined })}>reset ({defaultStartFor(user, date)})</button>}</label></div>
           {rows.length === 0 && <p className="empty">Nothing booked. Excellent.</p>}
-          {type === 'travel' && <p className="meta">If a piano turns up: the head of {std ?? 'this week’s tune'}, ten minutes, done.</p>}
+          {type === 'travel' && <p className="meta">Travel day — nothing planned. The queue waits.</p>}
           <ol className="plan-list">
             {rows.map(r => {
-              const isSel = r.kind === 'block' && r.title === selTitle
+              const isSel = r.kind === 'block' && r.lane === lane
               const isNow = nowMin != null && r.end != null && nowMin >= r.start && nowMin < r.end
               const cls = ['plan-row', r.kind, isSel ? 'sel' : '', isNow ? 'now' : '', r.skipped ? 'skipped' : ''].join(' ')
-              const onClick = r.kind === 'block' ? () => setSel(r.title) : r.p ? () => onOpen(r.p!, date) : undefined
+              const onClick = r.kind === 'block' && r.lane ? () => setLane(r.lane!) : r.p ? () => onOpen(r.p!, date) : undefined
               return (
                 <li key={r.key} className={cls} onClick={onClick}>
                   <span className="t num">{fmtMin(r.start)}{r.end && r.kind === 'class' ? `–${fmtMin(r.end)}` : ''}</span>
@@ -149,7 +163,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
                       {r.start < r.clash.from && <> · <button className="linkbtn" onClick={e => { e.stopPropagation(); setBlock(r.title, { end: r.clash!.from }) }}>shorten</button></>} · <button className="linkbtn" onClick={e => { e.stopPropagation(); skip(r.title) }}>skip</button></small>}
                     {r.skipped && <small><button className="linkbtn quiet" onClick={e => { e.stopPropagation(); skip(r.title) }}>restore</button></small>}
                   </span>
-                  {r.kind === 'block' && <span className="chev">›</span>}
+                  {r.kind === 'block' && r.lane && <span className="chev">›</span>}
                 </li>
               )
             })}
@@ -158,31 +172,40 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
         </section>
 
         <section className="card main">
-          {selBlock ? <>
-            <p className="eyebrow">{isPiano(selBlock.title) ? 'On the piano today' : 'Warm-up'}</p>
-            <h1 className="tune">{isPiano(selBlock.title) ? (std ?? 'Pick a standard') : selBlock.title}</h1>
+          <div className="lanes">
+            <span className="eyebrow">On the</span>
+            {LANES.map(l => <button key={l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}>{l.label}{laneDone(l.id) ? ' ✓' : ''}</button>)}
+            <span className="eyebrow">today</span>
+          </div>
+          {curTasks.length > 0 || curBlock ? <>
+            <h1 className="tune">{title}</h1>
             {focusLine && <p className="lede serif">{focusLine}.</p>}
-            {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : null}
-            {isActive
-              ? <button className="btn primary big wide" onClick={() => setFinishing(selBlock)}><Ic.stop /> Finish session · {elapsed} min</button>
-              : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: selBlock.title, since: Date.now() } })}><Ic.start /> Start {selBlock.end - selBlock.start}-min session</button>}
-            <div className="grid2 links">
-              {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer"><Ic.lesson /> Open lesson{lesson ? ` · ${lesson.what.slice(0, 28)}${lesson.what.length > 28 ? '…' : ''}` : ''}</a>}
+            {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : <p className="meta">{prog.done} of {prog.total} in the {lane} queue done{projected.remaining[lane] ? ` · ${projected.remaining[lane]} won’t fit before Dec 23 at this pace` : ''}</p>}
+            {laneDef.minutes && curBlock && (isActive
+              ? <button className="btn primary big wide" onClick={() => setFinishing(lane)}><Ic.stop /> Finish session · {elapsed} min</button>
+              : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: curBlock.title, since: Date.now() } })}><Ic.start /> Start {curBlock.end - curBlock.start}-min session</button>)}
+            {lane === 'piano' && <div className="grid2 links">
+              {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer"><Ic.lesson /> Open lesson{lessonQ ? ` · ${lessonQ.label.split(': ')[1]?.slice(0, 26)}` : ''}</a>}
               {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
-            </div>
-            <p className="eyebrow steps-h">Session steps</p>
+            </div>}
+            <p className="eyebrow steps-h">{lane === 'piano' ? 'Session steps' : lane === 'sax' ? 'Today' : 'Today’s session'}</p>
             <ol className="steps">
-              {selTasks.length === 0 && <li className="meta">{selBlock.note ?? 'No steps for this block.'}</li>}
-              {selTasks.map((t, i) => { const id = selBlock.title + ':' + t.id; const on = done.includes(id); return (
-                <li key={id} className={on ? 'on' : ''} onClick={() => toggle(id)}>
+              {curTasks.length === 0 && <li className="meta">{curBlock?.note ?? 'Nothing queued for today.'}</li>}
+              {curTasks.map((t, i) => { const on = isDone(t); return (
+                <li key={t.id} className={on ? 'on' : ''} onClick={() => toggleTask(t)}>
                   <span className="n">{on ? '✓' : i + 1}</span>
-                  <span>{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}</span>
+                  <span>{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && <small className="qtag">queue</small>}</span>
                 </li>) })}
             </ol>
+            {laneDone(lane) && next && <div className="nextq">
+              <span>Done for today. Next in the queue: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></span>
+              <button className="btn" onClick={() => setPr({ pulled: [...(pr.pulled ?? []), next.id] })}>Pull it into today</button>
+            </div>}
+            {!laneDone(lane) && curTasks.some(t => t.qid) && <p className="meta small">Anything unticked stays at the front of the queue and shows up tomorrow. Classes are the only fixed dates.</p>}
           </> : <>
-            <p className="eyebrow">{type === 'rest' ? 'Rest day' : type === 'travel' ? 'Travel day' : 'Nothing to practice'}</p>
-            <h1 className="tune">{std ?? '—'}</h1>
+            <h1 className="tune">{type === 'rest' ? 'Rest' : type === 'travel' ? 'Away' : title}</h1>
             <p className="lede serif">{type === 'rest' ? 'Nothing planned. That’s part of the plan.' : 'Open to interpretation.'}</p>
+            <p className="meta">{prog.done} of {prog.total} in the {lane} queue done{projected.remaining[lane] ? ` · ${projected.remaining[lane]} won’t fit before Dec 23 at this pace` : ''}</p>
           </>}
         </section>
 
@@ -191,7 +214,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <DayLog date={date} />
           <label className="block">Next time, start with…
             <textarea rows={3} placeholder={todayNext ?? 'e.g. slower tempo, left hand voicings, or the bridge…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
-          <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced' : sync.state === 'error' ? '⚠ Sync error' : '☁ Syncing…') : 'Saved on this device'}</p>
+          <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device only · <button className="linkbtn" onClick={signIn}>sign in to sync</button></>}</p>
         </section>
       </div>
 
@@ -205,21 +228,20 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
         <span className="wknav"><button className="btn icon" onClick={() => setDate(shiftDay(date, -7))}>‹</button> Week {Math.max(wk, 0)} · {weekStart(Math.max(wk, 1))} <button className="btn icon" onClick={() => setDate(shiftDay(date, 7))}>›</button></span>
       </footer>
       {showWeek && wk >= 1 && <div className="card"><WeekProgress wk={wk} from={date} /><WeekFocus wk={wk} onNav={onNav} /></div>}
-      {finishing && <FinishSheet date={date} block={finishing} tune={isPiano(finishing.title) ? std : undefined} onClose={() => setFinishing(null)} />}
+      {finishing && curBlock && <FinishSheet date={date} block={curBlock} minutesKey={laneDef.minutes ?? 'piano1'} tune={lane === 'piano' ? std : undefined} onClose={() => setFinishing(null)} />}
     </div>
   )
 }
 
-function FinishSheet({ date, block, tune, onClose }: { date: string; block: Block; tune?: string; onClose: () => void }) {
+function FinishSheet({ date, block, minutesKey, tune, onClose }: { date: string; block: Block; minutesKey: 'piano1' | 'sax'; tune?: string; onClose: () => void }) {
   const user = useUser()
   const since = user.practice[date]?.active?.since ?? Date.now()
   const [mins, setMins] = useState(Math.max(1, Math.round((Date.now() - since) / 60000)))
   const [note, setNote] = useState(''), [next, setNext] = useState('')
-  const k = minutesKey(block.title) ?? 'piano1'
   const save = () => {
     update(u => ({
       ...u,
-      practice: { ...u.practice, [date]: { ...u.practice[date], active: undefined, [k]: (u.practice[date]?.[k] ?? 0) + mins } },
+      practice: { ...u.practice, [date]: { ...u.practice[date], active: undefined, [minutesKey]: (u.practice[date]?.[minutesKey] ?? 0) + mins } },
       sessions: [...u.sessions, { date, block: block.title, minutes: mins, tune, note: note.trim() || undefined, next: next.trim() || undefined }],
       tunes: tune ? { ...u.tunes, [tune]: { ...{ checks: [] }, ...u.tunes[tune], last: date } } : u.tunes,
     }))

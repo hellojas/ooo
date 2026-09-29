@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
-import { programs, trips } from './data'
+import { programs } from './data'
 import { Calendar } from './components/Calendar'
 import { CheckIn } from './components/CheckIn'
 import { Today, clampDay } from './components/Today'
 import { WeekView } from './components/Week'
-import { Agenda } from './components/Agenda'
+import { MonthCal } from './components/MonthCal'
 import { Weekly } from './components/Weekly'
 import { Practice } from './components/Practice'
 import { Resources } from './components/Resources'
 import { Settings } from './components/Settings'
 import { ProgressStrip } from './components/Progress'
-import { AbsTables, Counts, OnlineTables, Template, Where } from './components/Tables'
-import { downloadIcs } from './ics'
+import { AbsTables, Counts, OnlineTables, Where } from './components/Tables'
 import { startReminders } from './reminders'
 import { useUser } from './storage'
 import { today, weekNo } from './dates'
@@ -24,7 +23,7 @@ type CalSub = 'week' | 'month' | 'agenda' | 'music' | 'fitness'
 type Sub = 'inperson' | 'online' | 'plan'
 const TOPS: [Top, string][] = [['today', 'Today'], ['calendar', 'Calendar'], ['practice', 'Practice'], ['review', 'Review'], ['play', 'Play'], ['configure', 'Configure']]
 const ICON: Record<Top, (p: object) => JSX.Element> = { today: Ic.today, calendar: Ic.calendar, practice: Ic.practice, review: Ic.review, play: Ic.play, configure: Ic.gear }
-const CALS: [CalSub, string][] = [['week', 'Week'], ['month', 'Month'], ['agenda', 'Agenda'], ['music', 'Music'], ['fitness', 'Fitness']]
+const CALS: [CalSub, string][] = [['month', 'Month'], ['week', 'Week'], ['music', 'Music'], ['fitness', 'Fitness']]
 const inPerson = programs.filter(p => p.kind === 'inperson')
 const plan = programs.filter(p => p.plan)
 const abs = programs.filter(p => p.kind === 'abs')
@@ -32,7 +31,7 @@ const abs = programs.filter(p => p.kind === 'abs')
 const readHash = (): [Top, CalSub] => {
   const [a, b] = location.hash.replace(/^#\/?/, '').split('/')
   const top = (TOPS.some(([t]) => t === a) ? a : 'today') as Top
-  const cal = (CALS.some(([c]) => c === b) ? b : 'week') as CalSub
+  const cal = (CALS.some(([c]) => c === b) ? b : 'month') as CalSub
   return [top, cal]
 }
 
@@ -56,13 +55,9 @@ export default function App() {
   const [wk, setWk] = useState(Math.min(11, Math.max(1, weekNo(clampDay(today())))))
   const [sub, setSub] = useState<Sub>('plan')
   const [open, setOpen] = useState<{ p: Program; d: string } | null>(null)
-  const [groups, setGroups] = useState<Record<string, boolean>>({ online: true, inperson: true, abs: true, read: true, travel: true })
-  const g = (k: string) => groups[k]
-  const flip = (k: string) => setGroups({ ...groups, [k]: !groups[k] })
   const onOpen = (p: Program, d: string) => setOpen({ p, d })
   const openDay = (d: string) => { setDay(d); setView('today'); window.scrollTo(0, 0) }
   const toFitness = () => setView('calendar', 'fitness')
-  const visible = (p: Program) => (p.kind === 'inperson' ? !!p.plan && g('inperson') : p.kind === 'abs' ? g('abs') : g('read'))
 
   return (
     <div className="wrap">
@@ -79,20 +74,7 @@ export default function App() {
       {view === 'calendar' && <>
         <div className="subtabs">{CALS.map(([c, l]) => <button key={c} aria-pressed={cal === c} onClick={() => setView('calendar', c)}>{l}</button>)}</div>
         {cal === 'week' && <WeekView wk={wk} setWk={setWk} onOpen={onOpen} onOpenDay={openDay} onNav={toFitness} />}
-        {(cal === 'month' || cal === 'agenda') && <>
-          <div className="fullbar">
-            <div className="trips">{trips.map(t => <div key={t.name} className={'trip-card' + (t.tentative ? ' tent' : '')}><b>{t.name}</b><span>{t.from.slice(5)} → {t.to.slice(5)}</span></div>)}</div>
-            <button className="btn" onClick={() => downloadIcs(user)}>Export plan (.ics)</button>
-          </div>
-          <div className="legend">
-            <Group label="Music" items={[['online', 'Online'], ['inperson', 'Classes']]} on={g} flip={flip} />
-            <Group label="Life" items={[['abs', 'Fitness'], ['read', 'Coffee'], ['travel', 'Travel']]} on={g} flip={flip} />
-          </div>
-          {cal === 'month'
-            ? <Calendar showTravel={g('travel')} showOnline={g('online')} showVideos={false} phaseProgs={g('abs') ? ['c25k', 'pull', 'v8'] : []} visible={visible} onOpen={onOpen} />
-            : <Agenda visible={visible} showTravel={g('travel')} onOpen={onOpen} />}
-          <Template title="A typical week" />
-        </>}
+        {(cal === 'month' || cal === 'agenda') && <MonthCal onOpenDay={openDay} />}
         {cal === 'music' && <>
           <ProgressStrip kind="jazz" />
           <div className="subtabs small">
@@ -127,14 +109,6 @@ export default function App() {
         <button aria-current={['play', 'configure'].includes(view)} onClick={() => setView('play')}><Ic.play />More</button>
       </nav>
       {open && <CheckIn p={open.p} date={open.d} onClose={() => setOpen(null)} />}
-    </div>
-  )
-}
-
-function Group({ label, items, on, flip }: { label: string; items: [string, string][]; on: (k: string) => boolean; flip: (k: string) => void }) {
-  return (
-    <div className="lgroup"><span className="gh">{label}</span>
-      {items.map(([k, l]) => <button key={k} className="item" aria-pressed={on(k)} onClick={() => flip(k)}>{l}</button>)}
     </div>
   )
 }

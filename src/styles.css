@@ -577,3 +577,53 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
 .daytag .meta{margin:0}
 .replan li{color:var(--ink-2);font-size:14px;padding:4px 0;border-top:1px solid var(--line)}
 @media (max-width:760px){.daytag{align-items:flex-start;text-align:left}}
+.lanes{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.lanebtn{font-family:"Instrument Serif",serif;font-style:italic;font-size:22px;background:none;border:0;border-bottom:2px solid transparent;color:var(--ink-3);cursor:pointer;padding:0 2px 2px}
+.lanebtn.on{color:var(--ink);border-bottom-color:var(--accent)}.lanebtn.done{color:var(--move)}
+.qtag{display:inline-block;margin-left:8px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:1px 5px;vertical-align:middle}
+.steps li.on .qtag{text-decoration:none}
+.nextq{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding:12px 14px;border-radius:10px;background:color-mix(in srgb,var(--accent) 7%,var(--panel));font-size:14px}
+.meta.small{font-size:12.5px;margin-top:10px}
+
+/* ==== Calendar tab: reference style (sans, tall cells, colored pills) ==== */
+.mcal{font-family:"Inter",system-ui,sans-serif}
+.mcal-head h2{font-family:"Inter",sans-serif;font-size:26px;font-weight:700;letter-spacing:-0.02em;margin:0 0 2px}
+.mcal-head .sub{color:var(--ink-3);font-size:14px;margin:0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.pill{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:13px;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.pill.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pill.off{opacity:.4}.pill[disabled]{opacity:.35;cursor:default}
+.pill i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.legend2{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 8px 30px rgba(0,0,0,.04)}
+.stat span{font-size:13px;color:var(--ink-3)}.stat b{font-size:24px;display:block;font-weight:700}
+.mgrid-wrap{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.04)}
+.mdow{display:grid;grid-template-columns:repeat(7,1fr);background:var(--paper);border-bottom:1px solid var(--line)}
+.mdow div{padding:10px;font-size:12px;color:var(--ink-2);font-weight:600}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr)}
+.mday{min-height:150px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;position:relative}
+.mday:nth-child(7n){border-right:0}
+.mday.other{background:var(--paper)}
+.mday.trip{background:repeating-linear-gradient(135deg,transparent 0 8px,color-mix(in srgb,#e06060 8%,transparent) 8px 16px)}
+.mday.today{outline:2px solid var(--ink);outline-offset:-2px}
+.mdate{font-weight:700;font-size:13px;margin-bottom:6px;display:flex;justify-content:space-between;cursor:pointer}
+.mdate small{font-weight:500;color:var(--ink-3)}
+.mev{font-size:11px;line-height:1.25;padding:5px 6px 5px 8px;margin:4px 0;border-radius:7px;cursor:pointer;border:1px solid rgba(0,0,0,.08);border-left:3px solid;background:#f6f6f6;color:var(--ink)}
+.mev.optional{opacity:.62;border-style:dashed;border-left-style:solid}
+.mev.done{text-decoration:line-through;opacity:.42}
+.mev.missed{text-decoration:line-through;opacity:.35}
+.mev .time{font-weight:700;margin-right:4px}
+.mev.Classes{background:#ece7ff}.mev.Piano{background:#e7f0ff}.mev.Fitness{background:#eaf7e8}.mev.Sax{background:#fff0da}.mev.Lifestyle{background:#f2f2f2}.mev.Travel{background:#ffe5e5}
+:root[data-theme="dark"] .mev,:root:not([data-theme="light"]) .mev{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mev.Classes{background:#2a2550}:root:not([data-theme="light"]) .mev.Piano{background:#1f2c48}:root:not([data-theme="light"]) .mev.Fitness{background:#1f3a26}:root:not([data-theme="light"]) .mev.Sax{background:#3d2e14}:root:not([data-theme="light"]) .mev.Lifestyle{background:#2a2e36}:root:not([data-theme="light"]) .mev.Travel{background:#402020}}
+.mev.big{font-size:13px;padding:8px 10px}
+.magenda{display:grid;gap:10px}
+.magenda-day{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.sheet.modal{max-width:560px;border-radius:18px}
+.sheet.modal h2{font-family:"Inter",sans-serif;font-size:22px;margin:4px 0}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+@media(max-width:850px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .mday{min-height:110px;padding:5px}.mev{font-size:10px;padding:4px 5px}.mdow div{font-size:10px;padding:6px}
+}
