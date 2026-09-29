@@ -258,12 +258,12 @@ a.chip.online{display:block}
 :root{--radius:10px}
 body{font-size:15.5px}
 header h1{font-size:clamp(34px,5vw,52px);letter-spacing:-0.03em;margin:0}
-.tagline{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:19px;color:var(--ink-2);margin:2px 0 0}
-.serif,.tune{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.tagline{font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:19px;color:var(--ink-2);margin:2px 0 0}
+.serif,.tune{font-family:"Fraunces",Georgia,serif;font-weight:400;letter-spacing:-0.01em}
 .num{font-variant-numeric:tabular-nums}
 .meta{color:var(--ink-3);font-size:13.5px;margin:4px 0 10px}
 .eyebrow{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
-.empty{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:18px;color:var(--ink-2)}
+.empty{font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:18px;color:var(--ink-2)}
 .tabs.desk button[aria-selected="true"]{border-bottom-color:var(--accent);color:var(--ink)}
 .tabs{border-bottom-color:var(--line)}
 .subtabs{border-color:var(--line);background:transparent}
@@ -531,7 +531,7 @@ h2.serif.big{font-size:clamp(28px,3.6vw,40px);line-height:1.05;margin:0}
 
 /* ==== type pass (matches the mock): Inter for UI, Instrument Serif for headings, italic serif for the tune ==== */
 body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;letter-spacing:-0.005em;-webkit-font-smoothing:antialiased}
-.serif,.tune,h2.serif.big,.card h3.serif,.plain h2,.month h2,.sheet h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.serif,.tune,h2.serif.big,.card h3.serif,.plain h2,.month h2,.sheet h3{font-family:"Fraunces",Georgia,serif;font-weight:400;letter-spacing:-0.01em}
 .main .tune{font-style:italic;font-weight:400;font-size:clamp(48px,7vw,84px);line-height:.95;letter-spacing:-0.02em;margin:4px 0 10px}
 .main .lede.serif{font-size:26px;line-height:1.2;color:var(--ink)}
 .main .meta{font-size:15px;color:var(--ink-3)}
@@ -540,7 +540,7 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
 .plain h2{font-size:26px;font-weight:400}
 .eyebrow{font-family:"Inter",sans-serif;font-size:11px;letter-spacing:.12em;color:var(--ink-3);font-weight:600}
 .masthead h1{font-family:"Inter",sans-serif;font-weight:700;letter-spacing:.02em;font-size:18px}
-.masthead h1 .tagline{font-family:"Instrument Serif",serif;font-style:italic;font-size:15px;letter-spacing:0}
+.masthead h1 .tagline{font-family:"Fraunces",serif;font-style:italic;font-size:15px;letter-spacing:0}
 .tabs button{font-weight:500;font-size:15px;color:var(--ink-3)}
 .tabs button[aria-selected="true"]{font-weight:600}
 .btn{font-weight:500}
@@ -573,12 +573,12 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
 .btn svg{width:18px;height:18px}
 .weekbar svg{color:var(--ink-3)}
 .daytag{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
-.daytag b{font-family:"Instrument Serif",serif;font-size:22px;font-weight:400}
+.daytag b{font-family:"Fraunces",serif;font-size:22px;font-weight:400}
 .daytag .meta{margin:0}
 .replan li{color:var(--ink-2);font-size:14px;padding:4px 0;border-top:1px solid var(--line)}
 @media (max-width:760px){.daytag{align-items:flex-start;text-align:left}}
 .lanes{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-.lanebtn{font-family:"Instrument Serif",serif;font-style:italic;font-size:22px;background:none;border:0;border-bottom:2px solid transparent;color:var(--ink-3);cursor:pointer;padding:0 2px 2px}
+.lanebtn{font-family:"Fraunces",serif;font-style:italic;font-size:22px;background:none;border:0;border-bottom:2px solid transparent;color:var(--ink-3);cursor:pointer;padding:0 2px 2px}
 .lanebtn.on{color:var(--ink);border-bottom-color:var(--accent)}.lanebtn.done{color:var(--move)}
 .qtag{display:inline-block;margin-left:8px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:1px 5px;vertical-align:middle}
 .steps li.on .qtag{text-decoration:none}
@@ -638,3 +638,11 @@ h2.serif.big{font-size:clamp(30px,3.8vw,44px)}
 .qrow.late .qbody small{color:var(--warm)}
 .qacts{display:flex;gap:10px;white-space:nowrap}
 .subtabs button small{font-weight:400;opacity:.7;margin-left:4px}
+
+/* Fraunces: optical size + weight so the tune reads like the mock */
+.serif,.tune,h2.serif.big,.card h3.serif,.plain h2,.month h2,.sheet h3,.lanebtn,.daytag b,.masthead h1 .tagline,.empty,.main .lede.serif{font-family:"Fraunces",Georgia,serif;font-variation-settings:"opsz" 144,"SOFT" 30}
+.main .tune{font-weight:700;font-style:italic;letter-spacing:-0.03em}
+h2.serif.big{font-weight:500;letter-spacing:-0.02em}
+.card h3.serif,.plain h2{font-weight:500}
+.main .lede.serif{font-weight:400}
+.lanebtn{font-weight:500}

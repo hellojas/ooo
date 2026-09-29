@@ -14,7 +14,6 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const [showDone, setShowDone] = useState(false)
   const projected = useMemo(() => project(user, real), [user, real])
   const items = MASTER.filter(x => x.lane === lane)
-  const prog = laneProgress(user, lane)
   const eta = laneEta(user, lane, projected)
   const skip = new Set(user.queueSkip ?? [])
   const toggleSkip = (id: string) => update(u => ({ ...u, queueSkip: (u.queueSkip ?? []).includes(id) ? u.queueSkip.filter(x => x !== id) : [...(u.queueSkip ?? []), id] }))
