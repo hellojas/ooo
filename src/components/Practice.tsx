@@ -3,6 +3,7 @@ import plan from '../../data/block-tasks.json'
 import { today, weekNo } from '../dates'
 import { update, useUser } from '../storage'
 import { standardOfWeek } from '../tasks'
+import { MASTER } from '../queue'
 import { QueueView } from './Queue'
 import { ByEar } from './ByEar'
 
@@ -10,6 +11,7 @@ import { ByEar } from './ByEar'
 const STAGES = ['Melody from memory', 'Shells through the form', 'Comping at a recorded tempo', 'Solo without losing the form', 'Complete performance recorded']
 const RUBRIC = ['Time', 'Form', 'Voicings']
 const daysAgo = (d?: string) => d ? Math.floor((Date.now() - new Date(d + 'T12:00').getTime()) / 864e5) : undefined
+const agoText = (d?: string) => { const a = daysAgo(d); return a == null ? '' : a < 0 ? `planned ${d}` : a === 0 ? 'today' : `${a}d ago` }
 
 /** Repertoire pipeline for the 10 standards + the transcription log. */
 export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
@@ -36,15 +38,17 @@ export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
           const revisit = learned.sort((a, b) => (a.t.last ?? '').localeCompare(b.t.last ?? ''))[0]
           const later = rows.filter(r => r.name !== current && r !== revisit)
           const Tune = ({ name, i, t, full }: { name: string; i: number; t: typeof rows[number]['t']; full: boolean }) => {
-            const n = t.checks.length, ago = daysAgo(t.last)
-            const stage = n === 0 ? (i + 1 <= wk ? 'learning' : 'assigned wk ' + (i + 1)) : n < 3 ? 'learning' : n < 5 ? 'memorized' : 'recorded'
+            const qSteps = MASTER.filter(x => x.kind === 'standard' && x.tune === name)
+            const qDone = qSteps.filter(x => user.queueDone?.[x.id]).length
+            const n = Math.max(t.checks.length, qDone), ago = daysAgo(t.last)
+            const stage = n === 0 ? (name === current ? 'learning' : 'assigned wk ' + (i + 1)) : n < 3 ? 'learning' : n < 5 ? 'memorized' : 'recorded'
             const due = n > 0 && n < 5 && ago != null && ago >= 7
             const takes = t.takes ?? (t.recordingUrl ? [{ date: t.last ?? '', url: t.recordingUrl, rubric: t.rubric }] : [])
             return (
               <li className={'tune-row' + (name === current ? ' current' : '') + (full ? '' : ' compact')}>
                 <div className="tune-head" onClick={() => touch(name)}>
                   <span className="serif">{name}</span>
-                  <span className="meta">{stage}{name === current ? ' · this week' : ''}{ago != null ? ` · ${ago === 0 ? 'today' : ago + 'd ago'}` : ''}{due ? ' · review due' : ''}{!full && n > 0 ? ` · ${n}/5` : ''}</span>
+                  <span className="meta">{stage}{name === current ? ' · this week' : ''}{t.last ? ` · ${agoText(t.last)}` : ''}{due ? ' · review due' : ''}{qDone > 0 ? ` · ${qDone}/5 curriculum steps` : ''}{!full && n > 0 ? ` · ${n}/5` : ''}</span>
                 </div>
                 {full && <>
                   <div className="stages">{STAGES.map((s, j) => <label key={s} className={'stage' + (t.checks.includes(s) ? ' on' : '')}><input type="checkbox" checked={t.checks.includes(s)} onChange={e => set(name, { checks: e.target.checked ? [...t.checks, s] : t.checks.filter(x => x !== s), last: today() })} />{j + 1}. {s}</label>)}</div>

@@ -8,6 +8,7 @@ import { signIn, useSync } from '../sync'
 import { standardOfWeek, tasksFor, type Task } from '../tasks'
 import { MASTER, byId, project, priorityOf, type Lane } from '../queue'
 import { courseLinks, pdfLinks } from '../drive'
+import { currentByEar, EAR_STEPS } from './ByEar'
 import { DayLog } from './DayLog'
 import { WeekProgress } from './WeekProgress'
 import { Chip } from './Chip'
@@ -101,7 +102,19 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   }
   function toggleTask(t: Task) {
     if (t.qid) outcome(t, isDone(t) ? 'clear' : 'done')
-    else setPr({ tasks: done.includes(t.id) ? done.filter(x => x !== t.id) : [...done, t.id] })
+    else {
+      const turningOn = !done.includes(t.id)
+      setPr({ tasks: turningOn ? [...done, t.id] : done.filter(x => x !== t.id) })
+      if (t.id === 'ear-song') {   // mirror onto the song in Roadmap → By ear
+        update(u => {
+          const song = currentByEar(u.transcriptions); if (!song) return u
+          const steps = song.steps ?? []
+          const nextStep = EAR_STEPS.find(st => !steps.includes(st))
+          const newSteps = turningOn ? (nextStep ? [...steps, nextStep] : steps) : steps.slice(0, -1)
+          return { ...u, transcriptions: u.transcriptions.map(x => x.id === song.id ? { ...x, steps: newSteps, done: newSteps.length >= EAR_STEPS.length ? date : undefined } : x) }
+        })
+      }
+    }
     if (t.qid?.startsWith('wv8') || t.qid?.startsWith('wc25k') ) { /* workout ticks also log the session */
       const kind = t.qid.startsWith('wv8') ? 'climbing' : 'running'
       update(u => ({ ...u, [kind]: { ...u[kind], [date]: { ...(u[kind] as Record<string, object>)[date], done: !isDone(t) } } }))
