@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { programs, trips } from '../data'
 import { DOW } from '../dates'
 import { downloadIcs } from '../ics'
-import { DEFAULT_START, WEEKLY_METRICS, stateOf, type PState } from '../model'
+import { DEFAULT_START, WEEKLY_METRICS } from '../model'
 import { canNotify, enableReminders, remindersOn } from '../reminders'
 import { exportJson, importJson, update, useUser } from '../storage'
 import { logOut, signIn, useSync } from '../sync'
 
-const KINDS = [['inperson', 'Music · in person'], ['abs', 'Abs'], ['read', 'Reading']] as const
+const KINDS = [['abs', 'Abs'], ['read', 'Reading']] as const
 
 export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () => void }) {
   const user = useUser(), sync = useSync()
@@ -53,14 +53,10 @@ export function Settings({ theme, cycleTheme }: { theme: string; cycleTheme: () 
 
       <section className="plain">
         <h2>Sessions on the calendar</h2>
-        <p className="sub">Classes are <b>Considering</b> (only on the Music tab, for comparison), <b>Planned / trial</b> (on the calendar, outlined) or <b>Registered</b> (solid). Untick abs or reading items you’re not doing. It disappears from every view, reminders and the .ics export.</p>
+        <p className="sub">Untick anything you’re not doing. Classes are decided on the Programs tab. It disappears from every view, reminders and the .ics export.</p>
         {KINDS.map(([kind, label]) => <div key={kind}>
           <h3>{label}</h3>
-          <ul className="checks">{programs.filter(p => p.kind === kind).map(p => kind === 'inperson'
-            ? <li key={p.id}><span>{p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></span>
-                <select value={stateOf(p, user)} onChange={e => set({ programState: { ...s.programState, [p.id]: e.target.value as PState } })}>
-                  <option value="considering">Considering</option><option value="planned">Planned / trial</option><option value="registered">Registered</option></select></li>
-            : <li key={p.id}><label><input type="checkbox" checked={!s.hiddenItems.includes(p.id)}
+          <ul className="checks">{programs.filter(p => p.kind === kind).map(p => <li key={p.id}><label><input type="checkbox" checked={!s.hiddenItems.includes(p.id)}
                 onChange={e => set({ hiddenItems: e.target.checked ? s.hiddenItems.filter(x => x !== p.id) : [...s.hiddenItems, p.id] })} />
                 {p.short} <span className="sub">{p.time}{p.drop ? ' · flex' : ''}</span></label></li>)}</ul>
         </div>)}

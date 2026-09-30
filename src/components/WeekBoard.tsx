@@ -32,7 +32,7 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
     const type = dayTypeWhy(u, date, real).type
     const bs = blocksForType(date, type, startFor(u, date), u)
     const last = bs.length ? Math.max(...bs.map(b => b.end)) : T0 + 120
-    const start = clamp(snap(last + 30)), title = `Practice ${(u.practice[date]?.added?.length ?? 0) + 1}`
+    const start = clamp(snap(last + 30)), title = `Piano (extra ${(u.practice[date]?.added?.length ?? 0) + 1})`
     return { ...u, practice: { ...u.practice, [date]: { ...u.practice[date], added: [...(u.practice[date]?.added ?? []), { title, start, end: Math.min(T1, start + 30) }] } } }
   })
   const removeAdded = (date: string, title: string) => update(u => ({ ...u, practice: { ...u.practice, [date]: { ...u.practice[date], added: (u.practice[date]?.added ?? []).filter(a => a.title !== title) } } }))

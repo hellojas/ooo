@@ -69,7 +69,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const done = pr.tasks ?? [], skipped = pr.skipped ?? []
   const wins = classWindows(user, date)
   const blocks = blocksForType(date, type, startFor(user, date), user)
-  const laneOf = (t: string): Lane | undefined => LANES.find(l => l.blocks.includes(t))?.id
+  const laneOf = (t: string): Lane | undefined => LANES.find(l => l.blocks.includes(t))?.id ?? (t.startsWith('Piano') ? 'piano' : t.startsWith('Sax') ? 'sax' : undefined)
   const rows: PlanRow[] = blocks.map(b => ({
     key: 'b' + b.title, start: b.start, end: b.end, title: b.title, kind: 'block' as const, block: b, skipped: skipped.includes(b.title), lane: laneOf(b.title),
     sub: (tasks[b.title]?.length ? `${tasks[b.title].filter(t => isDone(t)).length}/${tasks[b.title].length} done` : b.note),

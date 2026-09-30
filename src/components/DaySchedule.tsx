@@ -147,7 +147,8 @@ export function CoffeePick({ date }: { date: string }) {
   const visited = (n: string) => !!user.coffee[n]?.visited
   const cls = classWindows(user, date)[0]
   const classNb = nbOf(cls?.p.loc)
-  const pick = (f: (s: (typeof shops)[number]) => boolean) => shops.filter(s => f(s) && !visited(s.n))[0] ?? shops.find(f)
+  const all = [...user.customShops, ...shops]
+  const pick = (f: (s: (typeof shops)[number]) => boolean) => all.filter(s => f(s) && !visited(s.n))[0] ?? all.find(f)
   const cands = [
     { label: 'Stay nearby', s: pick(s => NEAR.includes(s.nb ?? '')) },
     classNb ? { label: `Near ${cls!.p.short}`, s: pick(s => s.nb === classNb) } : null,

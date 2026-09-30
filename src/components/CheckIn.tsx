@@ -24,7 +24,7 @@ export function CheckIn({ p, date, onClose }: { p: Program; date: string; onClos
           <dt>When</dt><dd>{date} · {p.time}</dd>
           {p.loc && <><dt>Where</dt><dd>{p.loc}</dd></>}
           {p.go && <><dt>From home</dt><dd>{p.go}</dd></>}
-          <dt>Status</dt><dd>{{ considering: 'Considering — not on your plan yet', planned: 'Planned / trial — not registered (TBD)', registered: 'Registered' }[stateOf(p, user)]}{p.uncertain?.includes(date) ? ' · the school hasn’t confirmed this date' : ''}{p.kind !== 'inperson' ? '' : ' · change in Configure'}</dd>
+          <dt>Status</dt><dd>{{ considering: 'Considering — not on your plan yet', planned: 'Planned / trial — not registered (TBD)', registered: 'Registered' }[stateOf(p, user)]}{p.uncertain?.includes(date) ? ' · the school hasn’t confirmed this date' : ''}{p.kind !== 'inperson' ? '' : ' · change in Programs'}</dd>
         </dl>
         <div className="seg">
           {(['went', 'missed', 'skipped'] as Attendance[]).map(a => (

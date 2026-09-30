@@ -31,7 +31,9 @@ function Card({ s, custom }: { s: Shop; custom?: boolean }) {
 export function Coffee() {
   const user = useUser()
   const [n, setN] = useState(''), [a, setA] = useState(''), [u, setU] = useState('')
-  const add = () => { if (n.trim()) { update(x => ({ ...x, customShops: [...x.customShops, { n: n.trim(), a, w: '', why: '', tags: [], u, nb: 'Added' }] })); setN(''); setA(''); setU('') } }
+  const NBS = ['Williamsburg', 'Greenpoint', 'East Williamsburg', 'Bushwick', 'Lower East Side', 'East Village', 'West Village', 'SoHo', 'Chelsea', 'Midtown', 'Upper West Side', 'Upper East Side', 'Prospect Heights', 'Park Slope', 'Carroll Gardens', 'Downtown Brooklyn', 'Long Island City', 'Harlem', 'Tribeca', 'Chinatown']
+  const guessNb = (addr: string) => NBS.find(x => addr.toLowerCase().includes(x.toLowerCase())) ?? 'Added'
+  const add = () => { if (n.trim()) { update(x => ({ ...x, customShops: [...x.customShops, { n: n.trim(), a, w: '', why: '', tags: [], u, nb: guessNb(a) }] })); setN(''); setA(''); setU('') } }
   const all = [...user.customShops, ...shops]
   const groups = [...new Set(all.map(s => s.nb ?? 'Elsewhere'))]
   return (
