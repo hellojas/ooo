@@ -7,7 +7,7 @@ import type { UserData } from './types'
 /** One unit of curriculum. The queue is ordered; nothing is dated until it's projected onto the calendar. */
 export type Lane = 'piano' | 'sax' | 'workout'
 export type Kind = 'lesson' | 'technique' | 'standard' | 'sax' | 'climb' | 'run' | 'pull'
-export interface QItem { id: string; lane: Lane; kind: Kind; label: string; url?: string; pdf?: string; course?: string; tune?: string }
+export interface QItem { id: string; lane: Lane; kind: Kind; label: string; url?: string; pdf?: string; course?: string; tune?: string; /** sax: the one thing this session leans on (rotates through the phase's tasks) */ focus?: string }
 
 const STEPS = ['Melody + shell voicings, memorize the form', 'Rootless A/B voicings through the form', 'Walk chord tones 1‑3‑5‑7 at tempo', 'Chord-tone solo, then add enclosures', 'Head + one chorus + comp, 5 min — record it']
 const TECH_SESSIONS = 4
@@ -19,7 +19,8 @@ export function masterQueue(): QItem[] {
   dayByDay.forEach((v, i) => q.push({ id: `v${i}`, lane: 'piano', kind: 'lesson', label: `${courses.find(c => c.id === v.course)?.short ?? v.course}: ${v.what}`, url: courses.find(c => c.id === v.course)?.url, pdf: v.pdf, course: v.course }))
   plan.technique.forEach((t, i) => { for (let s = 1; s <= TECH_SESSIONS; s++) q.push({ id: `t${i}.${s}`, lane: 'piano', kind: 'technique', label: `Technique: ${t.text} (${s}/${TECH_SESSIONS})` }) })
   plan.standards.forEach((tune, i) => STEPS.forEach((st, k) => q.push({ id: `s${i}.${k}`, lane: 'piano', kind: 'standard', label: `${tune}: ${st}`, tune })))
-  plan.sax.forEach((ph, i) => { const n = wkLen(ph.wk) * 5; for (let s = 1; s <= n; s++) q.push({ id: `x${i}.${s}`, lane: 'sax', kind: 'sax', label: `${ph.tasks.join(' · ')} (${s}/${n})` }) })
+  // Sax: same warm-up every day, but each session leans on one task in turn so no two days in a row read the same.
+  plan.sax.forEach((ph, i) => { const n = wkLen(ph.wk) * 5; for (let s = 1; s <= n; s++) { const focus = ph.tasks[(s - 1) % ph.tasks.length]; const rest = ph.tasks.filter(t => t !== focus); q.push({ id: `x${i}.${s}`, lane: 'sax', kind: 'sax', focus, label: `Focus: ${focus}${rest.length ? ' · then ' + rest.join(', ') : ''} (${s}/${n})` }) } })
   // Climbing stays fun: no queue for it. Runs (C25K) and pull-ups keep their roadmap.
   for (const ph of phases.filter(p => p.prog !== 'v8')) {
     const perWeek = ph.prog === 'c25k' ? 2 : 3
@@ -107,4 +108,11 @@ export function laneEta(user: UserData, lane: Lane, projected = project(user)) {
   }
   const pace = practiceDays ? Math.round((done / practiceDays) * 10) / 10 : null
   return { done, total, pct, pace, practiceDays, eta: short ? null : last, short }
+}
+
+/** The tune in play on a date: the last standard step scheduled on or before it, else whatever the queue is on now. */
+export function tuneOn(user: UserData, projected: ReturnType<typeof project>, date: string): string | undefined {
+  const days = Object.keys(projected.alloc).filter(d => d <= date).sort()
+  for (let i = days.length - 1; i >= 0; i--) { const st = projected.alloc[days[i]].filter(q => q.kind === 'standard').pop(); if (st?.tune) return st.tune }
+  return currentTune(user)
 }

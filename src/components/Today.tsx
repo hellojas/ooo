@@ -140,7 +140,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const chart = (lessonQ ? pdfLinks(lessonQ.pdf) : courseLinks(course?.id ?? ''))[0]
   const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Run + pull-ups'
   const repeats = curTasks.filter(t => t.qid && (user.queueRepeat ?? []).includes(t.qid) && user.queueDone?.[t.qid] !== date)
-  const focusLine = (repeats.length ? 'Again: ' + repeats[0].label.split(': ').slice(-1)[0].replace(/ \(\d+\/\d+\)$/, '') + '. ' : '') + (lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s') && !repeats.includes(t)).map(t => t.label.split(': ')[1]).join('. ') : (curTasks.find(t => !repeats.includes(t))?.label.replace(/ \(\d+\/\d+\)$/, '') ?? ''))
+  const focusLine = (repeats.length ? 'Again: ' + repeats[0].label.split(': ').slice(-1)[0].replace(/ \(\d+\/\d+\)$/, '') + '. ' : '') + (lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s') && !repeats.includes(t)).map(t => t.label.split(': ')[1]).join('. ') : (curTasks.find(t => !repeats.includes(t))?.label.replace(/ \(\d+\/\d+\)$/, '').replace(/^Focus: /, '') ?? ''))
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
   const setBlock = (t: string, v: { start?: number; end?: number } | null) => setPr({ blocks: v ? { ...pr.blocks, [t]: v } : Object.fromEntries(Object.entries(pr.blocks ?? {}).filter(([k]) => k !== t)) })
   const [nextNote, setNextNote] = useState('')

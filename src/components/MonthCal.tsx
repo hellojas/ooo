@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { DOW, MONTHS, END, START, addDays, key, parse, today, weekNo, weekStart } from '../dates'
 import { attKey, itemsOn, monthWeeks, setTaipeiStart, stateOf, tripOn } from '../model'
-import { project, type QItem } from '../queue'
+import { project, tuneOn, type QItem } from '../queue'
 import { update, useUser } from '../storage'
 import { gcalUrl } from '../ics'
 import type { Program } from '../types'
@@ -38,8 +38,8 @@ export function MonthCal({ onOpenDay, view = 'month' }: { onOpenDay: (d: string)
     }
     for (const q of projected.alloc[d] ?? []) {
       const cat: Cat = q.lane === 'piano' ? 'Piano' : q.lane === 'sax' ? 'Sax' : 'Fitness'
-      const title = q.kind === 'lesson' ? `Lesson · ${q.label.split(': ')[1]}` : q.kind === 'standard' ? q.label : q.kind === 'technique' ? q.label.replace(/^Technique: /, 'Technique · ') : q.kind === 'sax' ? 'Sax · ' + q.label.split(' · ')[0] : q.label.split(':')[0]
-      out.push({ id: q.id, cat, title, desc: q.label, done: user.queueDone?.[q.id] === d, q, url: q.url })
+      const title = q.kind === 'lesson' ? `Lesson · ${q.label.split(': ')[1]}` : q.kind === 'standard' ? q.label : q.kind === 'technique' ? q.label.replace(/^Technique: /, 'Technique · ') : q.kind === 'sax' ? 'Sax · ' + (q.focus ?? q.label).replace("this week's standard", tuneOn(user, projected, d) ?? "this week's standard") : q.label.split(':')[0]
+      out.push({ id: q.id, cat, title, desc: q.kind === 'sax' ? q.label.replace("this week's standard", tuneOn(user, projected, d) ?? "this week's standard") : q.label, done: user.queueDone?.[q.id] === d, q, url: q.url })
     }
     return out.filter(e => !hide.has(e.cat) && (showOpt || !e.optional))
   }
