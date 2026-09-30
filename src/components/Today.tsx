@@ -192,7 +192,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
                     {r.sub && <small>{r.sub}</small>}
                     {r.clash && <small className="clash">Overlaps {r.clash.p.short} · <button className="linkbtn" onClick={e => { e.stopPropagation(); const len = r.end! - r.start; const s = freeSlot(user, date, len, r.clash!.to); setBlock(r.title, { start: s, end: s + len }) }}>move after</button>
                       {r.start < r.clash.from && <> · <button className="linkbtn" onClick={e => { e.stopPropagation(); setBlock(r.title, { end: r.clash!.from }) }}>shorten</button></>} · <button className="linkbtn" onClick={e => { e.stopPropagation(); skip(r.title) }}>skip</button></small>}
-                    {r.skipped && <small><button className="linkbtn quiet" onClick={e => { e.stopPropagation(); skip(r.title) }}>restore</button></small>}
+                    {r.kind === 'block' && !r.clash && <small><button className="linkbtn quiet" onClick={e => { e.stopPropagation(); skip(r.title) }}>{r.skipped ? 'restore' : 'skip today'}</button></small>}
                     {r.p?.id === 'coffee' && <span onClick={e => e.stopPropagation()}><CoffeePick date={date} /></span>}
                   </span>
                   {r.kind === 'block' && r.lane && <span className="chev">›</span>}

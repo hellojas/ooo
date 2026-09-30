@@ -15,7 +15,8 @@ import { LogView } from './LogView'
 /** Sunday setup: three prompts, next week's standard, confirm classes, pre-set day types. Plus the log. */
 export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const user = useUser()
-  const [wk, setWk] = useState(Math.min(10, Math.max(1, weekNo(today()))))
+  // Sunday is day 1 of the next week, so a Sunday review looks back at the week that just ended.
+  const [wk, setWk] = useState(Math.min(10, Math.max(1, weekNo(today()) - (parse(today()).getDay() === 0 ? 1 : 0))))
   const [tab, setTab] = useState<'review' | 'log'>('review')
   const [staged, setStaged] = useState<Change[] | null>(null)
   const sync = useSync()

@@ -223,8 +223,13 @@ export function dayTypeWhy(user: UserData, k: string, real: string): { type: Day
   // Only an explicit “skipped today” counts as a miss. An empty log is unknown, not a miss.
   if (k <= real && prev >= START && pp?.skippedDay && !tripOn(prev, user.settings.tripsOff)) return { type: 'light', why: 'you skipped yesterday — never miss twice' }
   let run = 0
-  for (let d = prev; d >= START && hasMusic(user, d) && run < 6; d = key(addDays(parse(d), -1))) run++
-  if (run >= 5) return { type: 'light', why: `${run} practice days in a row` }
+  for (let d = prev; d >= START && run < 6; d = key(addDays(parse(d), -1))) {
+    const dd = parse(d).getDay()
+    if (dd === 0 || dd === 6 || tripOn(d, user.settings.tripsOff) || user.practice[d]?.dayType === 'rest') continue   // skip non-practice days
+    if (!hasMusic(user, d)) break
+    run++
+  }
+  if (run >= 5) return { type: 'light', why: `${run} practice days in a row — take it easy` }
   if (classWindows(user, k).some(c => c.from < H(17, 30))) return { type: 'class', why: 'class this afternoon' }
   return { type: 'full', why: 'a normal practice day' }
 }
