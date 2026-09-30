@@ -61,7 +61,9 @@ export const isoWeekday = (k: string) => parse(k).getDay()
 export { weekNo }
 
 export function progress(user: UserData, wk: number) {
-  const standards = Object.values(user.weekly).filter(w => w.recordedStandard).length
+  const fromQueue = new Set<string>()
+  for (const [id, d] of Object.entries(user.queueDone ?? {})) if (/^s\d+\.4$/.test(id) && d) fromQueue.add(id.split('.')[0])
+  const standards = Math.max(fromQueue.size, Object.values(user.weekly).filter(w => w.recordedStandard).length)
   const maxes = Object.entries(user.weekly).filter(([, w]) => w.pullupMax != null).sort(([a], [b]) => Number(a) - Number(b)).map(([, w]) => w.pullupMax as number)
   let c25k = ''
   for (const [d, r] of Object.entries(user.running).sort(([a], [b]) => a.localeCompare(b))) if (r.done) c25k = phasesForWeek(weekNo(d)).find(x => x.prog === 'c25k')?.short ?? c25k

@@ -1,5 +1,5 @@
 import { programs } from './data'
-import { tripOn } from './model'
+import { stateOf, tripOn } from './model'
 import { span } from './time'
 export { span }
 import type { UserData } from './types'
@@ -11,7 +11,7 @@ const esc = (s: string) => s.replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n')
 export function buildIcs(user: UserData, opts: { planOnly?: boolean } = {}): string {
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PROJECT OOO//EN', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:PROJECT OOO', 'X-WR-TIMEZONE:America/New_York']
   for (const p of programs) {
-    if (opts.planOnly && p.kind === 'inperson' && !p.plan) continue
+    if (opts.planOnly && p.kind === 'inperson' && stateOf(p, user) === 'considering') continue
     if (user.settings.hiddenItems.includes(p.id)) continue
     const t = span(p.time)
     for (const d of p.dates) {

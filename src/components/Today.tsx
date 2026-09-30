@@ -128,7 +128,8 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const onDay = new Set(curTasks.map(t => t.qid).filter(Boolean) as string[])
   const optionalWaiting = MASTER.filter(x => x.lane === lane && x.kind === 'lesson' && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && priorityOf(user, x) === 'optional' && !projected.dateOf[x.id]).length
   const next = (() => { const cand = MASTER.filter(x => x.lane === lane && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && !onDay.has(x.id) && priorityOf(user, x) !== 'parked'); return cand.find(x => (projected.dateOf[x.id] ?? '9999') > date) ?? cand[0] })()
-  const active = pr.active
+  const active = pr.active && Date.now() - pr.active.since < 8 * 3600e3 ? pr.active : undefined
+  useEffect(() => { if (pr.active && !active) setPr({ active: undefined }) }, [pr.active, active]) // eslint-disable-line react-hooks/exhaustive-deps
   const isActive = !!active && laneOf(active.block) === lane
   const elapsed = isActive ? Math.max(1, Math.round((Date.now() - active!.since) / 60000)) : 0
   const laneDef = LANES.find(l => l.id === lane)!

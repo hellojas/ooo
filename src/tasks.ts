@@ -9,7 +9,7 @@ export interface Task { id: string; label: string; url?: string; qid?: string; p
 const inRange = (wk: number, r: number[]) => wk >= r[0] && wk <= r[1]
 
 /** The tune in play: the queue decides; a Review override for that week wins. */
-export const standardOfWeek = (user: UserData, wk: number) => user.weekly[wk]?.standard || currentTune(user) || plan.standards[Math.min(9, Math.max(0, wk - 1))]
+export const standardOfWeek = (user: UserData, wk: number) => currentTune(user) || plan.standards[Math.min(9, Math.max(0, wk - 1))]
 
 const toTask = (q: QItem): Task => ({ id: 'q:' + q.id, qid: q.id, label: q.label, url: q.url, pdf: q.pdf })
 

@@ -32,8 +32,9 @@ export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
         <h2>Repertoire</h2>
         <p className="meta">One tune at a time. The five steps are the same ones the curriculum queues on Today — tick them here or there. Anything untouched for 7+ days gets a review flag.</p>
         {(() => {
+          const qDoneOf = (name: string) => MASTER.filter(x => x.kind === 'standard' && x.tune === name && user.queueDone?.[x.id]).length
           const rows = plan.standards.map((name, i) => ({ name, i, t: user.tunes[name] ?? { checks: [] } }))
-          const learned = rows.filter(r => r.name !== current && r.t.checks.length > 0)
+          const learned = rows.filter(r => r.name !== current && qDoneOf(r.name) > 0)
           const revisit = learned.sort((a, b) => (a.t.last ?? '').localeCompare(b.t.last ?? ''))[0]
           const later = rows.filter(r => r.name !== current && r !== revisit)
           const Tune = ({ name, i, t, full }: { name: string; i: number; t: typeof rows[number]['t']; full: boolean }) => {
