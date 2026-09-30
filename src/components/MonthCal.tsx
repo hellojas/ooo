@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { DOW, MONTHS, END, START, addDays, key, parse, today, weekNo, weekStart } from '../dates'
-import { attKey, itemsOn, monthWeeks, setTaipeiStart, stateOf, tripOn } from '../model'
+import { attKey, blocksForType, dayTypeFor, fmtMin, itemSpan, itemsOn, monthWeeks, startFor, setTaipeiStart, stateOf, tripOn } from '../model'
 import { project, tuneOn, type QItem } from '../queue'
 import { update, useUser } from '../storage'
 import { gcalUrl } from '../ics'
@@ -11,7 +11,7 @@ const CATS: { id: Cat; color: string }[] = [
   { id: 'Classes', color: '#7c6cf0' }, { id: 'Piano', color: '#4a8df0' }, { id: 'Sax', color: '#f0a03a' },
   { id: 'Fitness', color: '#3fae5a' }, { id: 'Lifestyle', color: '#9a9a9a' }, { id: 'Travel', color: '#e06060' },
 ]
-interface Ev { id: string; cat: Cat; time?: string; title: string; desc?: string; optional?: boolean; done?: boolean; missed?: boolean; q?: QItem; p?: Program; url?: string }
+interface Ev { id: string; cat: Cat; start?: number; time?: string; title: string; desc?: string; optional?: boolean; done?: boolean; missed?: boolean; q?: QItem; p?: Program; url?: string }
 
 /** Month grid in the reference style. Fixed dates are classes and trips; everything else is the queue, projected. */
 export function MonthCal({ onOpenDay, view = 'month' }: { onOpenDay: (d: string) => void; view?: 'month' | 'week' }) {
@@ -33,14 +33,18 @@ export function MonthCal({ onOpenDay, view = 'month' }: { onOpenDay: (d: string)
     for (const { p, missed, maybe, state } of itemsOn(d, user)) {
       if (['climb', 'climbLES', 'run', 'run2'].includes(p.id)) continue
       const att = user.attendance[attKey(p.id, d)]
-      out.push({ id: p.id, cat: p.kind === 'inperson' ? 'Classes' : 'Lifestyle', time: p.time.replace(/^[A-Z][a-z]{2} /, ''), title: p.short, desc: [p.loc, p.go].filter(Boolean).join(' · '),
+      const t = itemSpan(p, user, d)
+      out.push({ id: p.id, cat: p.kind === 'inperson' ? 'Classes' : 'Lifestyle', start: t?.[0], time: t ? `${fmtMin(t[0])}–${fmtMin(t[1])}` : p.time.replace(/^[A-Z][a-z]{2} /, ''), title: p.short, desc: [p.loc, p.go].filter(Boolean).join(' · '),
         optional: !!p.drop || state === 'planned' || maybe, done: att === 'went', missed: missed || att === 'missed' || att === 'skipped', p, url: p.url })
     }
+    const blocks = blocksForType(d, dayTypeFor(user, d, real), startFor(user, d), user)
+    const blockStart = (q: QItem) => blocks.find(b => q.lane === 'sax' ? b.title.startsWith('Sax') : q.lane === 'piano' ? b.title.startsWith('Piano') : b.title === 'Gym slot')?.start
     for (const q of projected.alloc[d] ?? []) {
       const cat: Cat = q.lane === 'piano' ? 'Piano' : q.lane === 'sax' ? 'Sax' : 'Fitness'
       const title = q.kind === 'lesson' ? `Lesson · ${q.label.split(': ')[1]}` : q.kind === 'standard' ? q.label : q.kind === 'technique' ? q.label.replace(/^Technique: /, 'Technique · ') : q.kind === 'sax' ? 'Sax · ' + (q.focus ?? q.label).replace("this week's standard", tuneOn(user, projected, d) ?? "this week's standard") : q.label.split(':')[0]
-      out.push({ id: q.id, cat, title, desc: q.kind === 'sax' ? q.label.replace("this week's standard", tuneOn(user, projected, d) ?? "this week's standard") : q.label, done: user.queueDone?.[q.id] === d, q, url: q.url })
+      out.push({ id: q.id, cat, start: blockStart(q), title, desc: q.kind === 'sax' ? q.label.replace("this week's standard", tuneOn(user, projected, d) ?? "this week's standard") : q.label, done: user.queueDone?.[q.id] === d, q, url: q.url })
     }
+    out.sort((a, b) => (a.start ?? (a.cat === 'Travel' ? -1 : 1e9)) - (b.start ?? (b.cat === 'Travel' ? -1 : 1e9)))
     return out.filter(e => !hide.has(e.cat) && (showOpt || !e.optional))
   }
 

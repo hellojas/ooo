@@ -1,5 +1,5 @@
 import { programs } from './data'
-import { stateOf, tripOn } from './model'
+import { itemSpan, stateOf, tripOn } from './model'
 import { span } from './time'
 export { span }
 import type { UserData } from './types'
@@ -13,9 +13,9 @@ export function buildIcs(user: UserData, opts: { planOnly?: boolean } = {}): str
   for (const p of programs) {
     if (opts.planOnly && p.kind === 'inperson' && stateOf(p, user) === 'considering') continue
     if (user.settings.hiddenItems.includes(p.id)) continue
-    const t = span(p.time)
     for (const d of p.dates) {
       if (tripOn(d, user.settings.tripsOff)) continue
+      const t = itemSpan(p, user, d)
       const [y, mo, da] = d.split('-').map(Number)
       const fmt = (min: number) => `${y}${pad(mo)}${pad(da)}T${pad(Math.floor(min / 60))}${pad(min % 60)}00`
       lines.push('BEGIN:VEVENT', `UID:${p.id}-${d}@project-ooo`, `DTSTAMP:20260929T000000Z`,

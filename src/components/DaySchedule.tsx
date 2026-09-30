@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { parse, weekNo, today } from '../dates'
 import { shops } from '../data'
-import { attKey, blocksForType, classWindows, dayTypeFor, fmtMin, freeSlot, hintFor, itemsOn, setTaipeiStart, startFor, type Block } from '../model'
-import { span } from '../time'
+import { attKey, itemSpan, blocksForType, classWindows, dayTypeFor, fmtMin, freeSlot, hintFor, itemsOn, setTaipeiStart, startFor, type Block } from '../model'
 import { update, useUser } from '../storage'
 import { standardOfWeek, tasksFor } from '../tasks'
 import { Chip } from './Chip'
@@ -92,7 +91,7 @@ export function DaySchedule({ date, onOpen, showTasks, nowMin }: { date: string;
     if (it.missed) { away.push(it); continue }
     const { p, maybe } = it
     const hint = hintFor(p.id, wk, dow)
-    const t = span(p.time)
+    const t = itemSpan(p, user, date)
     const until = pr.until?.[p.id]
     rows.push({ start: t?.[0] ?? 0, key: p.id, node: <>
       <Chip p={p} missed={false} maybe={maybe} att={user.attendance[attKey(p.id, date)]} onOpen={() => onOpen(p, date)} />

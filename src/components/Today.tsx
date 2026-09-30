@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { DOW, END, MONTHS, key, parse, START, today as todayKey, weekNo, weekStart } from '../dates'
 import { courses } from '../data'
-import { DAY_TYPES, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, attKey, type Block } from '../model'
-import { span } from '../time'
+import { DAY_TYPES, itemSpan, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, attKey, type Block } from '../model'
 import { update, useUser } from '../storage'
 import { signIn, useSync } from '../sync'
 import { standardOfWeek, tasksFor, type Task } from '../tasks'
@@ -78,7 +77,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const items = itemsOn(date, user).filter(x => !['climb', 'climbLES', 'run', 'run2'].includes(x.p.id))
   const away = items.filter(x => x.missed)
   for (const it of items.filter(x => !x.missed)) {
-    const t = span(it.p.time); if (!t) continue
+    const t = itemSpan(it.p, user, date); if (!t) continue
     const w = wins.find(w => w.p.id === it.p.id)
     if (w && w.from < w.start) rows.push({ key: 'go' + it.p.id, start: w.from, title: `Leave for ${it.p.short}`, sub: it.p.go?.split('·').slice(1).join('·').trim() || it.p.go, kind: 'travel' })
     rows.push({ key: it.p.id, start: w?.start ?? t[0], end: w?.end ?? t[1], title: it.p.short, sub: it.p.loc?.split(',')[0], kind: it.p.kind === 'inperson' ? 'class' : 'life', p: it.p })

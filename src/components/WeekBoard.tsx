@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { DOW, MONTHS, START, addDays, key, parse, today, weekNo, weekStart } from '../dates'
-import { DAY_TYPES, attKey, blocksForType, classWindows, dayTypeWhy, fmtMin, itemsOn, setTaipeiStart, startFor, stateOf, tripOn } from '../model'
+import { DAY_TYPES, itemSpan, attKey, blocksForType, classWindows, dayTypeWhy, fmtMin, itemsOn, setTaipeiStart, startFor, stateOf, tripOn } from '../model'
 import { span } from '../time'
 import { update, useUser } from '../storage'
 import { project } from '../queue'
@@ -95,9 +95,9 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
                         <b>{w.p.short}</b><span>{fmtMin(w.start)}–{fmtMin(w.end)}</span>{w.end - w.start >= 120 && <i className={'tag ' + (stateOf(w.p, user) === 'registered' ? 'planned' : 'trial')}>{stateOf(w.p, user) === 'registered' ? 'Planned' : 'Trial'}</i>}
                       </div>
                     </div>) })}
-                  {items.map(it => { const t = span(it.p.time); if (!t) return null; return (
+                  {items.map(it => { const t = itemSpan(it.p, user, date); if (!t) return null; return (
                     <div key={it.p.id} className={'wb-ev life' + (t[1] - t[0] < 90 ? ' narrow' : '')} style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} onClick={e => { e.stopPropagation(); onOpen(it.p, date) }} title={it.p.name}><b>{it.p.short}</b></div>) })}
-                  {optional.map(it => { const t = span(it.p.time); if (!t) return null; return (
+                  {optional.map(it => { const t = itemSpan(it.p, user, date); if (!t) return null; return (
                     <div key={it.p.id} className="wb-ev opt" style={{ left: pct(t[0]) + '%', width: (pct(t[1]) - pct(t[0])) + '%' }} onClick={e => { e.stopPropagation(); onOpen(it.p, date) }} title={`${it.p.name} · considering`}><b>{it.p.short}</b></div>) })}
                   {blocks.map(b => {
                     const d = drag && drag.date === date && drag.title === b.title ? drag : null

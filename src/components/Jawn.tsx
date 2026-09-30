@@ -14,8 +14,7 @@ export function Jawn() {
   const [t, setT] = useState(''), [n, setN] = useState('')
   if (!ok) return (
     <section className="plain gate">
-      <h2 className="serif">Jawn</h2>
-      <p className="meta">The non-sabbatical list: date nights, games, things to do together this fall. Password-protected, lightly.</p>
+      <p className="meta">who climbs the next 14 flights of stairs?</p>
       <form onSubmit={e => { e.preventDefault(); if (pw === PW) setOk(true); else setBad(true) }} className="row">
         <input type="password" placeholder="password" value={pw} onChange={e => { setPw(e.target.value); setBad(false) }} autoFocus />
         <button className="btn primary">Open</button>{bad && <span className="meta">nope</span>}

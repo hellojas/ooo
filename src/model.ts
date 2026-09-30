@@ -80,6 +80,15 @@ export const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); r
 /** Start time for a day: that date's override, else the weekday default from Configure, else the global default. */
 export const defaultStartFor = (user: UserData, k: string) => user.settings.startTimes?.[parse(k).getDay()] || user.settings.startTime || DEFAULT_START
 export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || defaultStartFor(user, k)
+const fmtHM = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
+export const READ_MIN = 90
+/** When a session happens on a date. Classes keep their listed time; the reading morning opens the day at your start time (90 min). */
+export function itemSpan(p: Program, user: UserData, k: string): [number, number] | null {
+  if (p.kind === 'read') { const st = toMin(startFor(user, k)); return [st, st + READ_MIN] }
+  return span(p.time)
+}
+/** Minutes the practice blocks move back on a date: the reading morning goes first. */
+export const morningShift = (user: UserData | undefined, k: string) => user && itemsOn(k, user).some(x => x.p.kind === 'read' && !x.missed) ? READ_MIN : 0
 export function blocksOn(k: string, startTime = DEFAULT_START): Block[] {
   const dow = parse(k).getDay()
   const shift = toMin(startTime) - toMin(BASE_START)
@@ -110,10 +119,10 @@ export const MILESTONES: { wk: number; items: string[] }[] = [
 
 export const WEEK_TEMPLATE: { day: string; items: { t: string; c?: string; opt?: boolean }[] }[] = [
   { day: 'Mon', items: [{ t: 'sax · piano · lunch · piano (from your start time)' }, { t: 'Climb BK 3:30p', c: 'climb' }, { t: 'BKCM Piano Lab 8–9p', c: 'bkcm', opt: true }] },
-  { day: 'Tue', items: [{ t: 'Coffee shop + read 8a', c: 'coffee' }, { t: 'sax · piano · piano' }, { t: 'Run + pull-ups', c: 'run' }, { t: 'BH free jam 2–6p (some weeks)', c: 'bhTue', opt: true }, { t: 'Kaufman Harmony 5:30–7p', c: 'kaufTue' }] },
+  { day: 'Tue', items: [{ t: 'Coffee shop + read (first thing)', c: 'coffee' }, { t: 'sax · piano · piano' }, { t: 'Run + pull-ups', c: 'run' }, { t: 'BH free jam 2–6p (some weeks)', c: 'bhTue', opt: true }, { t: 'Kaufman Harmony 5:30–7p', c: 'kaufTue' }] },
   { day: 'Wed', items: [{ t: 'sax · piano · piano' }, { t: 'Climb BK 3:30p', c: 'climb' }, { t: 'NYJW Songbook 8–10p (optional)', c: 'nyjwSong', opt: true }] },
   { day: 'Thu', items: [{ t: 'sax · piano · piano' }, { t: 'Climb LES 4:30–6:30p (optional 4th)', c: 'climbLES', opt: true }, { t: 'Kaufman Blues Jam 7–9p', c: 'kaufThu' }] },
-  { day: 'Fri', items: [{ t: 'Coffee shop + read 8a', c: 'coffee' }, { t: 'sax · piano · piano' }, { t: 'Climb BK 3:30p + pull-ups', c: 'climb' }, { t: 'Free evening' }] },
+  { day: 'Fri', items: [{ t: 'Coffee shop + read (first thing)', c: 'coffee' }, { t: 'sax · piano · piano' }, { t: 'Climb BK 3:30p + pull-ups', c: 'climb' }, { t: 'Free evening' }] },
   { day: 'Sat', items: [{ t: 'Badminton 10a, every other week', c: 'badm', opt: true }, { t: 'NYJW Standards 2–4p', c: 'nyjwStd' }, { t: 'Intro Improv 4–6p (optional)', c: 'nyjwImp', opt: true }] },
   { day: 'Sun', items: [{ t: 'Quick run 10a (optional 2nd)', c: 'run2', opt: true }, { t: 'Weekly review · record' }, { t: 'Barry Harris 6–10p', c: 'bhSun' }] },
 ]
@@ -240,7 +249,8 @@ export const dayTypeFor = (user: UserData, k: string, real: string): DayType => 
 /** Blocks for a day given its type, with per-block overrides (moved / shortened) applied. */
 export function blocksForType(k: string, type: DayType, startTime: string, user?: UserData): Block[] {
   const dow = parse(k).getDay()
-  const st = toMin(startTime)
+  const st = toMin(startTime) + morningShift(user, k)
+  startTime = fmtHM(st)
   let bs: Block[] = []
   if (type === 'rest' || type === 'travel') bs = []
   else if (type === 'light') {
