@@ -6,7 +6,9 @@ import { DAY_TYPES, dayTypeFor, stateOf, type DayType } from '../model'
 import { update, useUser } from '../storage'
 import { WeekProgress } from './WeekProgress'
 import { ProgressStrip } from './Progress'
-import { replan } from '../replan'
+import { applyChanges, propose, type Change } from '../replan'
+import { exportJson } from '../storage'
+import { useSync } from '../sync'
 import { standardOfWeek } from '../tasks'
 import { LogView } from './LogView'
 
@@ -15,6 +17,9 @@ export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const user = useUser()
   const [wk, setWk] = useState(Math.min(10, Math.max(1, weekNo(today()))))
   const [tab, setTab] = useState<'review' | 'log'>('review')
+  const [staged, setStaged] = useState<Change[] | null>(null)
+  const sync = useSync()
+  const backup = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([exportJson()], { type: 'application/json' })); a.download = `project-ooo-${today()}.json`; a.click(); update(u => ({ ...u, settings: { ...u.settings, lastBackup: today() } })) }
   const w = user.weekly[wk] ?? {}
   const cur = standardOfWeek(user, wk)
   const nextW = user.weekly[wk + 1] ?? {}
@@ -54,11 +59,26 @@ export function Weekly({ onOpenDay }: { onOpenDay: (d: string) => void }) {
           <label className="block">The takes <input type="url" placeholder="Drive / Voice Memos link" value={w.recordingUrl ?? ''} onChange={e => set(wk, { recordingUrl: e.target.value })} /></label>
         </section>
         <section className="plain">
-          <h3>Adjust next week from this one</h3>
-          <p className="meta">One button. It keeps the tune if it isn’t memorized, nudges the piano guideline up or down by how the week went, and eases next week if your body complained. You can still change anything below.</p>
-          <button className="btn primary" onClick={() => { const r = replan(user, wk); update(() => r.user) }}>Replan week {wk + 1}</button>
-          {w.replan && <ul className="checks replan">{w.replan.map((c, i) => <li key={i}>{c}</li>)}</ul>}
+          <h2>Proposed changes</h2>
+          <p className="meta">Staged for week {wk + 1} · not applied yet. Suggestions come from your logged sessions; untick anything you disagree with.</p>
+          {!staged && <button className="btn" onClick={() => setStaged(propose(user, wk))}>Preview next week →</button>}
+          {staged && <>
+            {staged.length === 0 && <p className="meta">Nothing to change — the week went to plan.</p>}
+            <ul className="changes">{staged.map((c, i) => <li key={c.key} className={c.apply ? '' : 'off'}>
+              <label className="inl"><input type="checkbox" checked={c.apply} disabled={c.to === 'no change'} onChange={e => setStaged(staged.map((x, j) => j === i ? { ...x, apply: e.target.checked } : x))} /> <b>{c.label}</b></label>
+              <span className="from">{c.from}</span><span className="arrow">→</span><span className="to">{c.to}</span>
+              <small>{c.reason}</small></li>)}</ul>
+            <div className="row">
+              <button className="btn primary" disabled={!staged.some(c => c.apply)} onClick={() => { update(u => applyChanges(u, wk, staged)); setStaged(null) }}>Apply these changes</button>
+              <button className="btn" onClick={() => setStaged(null)}>Keep current plan</button>
+            </div>
+          </>}
+          {w.replan && !staged && <ul className="checks replan">{w.replan.map((c, i) => <li key={i}>Applied: {c}</li>)}</ul>}
         </section>
+        {!sync.user && <section className="plain backup">
+          <div className="row between"><div><h2>Backup</h2><p className="meta">Everything lives in this browser until you sign in. {user.settings.lastBackup ? `Last backup ${user.settings.lastBackup}.` : 'No backup yet.'}</p></div>
+            <button className="btn" onClick={backup}>Export a backup</button></div>
+        </section>}
         <section className="plain">
           <h3>Set up week {wk + 1}</h3>
           <p className="meta">The app decides each day: trips → Travel, weekends → Rest, a class that afternoon → Class, a missed day or a tired/sore body → Light, five days in a row → Light. Override a day here only if you already know something it doesn’t.</p>

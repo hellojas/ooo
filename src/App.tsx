@@ -62,7 +62,7 @@ export default function App() {
         <button className="gear desk" aria-pressed={view === 'configure'} aria-label="Configure" title="Configure" onClick={() => setView('configure')}><Ic.gear /></button>
       </header>
 
-      {view === 'today' && <Today date={day} setDate={setDay} onOpen={onOpen} onNav={toFitness} />}
+      {view === 'today' && <Today date={day} setDate={setDay} onOpen={onOpen} onNav={toFitness} onReview={() => setView('review')} />}
 
       {view === 'calendar' && <>
         <div className="subtabs">{CALS.map(([c, l]) => <button key={c} aria-pressed={cal === c} onClick={() => setView('calendar', c)}>{l}</button>)}</div>

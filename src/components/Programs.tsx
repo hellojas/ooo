@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { programs } from '../data'
-import { stateOf, type PState } from '../model'
+import { fmtMin, stateOf, type PState } from '../model'
+import { span } from '../time'
 import { update, useUser } from '../storage'
 import { Calendar } from './Calendar'
 import { AbsTables, Counts, OnlineTables, Where } from './Tables'
@@ -19,14 +20,15 @@ export function Programs({ onOpen }: { onOpen: (p: Program, d: string) => void }
       {tab === 'classes' && <>
         <section className="plain">
           <h2>Every class, one list</h2>
-          <p className="meta">Nothing here is a commitment. Set each one to Considering (shown only here), Planned (on the calendar, outlined) or Registered (solid). Dates are what the schools published on Sep 29; “confirm” marks holiday weeks they haven’t confirmed.</p>
-          <div className="tblwrap"><table className="t"><thead><tr><th>Class</th><th>When</th><th>Dates</th><th>Where</th><th>From home</th><th>Status</th></tr></thead><tbody>
+          <p className="meta">Nothing here is a commitment. Set each one to Considering (shown only here), Planned (on the calendar, outlined) or Registered (solid). Dates are what the schools published on Sep 29; “confirm” marks holiday weeks they haven’t confirmed. For long drop-ins, set how long you usually stay — the schedule and travel chain use it every time.</p>
+          <div className="tblwrap"><table className="t"><thead><tr><th>Class</th><th>When</th><th>Dates</th><th>Where</th><th>From home</th><th>I usually stay until</th><th>Status</th></tr></thead><tbody>
             {classes.map(p => { const st = stateOf(p, user); return (
               <tr key={p.id} className={st === 'considering' ? 'skip' : ''}>
                 <td><span className="sw" style={{ '--c': `var(--${p.id})` } as React.CSSProperties} /><a href={p.url} target="_blank" rel="noreferrer">{p.name}</a>{p.drop && <small className="qtag">flex</small>}</td>
                 <td>{p.time}</td>
                 <td>{p.dates.length} · {p.dates[0].slice(5)} → {p.dates[p.dates.length - 1].slice(5)}{p.uncertain?.length ? ` · ${p.uncertain.length} to confirm` : ''}</td>
                 <td>{p.loc}</td><td className="go">{p.go}</td>
+                <td>{(() => { const t = span(p.time); if (!t || t[1] - t[0] <= 120) return <span className="meta">whole thing</span>; const opts = Array.from({ length: Math.floor((t[1] - t[0]) / 30) }, (_, i) => t[0] + 30 * (i + 1)); const v = user.settings.visitUntil?.[p.id] ?? t[1]; return <select value={v} onChange={e => update(u => ({ ...u, settings: { ...u.settings, visitUntil: { ...u.settings.visitUntil, [p.id]: Number(e.target.value) } } }))}>{opts.map(m => <option key={m} value={m}>{fmtMin(m)}{m === t[1] ? ' (end)' : ''}</option>)}</select> })()}</td>
                 <td><select value={st} onChange={e => set(p.id, e.target.value as PState)}><option value="considering">Considering</option><option value="planned">Planned</option><option value="registered">Registered</option></select></td>
               </tr>) })}
           </tbody></table></div>

@@ -197,7 +197,7 @@ const between = (a: string, b: string) => BETWEEN[`${a}|${b}`] ?? BETWEEN[`${b}|
 export function classWindows(user: UserData, k: string) {
   const list = itemsOn(k, user).filter(x => x.p.kind === 'inperson' && !x.missed).map(x => {
     const t = span(x.p.time); if (!t) return null
-    const until = user.practice[k]?.until?.[x.p.id] ?? t[1]
+    const until = user.practice[k]?.until?.[x.p.id] ?? user.settings.visitUntil?.[x.p.id] ?? t[1]
     return { p: x.p, start: t[0], end: until }
   }).filter(Boolean) as { p: Program; start: number; end: number }[]
   list.sort((a, b) => a.start - b.start)

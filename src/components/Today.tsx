@@ -48,7 +48,7 @@ export function WeekFocus({ wk, onNav }: { wk: number; onNav: (v: 'fitness') => 
 
 type PlanRow = { key: string; start: number; end?: number; title: string; sub?: string; kind: 'block' | 'class' | 'travel' | 'life'; block?: Block; p?: Program; clash?: { p: Program; from: number; to: number }; skipped?: boolean; lane?: Lane }
 
-export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate: (d: string) => void; onOpen: (p: Program, d: string) => void; onNav: (v: 'fitness') => void }) {
+export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string; setDate: (d: string) => void; onOpen: (p: Program, d: string) => void; onNav: (v: 'fitness') => void; onReview?: () => void }) {
   const user = useUser()
   const sync = useSync()
   setTaipeiStart(user.settings.taipeiStart)
@@ -126,6 +126,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const curTasks = laneTasks(lane)
   const laneDone = (l: Lane) => { const ts = laneTasks(l); return ts.length > 0 && ts.every(isDone) }
   const onDay = new Set(curTasks.map(t => t.qid).filter(Boolean) as string[])
+  const optionalWaiting = MASTER.filter(x => x.lane === lane && x.kind === 'lesson' && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && priorityOf(user, x) === 'optional' && !projected.dateOf[x.id]).length
   const next = (() => { const cand = MASTER.filter(x => x.lane === lane && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id) && !onDay.has(x.id) && priorityOf(user, x) !== 'parked'); return cand.find(x => (projected.dateOf[x.id] ?? '9999') > date) ?? cand[0] })()
   const active = pr.active
   const isActive = !!active && laneOf(active.block) === lane
@@ -137,7 +138,8 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
   const course = courses.find(c => c.id === (lessonQ?.course ?? coursesForWeek(wk)[0]?.id))
   const chart = (lessonQ ? pdfLinks(lessonQ.pdf) : courseLinks(course?.id ?? ''))[0]
   const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Run + pull-ups'
-  const focusLine = lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s')).map(t => t.label.split(': ')[1]).join('. ') : curTasks[0]?.label.replace(/ \(\d+\/\d+\)$/, '')
+  const repeats = curTasks.filter(t => t.qid && (user.queueRepeat ?? []).includes(t.qid) && user.queueDone?.[t.qid] !== date)
+  const focusLine = (repeats.length ? 'Again: ' + repeats[0].label.split(': ').slice(-1)[0].replace(/ \(\d+\/\d+\)$/, '') + '. ' : '') + (lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s') && !repeats.includes(t)).map(t => t.label.split(': ')[1]).join('. ') : (curTasks.find(t => !repeats.includes(t))?.label.replace(/ \(\d+\/\d+\)$/, '') ?? ''))
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
   const setBlock = (t: string, v: { start?: number; end?: number } | null) => setPr({ blocks: v ? { ...pr.blocks, [t]: v } : Object.fromEntries(Object.entries(pr.blocks ?? {}).filter(([k]) => k !== t)) })
   const [nextNote, setNextNote] = useState('')
@@ -172,6 +174,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
           <h3 className="serif">Today’s plan</h3>
           <div className="row between quiet"><label className="inl quiet">Starts <input type="time" value={startFor(user, date)} onChange={e => setPr({ startTime: e.target.value || undefined })} />
             {pr.startTime && <button className="linkbtn quiet" onClick={() => setPr({ startTime: undefined })}>reset ({defaultStartFor(user, date)})</button>}</label></div>
+          {parse(date).getDay() === 0 && wk >= 1 && <button className="btn primary wide" onClick={onReview}><Ic.review /> Open this week’s review</button>}
           {rows.length === 0 && <p className="empty">Nothing booked. Excellent.</p>}
           {type === 'travel' && <p className="meta">Travel day — nothing planned. The queue waits.</p>}
           <ol className="plan-list">
@@ -236,7 +239,7 @@ export function Today({ date, setDate, onOpen, onNav }: { date: string; setDate:
                 </li>) })}
             </ol>
             {next && <div className="nextq">
-              <span><Ic.programs /> Up next: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></span>
+              <span><Ic.programs /> Up next: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b>{optionalWaiting > 0 && <small className="meta"> · {optionalWaiting} optional lesson{optionalWaiting === 1 ? '' : 's'} waiting for a spare day</small>}</span>
               {laneDone(lane) && <button className="btn" onClick={() => setPr({ pulled: [...(pr.pulled ?? []), next.id] })}>Pull it into today</button>}
             </div>}
             <p className="banner"><span>✈</span> Travel or rest day? Your queue stays paused. Anything unticked stays at the front and shows up tomorrow.</p>
