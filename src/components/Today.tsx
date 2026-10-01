@@ -256,7 +256,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
               {curTasks.map((t, i) => { const on = isDone(t); return (
                 <li key={t.id} className={(on ? 'on' : '') + (isRepeat(t) ? ' rep' : '')} onClick={() => toggleTask(t)}>
                   <span className="n">{on ? (isRepeat(t) ? '↻' : '✓') : i + 1}</span>
-                  <span className="lbl">{t.min != null && <small className="mins num">{t.min} min</small>}{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && byId(t.qid) && priorityOf(user, byId(t.qid)!) === 'optional' && <small className="qtag">optional</small>}{t.ctx && <small className="ctx">{t.ctx}</small>}</span>
+                  <span className="lbl">{t.min != null && <small className="mins num">{t.min} min</small>}{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && byId(t.qid) && priorityOf(user, byId(t.qid)!) === 'optional' && <small className="qtag">optional</small>}{t.ctx && <small className="ctx">{t.ctx}</small>}{t.pass && !on && curTasks.find(x => !isDone(x))?.id === t.id && <small className="ctx pass">Pass: {t.pass}</small>}</span>
                   {t.qid && <span className="outcomes feel" onClick={e => e.stopPropagation()}>
                     {on ? <button className="linkbtn quiet" onClick={() => outcome(t, 'clear')}>{isRepeat(t) ? 'again tomorrow · undo' : 'done · undo'}</button> : <>
                       <button className="linkbtn quiet" onClick={() => feel(t, 'lost')} title="Keep it, smaller scope next time">lost</button>

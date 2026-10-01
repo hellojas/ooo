@@ -1,0 +1,2592 @@
+{
+  "name": "Project OOO Jazz Piano Curriculum v1",
+  "design_principles": [
+    "Sequence skills by dependency, not calendar date.",
+    "Use repertoire as the integration layer across harmony, ear, rhythm, voicings and improvisation.",
+    "Prefer chord-tone and guide-tone fluency before heavy chord-scale abstraction.",
+    "Keep only 2\u20133 genuinely new concepts active at once; everything else is maintenance, repertoire or play.",
+    "Learn language by ear, extract the underlying device, transpose it, vary it, then integrate it into standards.",
+    "Mastery is demonstrated by playing, hearing or applying\u2014not by consuming a lesson."
+  ],
+  "recommended_active_mix": {
+    "new_skill_nodes": "2\u20133",
+    "active_standard_nodes": "1\u20132",
+    "maintenance_nodes_per_session": "1\u20132",
+    "free_play_share": "10\u201320% of practice time"
+  },
+  "nodes": [
+    {
+      "id": "harmony.chord_quality_7ths",
+      "track": "Harmony",
+      "title": "7th-chord quality fluency",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [],
+      "goal": "Recognize and build maj7, min7, dom7, m7b5, dim7 quickly in every key.",
+      "practice_recipe": [
+        "Build each quality from a named root",
+        "Say chord tones aloud",
+        "Randomize roots instead of cycling mechanically"
+      ],
+      "mastery_tests": [
+        "Build any requested quality in <3 sec in all 12 keys",
+        "Name 3rd and 7th without counting"
+      ],
+      "remediation": [
+        "Reduce to 4 keys",
+        "Practice 3rd/7th only"
+      ],
+      "unlocks": [
+        "harmony.shells",
+        "ear.7th_chords"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 10,
+      "tags": [
+        "chords"
+      ]
+    },
+    {
+      "id": "harmony.shells",
+      "track": "Voicings",
+      "title": "Shell voicings: root\u20133\u20137",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.chord_quality_7ths"
+      ],
+      "goal": "Play functional shell voicings with minimal motion.",
+      "practice_recipe": [
+        "Play ii\u2013V\u2013I with root+3/7",
+        "Invert 3rd/7th to minimize motion",
+        "Cycle through 12 keys"
+      ],
+      "mastery_tests": [
+        "All 12 major ii\u2013V\u2013I without stopping at 60 BPM",
+        "Can identify which voice is 3rd/7th"
+      ],
+      "remediation": [
+        "Use only 3 keys",
+        "Remove metronome"
+      ],
+      "unlocks": [
+        "harmony.guide_tones",
+        "voicing.rootless_a"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "voicing",
+        "ii-v-i"
+      ]
+    },
+    {
+      "id": "harmony.guide_tones",
+      "track": "Harmony",
+      "title": "Guide-tone lines through changes",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.shells"
+      ],
+      "goal": "Hear and play smooth 3rd/7th lines through common progressions.",
+      "practice_recipe": [
+        "Play only 3rds through ii\u2013V\u2013I",
+        "Play only 7ths",
+        "Connect nearest guide tones through a standard"
+      ],
+      "mastery_tests": [
+        "Guide tones through Autumn Leaves from memory",
+        "Sing top guide tone before playing"
+      ],
+      "remediation": [
+        "Write guide tones first",
+        "Slow to half notes"
+      ],
+      "unlocks": [
+        "improv.chord_tones",
+        "ear.guide_tones"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "voice-leading"
+      ]
+    },
+    {
+      "id": "harmony.major_251",
+      "track": "Harmony",
+      "title": "Major ii\u2013V\u2013I fluency",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.shells"
+      ],
+      "goal": "See, hear and play major ii\u2013V\u2013I as one unit in every key.",
+      "practice_recipe": [
+        "Play shells in 12 keys",
+        "Name Roman numerals",
+        "Transpose one simple line through all keys"
+      ],
+      "mastery_tests": [
+        "12 keys at 72 BPM, one chord per bar",
+        "Recognize ii\u2013V\u2013I by ear in 8/10 examples"
+      ],
+      "remediation": [
+        "Practice roots only",
+        "Use circle of fourths"
+      ],
+      "unlocks": [
+        "voicing.rootless_a",
+        "improv.251_chordtones"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "ii-v-i"
+      ]
+    },
+    {
+      "id": "harmony.minor_251",
+      "track": "Harmony",
+      "title": "Minor ii\u00f8\u2013V7alt\u2013i fluency",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.major_251",
+        "harmony.chord_quality_7ths"
+      ],
+      "goal": "Internalize the basic minor ii\u2013V\u2013i sound and functions.",
+      "practice_recipe": [
+        "Play m7b5\u2013V7\u2013min shells",
+        "Add b9 to V",
+        "Cycle through 12 keys"
+      ],
+      "mastery_tests": [
+        "12 keys at 60 BPM",
+        "Name tendency tones of V\u2192i"
+      ],
+      "remediation": [
+        "Use 6 keys first",
+        "Keep V unaltered initially"
+      ],
+      "unlocks": [
+        "voicing.minor_251",
+        "improv.minor_251"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "minor"
+      ]
+    },
+    {
+      "id": "harmony.secondary_dominants",
+      "track": "Harmony",
+      "title": "Secondary dominants",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.major_251"
+      ],
+      "goal": "Recognize and hear V of ii, iii, IV, V, vi in standards.",
+      "practice_recipe": [
+        "Build V/x in major keys",
+        "Find examples inside repertoire",
+        "Resolve each dominant by voice-leading 3rd/7th"
+      ],
+      "mastery_tests": [
+        "Analyze 8 secondary dominants in tunes correctly",
+        "Play V/ii\u2192ii etc. in 12 keys"
+      ],
+      "remediation": [
+        "Restrict to V/ii and V/vi"
+      ],
+      "unlocks": [
+        "harmony.backdoor",
+        "harmony.turnarounds"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 15,
+      "tags": [
+        "functional-harmony"
+      ]
+    },
+    {
+      "id": "harmony.turnarounds",
+      "track": "Harmony",
+      "title": "I\u2013vi\u2013ii\u2013V and common turnarounds",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.major_251"
+      ],
+      "goal": "Recognize and play turnaround families without reading.",
+      "practice_recipe": [
+        "Play I\u2013vi\u2013ii\u2013V",
+        "Sub VI7 for vi",
+        "Practice iii\u2013VI\u2013ii\u2013V"
+      ],
+      "mastery_tests": [
+        "3 turnaround variants in 12 keys",
+        "Use one in a tune intro/ending"
+      ],
+      "remediation": [
+        "Use 4 keys"
+      ],
+      "unlocks": [
+        "repertoire.rhythm_changes",
+        "improv.turnaround_language"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "turnaround"
+      ]
+    },
+    {
+      "id": "harmony.tritone_sub",
+      "track": "Harmony",
+      "title": "Tritone substitution",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.secondary_dominants"
+      ],
+      "goal": "Hear and apply bII7 as substitute for V7.",
+      "practice_recipe": [
+        "Compare V7\u2192I vs bII7\u2192I",
+        "Track 3rd/7th voice-leading",
+        "Apply to two standards"
+      ],
+      "mastery_tests": [
+        "Apply in 12 keys",
+        "Use tastefully in 2 repertoire tunes"
+      ],
+      "remediation": [
+        "Practice only resolutions"
+      ],
+      "unlocks": [
+        "voicing.altered_dominants"
+      ],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 12,
+      "tags": [
+        "reharm"
+      ]
+    },
+    {
+      "id": "harmony.diminished_function",
+      "track": "Harmony",
+      "title": "Diminished passing harmony",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.secondary_dominants"
+      ],
+      "goal": "Recognize common passing and dominant-function diminished chords.",
+      "practice_recipe": [
+        "Build diminished 7th symmetries",
+        "Resolve each note up/down",
+        "Find passing diminished chords in standards"
+      ],
+      "mastery_tests": [
+        "Identify function in 3 tunes",
+        "Use one passing diminished device in comping"
+      ],
+      "remediation": [
+        "Limit to #I\u00b07\u2192ii"
+      ],
+      "unlocks": [
+        "voicing.diminished"
+      ],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 12,
+      "tags": [
+        "diminished"
+      ]
+    },
+    {
+      "id": "harmony.backdoor",
+      "track": "Harmony",
+      "title": "Backdoor dominant / iv\u2013bVII\u2013I",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.secondary_dominants"
+      ],
+      "goal": "Recognize and hear common backdoor motion.",
+      "practice_recipe": [
+        "Play ivm7\u2013bVII7\u2013I",
+        "Compare with ii\u2013V\u2013I",
+        "Locate in standards"
+      ],
+      "mastery_tests": [
+        "Transpose to 6+ keys",
+        "Hear difference from regular V\u2192I"
+      ],
+      "remediation": [
+        "Use only iv\u2013I color first"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 10,
+      "tags": [
+        "reharm"
+      ]
+    },
+    {
+      "id": "harmony.modal",
+      "track": "Harmony",
+      "title": "Modal harmony basics",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.chord_quality_7ths"
+      ],
+      "goal": "Sustain coherent improvisation over static/modal harmony.",
+      "practice_recipe": [
+        "Drone D Dorian",
+        "Alternate chord-scale and motif practice",
+        "Comp quartal shapes"
+      ],
+      "mastery_tests": [
+        "2-minute coherent solo without running scales",
+        "Maintain form on So What"
+      ],
+      "remediation": [
+        "Use only 5-note subsets"
+      ],
+      "unlocks": [
+        "voicing.quartal",
+        "repertoire.so_what"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 15,
+      "tags": [
+        "modal"
+      ]
+    },
+    {
+      "id": "voicing.rootless_a",
+      "track": "Voicings",
+      "title": "Rootless A voicings",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.shells",
+        "harmony.major_251"
+      ],
+      "goal": "Play compact left-hand rootless voicings through functional harmony.",
+      "practice_recipe": [
+        "Learn A-form for maj7/min7/dom7",
+        "Practice ii\u2013V\u2013I",
+        "Cycle 12 keys",
+        "Apply to Autumn Leaves"
+      ],
+      "mastery_tests": [
+        "12 keys at 76 BPM",
+        "Two full choruses of a standard with no voicing lookup"
+      ],
+      "remediation": [
+        "Use C/F/Bb/Eb only",
+        "Drop tempo to 50"
+      ],
+      "unlocks": [
+        "voicing.rootless_b"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 20,
+      "tags": [
+        "rootless"
+      ]
+    },
+    {
+      "id": "voicing.rootless_b",
+      "track": "Voicings",
+      "title": "Rootless B voicings",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.rootless_a"
+      ],
+      "goal": "Alternate A/B forms for smoother voice leading and register control.",
+      "practice_recipe": [
+        "Learn B-form",
+        "Alternate A/B on ii\u2013V\u2013I",
+        "Choose closest form through standards"
+      ],
+      "mastery_tests": [
+        "12 keys at 76 BPM",
+        "Comp through 2 tunes using mixed A/B forms"
+      ],
+      "remediation": [
+        "Only practice V\u2192I motion"
+      ],
+      "unlocks": [
+        "voicing.tensions"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 20,
+      "tags": [
+        "rootless"
+      ]
+    },
+    {
+      "id": "voicing.tensions",
+      "track": "Voicings",
+      "title": "Add 9ths and 13ths by function",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.rootless_b"
+      ],
+      "goal": "Color basic voicings with idiomatic tensions without losing function.",
+      "practice_recipe": [
+        "Add 9 to min/maj",
+        "Add 9/13 to dominants",
+        "Avoid notes that obscure chord quality"
+      ],
+      "mastery_tests": [
+        "Voice ii\u2013V\u2013I with 9/13 in 12 keys",
+        "Explain each added tension"
+      ],
+      "remediation": [
+        "One tension at a time"
+      ],
+      "unlocks": [
+        "voicing.two_hand_spread"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 15,
+      "tags": [
+        "tensions"
+      ]
+    },
+    {
+      "id": "voicing.two_hand_spread",
+      "track": "Voicings",
+      "title": "Two-hand spread voicings",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.tensions"
+      ],
+      "goal": "Create full ensemble-compatible voicings with clear register separation.",
+      "practice_recipe": [
+        "LH shell, RH color tones",
+        "Move top voice melodically",
+        "Apply to ballad and medium swing"
+      ],
+      "mastery_tests": [
+        "Comp 2 choruses with smooth top-line",
+        "No muddy low intervals"
+      ],
+      "remediation": [
+        "Use fixed RH triad shapes"
+      ],
+      "unlocks": [
+        "voicing.comping_voiceleading"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "two-hand"
+      ]
+    },
+    {
+      "id": "voicing.quartal",
+      "track": "Voicings",
+      "title": "Quartal voicings",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.modal"
+      ],
+      "goal": "Use fourth-based voicings in modal and modern contexts.",
+      "practice_recipe": [
+        "Stack fourths from scale tones",
+        "Move shapes diatonically",
+        "Apply to So What"
+      ],
+      "mastery_tests": [
+        "Comp full modal form with varied shapes",
+        "Transpose Dorian sound to 6 keys"
+      ],
+      "remediation": [
+        "Use 3-note stacks"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 15,
+      "tags": [
+        "quartal",
+        "modal"
+      ]
+    },
+    {
+      "id": "voicing.minor_251",
+      "track": "Voicings",
+      "title": "Minor ii\u2013V\u2013i voicings",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.minor_251",
+        "voicing.rootless_a"
+      ],
+      "goal": "Voice minor cadences smoothly with b9/alt color.",
+      "practice_recipe": [
+        "m7b5 voicings",
+        "V7b9 or altered color",
+        "Minor tonic options: m6/maj7"
+      ],
+      "mastery_tests": [
+        "12 keys at 60 BPM",
+        "Apply through Autumn Leaves minor cadences"
+      ],
+      "remediation": [
+        "No alteration on V initially"
+      ],
+      "unlocks": [
+        "voicing.altered_dominants"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "minor"
+      ]
+    },
+    {
+      "id": "voicing.altered_dominants",
+      "track": "Voicings",
+      "title": "Altered dominant voicings",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.minor_251",
+        "harmony.tritone_sub"
+      ],
+      "goal": "Control b9/#9/b13/#11 colors by resolution.",
+      "practice_recipe": [
+        "Voice one alteration family at a time",
+        "Resolve altered notes by half-step",
+        "Apply to minor ii\u2013V and tritone subs"
+      ],
+      "mastery_tests": [
+        "4 dominant colors in 12 keys",
+        "Choose color intentionally in 2 tunes"
+      ],
+      "remediation": [
+        "Only b9/13 first"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 15,
+      "tags": [
+        "altered"
+      ]
+    },
+    {
+      "id": "voicing.diminished",
+      "track": "Voicings",
+      "title": "Diminished voicing vocabulary",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.diminished_function"
+      ],
+      "goal": "Use diminished structures as functional passing material.",
+      "practice_recipe": [
+        "Symmetric dim7 shapes",
+        "Resolve by semitone",
+        "Use in passing contexts"
+      ],
+      "mastery_tests": [
+        "Apply correctly in 2 standards",
+        "Transpose one device through 12 roots"
+      ],
+      "remediation": [
+        "One inversion only"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 12,
+      "tags": [
+        "diminished"
+      ]
+    },
+    {
+      "id": "voicing.comping_voiceleading",
+      "track": "Voicings",
+      "title": "Melodic top voice in comping",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.two_hand_spread"
+      ],
+      "goal": "Make comping sound like connected lines rather than isolated chord blocks.",
+      "practice_recipe": [
+        "Choose a top note path",
+        "Limit top voice to stepwise motion",
+        "Reharmonize rhythm without changing harmony"
+      ],
+      "mastery_tests": [
+        "Comp one chorus with singable top line",
+        "Repeat with different top line"
+      ],
+      "remediation": [
+        "Use half notes only"
+      ],
+      "unlocks": [
+        "rhythm.comping_interaction"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "comping"
+      ]
+    },
+    {
+      "id": "rhythm.swing_subdivision",
+      "track": "Rhythm",
+      "title": "Swing subdivision and placement",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [],
+      "goal": "Internalize swing feel beyond mechanical triplet approximation.",
+      "practice_recipe": [
+        "Clap quarter-note pulse",
+        "Sing/scat swung eighth lines",
+        "Play one-note lines with metronome on 2&4"
+      ],
+      "mastery_tests": [
+        "Maintain 2 minutes at 100\u2013160 BPM",
+        "Record and hear consistent placement"
+      ],
+      "remediation": [
+        "Use slower tempo",
+        "Metronome on all beats"
+      ],
+      "unlocks": [
+        "rhythm.offbeat_accents",
+        "rhythm.comping_basic"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 10,
+      "tags": [
+        "swing"
+      ]
+    },
+    {
+      "id": "rhythm.offbeat_accents",
+      "track": "Rhythm",
+      "title": "Offbeat accents and syncopation",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.swing_subdivision"
+      ],
+      "goal": "Phrase across beats instead of accenting every downbeat.",
+      "practice_recipe": [
+        "Accent &'s selectively",
+        "Displace 2-beat motif",
+        "Copy rhythms from recordings on one pitch"
+      ],
+      "mastery_tests": [
+        "Create 8-bar phrase with varied accent placement",
+        "Clap back 5 sample rhythms"
+      ],
+      "remediation": [
+        "Use only quarter/eighth notes"
+      ],
+      "unlocks": [
+        "rhythm.phrase_length"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 10,
+      "tags": [
+        "syncopation"
+      ]
+    },
+    {
+      "id": "rhythm.comping_basic",
+      "track": "Rhythm",
+      "title": "Basic swing comping cells",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.swing_subdivision",
+        "harmony.shells"
+      ],
+      "goal": "Use a small set of reliable comping rhythms with good time.",
+      "practice_recipe": [
+        "Charleston",
+        "Reverse Charleston",
+        "Sparse offbeat hits",
+        "2&4 punctuations"
+      ],
+      "mastery_tests": [
+        "Comp 3 choruses without losing form",
+        "Use at least 3 cells naturally"
+      ],
+      "remediation": [
+        "One rhythm per chorus"
+      ],
+      "unlocks": [
+        "rhythm.comping_variation"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "comping"
+      ]
+    },
+    {
+      "id": "rhythm.comping_variation",
+      "track": "Rhythm",
+      "title": "Comping variation and density",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.comping_basic"
+      ],
+      "goal": "Control density and leave space behind a soloist.",
+      "practice_recipe": [
+        "Alternate sparse/dense choruses",
+        "Respond to imaginary phrases",
+        "Practice rests as planned events"
+      ],
+      "mastery_tests": [
+        "Comp 2 choruses with intentional density arc",
+        "No constant quarter-note chording"
+      ],
+      "remediation": [
+        "Limit to 2 hits/bar"
+      ],
+      "unlocks": [
+        "rhythm.comping_interaction"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "comping"
+      ]
+    },
+    {
+      "id": "rhythm.phrase_length",
+      "track": "Rhythm",
+      "title": "2-, 4-, and 8-bar phrase awareness",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.offbeat_accents"
+      ],
+      "goal": "Shape improvised ideas across formal phrase lengths.",
+      "practice_recipe": [
+        "Improvise only 2-bar ideas",
+        "Question/answer across 4 bars",
+        "Build 8-bar arc"
+      ],
+      "mastery_tests": [
+        "Hear and demonstrate 4-bar boundaries without counting aloud",
+        "Record one 32-bar solo with clear phrase architecture"
+      ],
+      "remediation": [
+        "Mark form on chart"
+      ],
+      "unlocks": [
+        "improv.motif_development"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "phrasing"
+      ]
+    },
+    {
+      "id": "rhythm.metronome_sparse",
+      "track": "Rhythm",
+      "title": "Sparse metronome practice",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.swing_subdivision"
+      ],
+      "goal": "Own internal pulse with less external timekeeping.",
+      "practice_recipe": [
+        "Metronome on 2&4",
+        "Then only beat 4",
+        "Then every 2 bars"
+      ],
+      "mastery_tests": [
+        "Hold form 3 minutes with click every 2 bars",
+        "Recover quickly after intentional click mute"
+      ],
+      "remediation": [
+        "Return to 2&4"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 10,
+      "tags": [
+        "time"
+      ]
+    },
+    {
+      "id": "rhythm.comping_interaction",
+      "track": "Rhythm",
+      "title": "Interactive comping",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.comping_variation",
+        "voicing.comping_voiceleading"
+      ],
+      "goal": "React to melodic space like an ensemble pianist.",
+      "practice_recipe": [
+        "Comp behind recordings at low volume",
+        "Echo rhythmic fragments",
+        "Practice call/response with backing track"
+      ],
+      "mastery_tests": [
+        "One recorded chorus feels responsive, not continuous",
+        "Can explain where you intentionally left space"
+      ],
+      "remediation": [
+        "Mute LH and clap responses"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "ensemble"
+      ]
+    },
+    {
+      "id": "rhythm.bossa",
+      "track": "Rhythm",
+      "title": "Basic bossa comping",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.shells"
+      ],
+      "goal": "Play a stable bossa groove under standards.",
+      "practice_recipe": [
+        "LH bass/root pattern",
+        "RH syncopated chords",
+        "Combine slowly",
+        "Apply to Blue Bossa / Girl from Ipanema"
+      ],
+      "mastery_tests": [
+        "2 minutes steady at 100\u2013130 BPM",
+        "Maintain groove while stating melody"
+      ],
+      "remediation": [
+        "Block chords on beat first"
+      ],
+      "unlocks": [
+        "repertoire.blue_bossa"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 15,
+      "tags": [
+        "bossa"
+      ]
+    },
+    {
+      "id": "rhythm.ballad",
+      "track": "Rhythm",
+      "title": "Ballad time and rubato control",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.tensions"
+      ],
+      "goal": "Phrase and accompany ballads without overfilling space.",
+      "practice_recipe": [
+        "Slow melody phrasing",
+        "Delayed chord placement",
+        "Arpeggiated/spread textures"
+      ],
+      "mastery_tests": [
+        "Perform one ballad intro+head with consistent pulse or intentional rubato"
+      ],
+      "remediation": [
+        "Use metronome quietly underneath"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 15,
+      "tags": [
+        "ballad"
+      ]
+    },
+    {
+      "id": "improv.chord_tones",
+      "track": "Improvisation",
+      "title": "Chord-tone soloing",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.guide_tones"
+      ],
+      "goal": "Outline harmony melodically before relying on scales.",
+      "practice_recipe": [
+        "Solo using 1-3-5-7 only",
+        "Start phrases on 3rds/7ths",
+        "Connect nearest chord tones"
+      ],
+      "mastery_tests": [
+        "One full chorus clearly outlines harmony without backing chords",
+        "Can target 3rd on every new chord"
+      ],
+      "remediation": [
+        "Use only 3rds and 7ths"
+      ],
+      "unlocks": [
+        "improv.approach_notes",
+        "improv.251_chordtones"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "melody"
+      ]
+    },
+    {
+      "id": "improv.251_chordtones",
+      "track": "Improvisation",
+      "title": "ii\u2013V\u2013I chord-tone lines",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "improv.chord_tones",
+        "harmony.major_251"
+      ],
+      "goal": "Create connected lines across ii\u2013V\u2013I rather than treating chords separately.",
+      "practice_recipe": [
+        "Connect nearest 3rds/7ths",
+        "Add 5th/root as passing chord tones",
+        "Transpose 2 lines"
+      ],
+      "mastery_tests": [
+        "Improvise ii\u2013V\u2013I in 12 keys without stopping",
+        "Avoid scalar up/down default"
+      ],
+      "remediation": [
+        "Only target 3rds"
+      ],
+      "unlocks": [
+        "improv.approach_notes"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "ii-v-i"
+      ]
+    },
+    {
+      "id": "improv.approach_notes",
+      "track": "Improvisation",
+      "title": "Diatonic and chromatic approach notes",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "improv.chord_tones"
+      ],
+      "goal": "Create forward motion into important chord tones.",
+      "practice_recipe": [
+        "Approach 3rds from above/below",
+        "Alternate diatonic/chromatic",
+        "Apply to ii\u2013V\u2013I"
+      ],
+      "mastery_tests": [
+        "Use approaches spontaneously in 2 standards",
+        "Resolve approaches on strong beats"
+      ],
+      "remediation": [
+        "One target note per chord"
+      ],
+      "unlocks": [
+        "improv.enclosures"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "bebop"
+      ]
+    },
+    {
+      "id": "improv.enclosures",
+      "track": "Improvisation",
+      "title": "Enclosures",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "improv.approach_notes"
+      ],
+      "goal": "Enclose chord tones with idiomatic chromatic/diatonic motion.",
+      "practice_recipe": [
+        "Enclose 3rds",
+        "Enclose 7ths",
+        "Move through ii\u2013V\u2013I",
+        "Extract one enclosure from recording"
+      ],
+      "mastery_tests": [
+        "Use 3 enclosure shapes in all 12 keys",
+        "Apply without forcing into 2 tunes"
+      ],
+      "remediation": [
+        "Only above-below enclosure"
+      ],
+      "unlocks": [
+        "improv.bebop_resolution"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "bebop"
+      ]
+    },
+    {
+      "id": "improv.bebop_resolution",
+      "track": "Improvisation",
+      "title": "Bebop resolutions to strong beats",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "improv.enclosures"
+      ],
+      "goal": "Control chromatic notes by resolving chord tones onto metrically strong points.",
+      "practice_recipe": [
+        "8th-note lines over dominant",
+        "Add passing chromatic notes",
+        "Aim chord tones to beats 1/3"
+      ],
+      "mastery_tests": [
+        "8 bars of eighth-note line with strong harmonic clarity",
+        "Transpose one model line through 6 keys"
+      ],
+      "remediation": [
+        "Slow to 70 BPM"
+      ],
+      "unlocks": [
+        "improv.turnaround_language"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "bebop"
+      ]
+    },
+    {
+      "id": "improv.motif_development",
+      "track": "Improvisation",
+      "title": "Motif development",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.phrase_length",
+        "improv.chord_tones"
+      ],
+      "goal": "Develop small ideas instead of constantly inventing new material.",
+      "practice_recipe": [
+        "Create 2-note motif",
+        "Repeat",
+        "Sequence",
+        "Rhythmically displace",
+        "Change ending"
+      ],
+      "mastery_tests": [
+        "One chorus built primarily from one motif",
+        "Listener can identify motif transformations"
+      ],
+      "remediation": [
+        "Use one chord vamp"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "development"
+      ]
+    },
+    {
+      "id": "improv.blues_language",
+      "track": "Improvisation",
+      "title": "Blues language",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.swing_subdivision"
+      ],
+      "goal": "Use blues vocabulary with phrasing rather than running a blues scale.",
+      "practice_recipe": [
+        "Learn blues scale sound",
+        "Transcribe 2 short blues phrases",
+        "Question/answer",
+        "Apply on C/F/Bb blues"
+      ],
+      "mastery_tests": [
+        "Play 3 blues choruses with distinct phrases",
+        "Use transcribed material transformed"
+      ],
+      "remediation": [
+        "One-note rhythmic solo"
+      ],
+      "unlocks": [
+        "repertoire.blues"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 20,
+      "tags": [
+        "blues"
+      ]
+    },
+    {
+      "id": "improv.turnaround_language",
+      "track": "Improvisation",
+      "title": "Turnaround language",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.turnarounds",
+        "improv.bebop_resolution"
+      ],
+      "goal": "Connect I\u2013vi\u2013ii\u2013V with idiomatic bebop motion.",
+      "practice_recipe": [
+        "Learn one model phrase",
+        "Analyze targets",
+        "Transpose all keys",
+        "Create 2 variations"
+      ],
+      "mastery_tests": [
+        "Original variation in 12 keys",
+        "Use in 2 repertoire tunes"
+      ],
+      "remediation": [
+        "Practice only iii\u2013VI\u2013ii\u2013V"
+      ],
+      "unlocks": [
+        "repertoire.rhythm_changes"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "bebop",
+        "turnaround"
+      ]
+    },
+    {
+      "id": "improv.minor_251",
+      "track": "Improvisation",
+      "title": "Minor ii\u2013V\u2013i lines",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.minor_251",
+        "improv.approach_notes"
+      ],
+      "goal": "Navigate minor cadence with clear targets and altered dominant color.",
+      "practice_recipe": [
+        "Chord-tone skeleton",
+        "Target b9/altered color on V",
+        "Resolve to 3rd/6th of minor tonic"
+      ],
+      "mastery_tests": [
+        "6 keys fluently, then 12",
+        "Apply to Autumn Leaves"
+      ],
+      "remediation": [
+        "Use harmonic-minor derived targets only"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "minor"
+      ]
+    },
+    {
+      "id": "improv.space",
+      "track": "Improvisation",
+      "title": "Space and conversational phrasing",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "improv.chord_tones"
+      ],
+      "goal": "Use silence intentionally.",
+      "practice_recipe": [
+        "One-bar phrase / one-bar rest",
+        "Call/response",
+        "Limit to 4 phrases per 8 bars"
+      ],
+      "mastery_tests": [
+        "Record a chorus with audible space and coherent answers"
+      ],
+      "remediation": [
+        "Count rests aloud"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 10,
+      "tags": [
+        "phrasing"
+      ]
+    },
+    {
+      "id": "ear.sing_scale_degrees",
+      "track": "Ear",
+      "title": "Sing scale degrees in key",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [],
+      "goal": "Hear scale-degree function before touching the keyboard.",
+      "practice_recipe": [
+        "Drone tonic",
+        "Sing 1-2-3-5-7",
+        "Random degree prompts",
+        "Resolve tendency tones"
+      ],
+      "mastery_tests": [
+        "8/10 random degree prompts in 4 keys"
+      ],
+      "remediation": [
+        "Use only 1/3/5"
+      ],
+      "unlocks": [
+        "ear.guide_tones",
+        "ear.melody_short"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 5,
+      "tags": [
+        "singing"
+      ]
+    },
+    {
+      "id": "ear.7th_chords",
+      "track": "Ear",
+      "title": "Hear 7th-chord qualities",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.chord_quality_7ths"
+      ],
+      "goal": "Differentiate common jazz chord qualities by sound.",
+      "practice_recipe": [
+        "Compare maj7/min7/dom7/m7b5",
+        "Sing bass then quality-defining tones",
+        "Random listening tests"
+      ],
+      "mastery_tests": [
+        "9/10 across two consecutive sessions"
+      ],
+      "remediation": [
+        "Use maj/min/dom only"
+      ],
+      "unlocks": [
+        "ear.cadences"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 8,
+      "tags": [
+        "harmony"
+      ]
+    },
+    {
+      "id": "ear.cadences",
+      "track": "Ear",
+      "title": "Hear ii\u2013V\u2013I and minor ii\u2013V\u2013i",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.7th_chords",
+        "harmony.major_251"
+      ],
+      "goal": "Recognize functional cadence direction aurally.",
+      "practice_recipe": [
+        "Listen to major ii\u2013V\u2013I",
+        "Sing bass roots",
+        "Identify major vs minor cadence"
+      ],
+      "mastery_tests": [
+        "8/10 cadence identification",
+        "Sing roots before checking"
+      ],
+      "remediation": [
+        "Major only"
+      ],
+      "unlocks": [
+        "ear.bass_motion"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 8,
+      "tags": [
+        "cadence"
+      ]
+    },
+    {
+      "id": "ear.guide_tones",
+      "track": "Ear",
+      "title": "Sing 3rds and 7ths through changes",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.sing_scale_degrees",
+        "harmony.guide_tones"
+      ],
+      "goal": "Audiates harmonic motion through guide tones.",
+      "practice_recipe": [
+        "Play roots only, sing 3rds",
+        "Play roots only, sing 7ths",
+        "Sing line through Autumn Leaves"
+      ],
+      "mastery_tests": [
+        "Sing one guide-tone line through full tune accurately"
+      ],
+      "remediation": [
+        "Half tune only"
+      ],
+      "unlocks": [
+        "ear.transcribe_phrases"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 10,
+      "tags": [
+        "guide-tones"
+      ]
+    },
+    {
+      "id": "ear.melody_short",
+      "track": "Ear",
+      "title": "Copy 2\u20134 note melodies by ear",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.sing_scale_degrees"
+      ],
+      "goal": "Shorten the hear\u2192sing\u2192play loop.",
+      "practice_recipe": [
+        "Hear short phrase",
+        "Sing before playing",
+        "Find on keyboard",
+        "Transpose"
+      ],
+      "mastery_tests": [
+        "8/10 phrases reproduced within 2 attempts"
+      ],
+      "remediation": [
+        "2-note phrases"
+      ],
+      "unlocks": [
+        "ear.transcribe_phrases"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 8,
+      "tags": [
+        "melody"
+      ]
+    },
+    {
+      "id": "ear.bass_motion",
+      "track": "Ear",
+      "title": "Hear bass/root movement",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.cadences"
+      ],
+      "goal": "Track roots and common cycle motion in standards.",
+      "practice_recipe": [
+        "Listen to bass line",
+        "Sing roots",
+        "Label scale degrees",
+        "Check at piano"
+      ],
+      "mastery_tests": [
+        "Transcribe roots of a 16-bar standard section"
+      ],
+      "remediation": [
+        "Use recordings with clear bass"
+      ],
+      "unlocks": [
+        "repertoire.learn_by_ear"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 10,
+      "tags": [
+        "bass"
+      ]
+    },
+    {
+      "id": "ear.transcribe_phrases",
+      "track": "Ear",
+      "title": "Transcribe 1\u20132 bar jazz phrases",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.melody_short",
+        "ear.guide_tones"
+      ],
+      "goal": "Copy short language accurately and connect ear to instrument.",
+      "practice_recipe": [
+        "Choose loved phrase",
+        "Loop 1\u20132 bars",
+        "Sing repeatedly",
+        "Play by ear",
+        "Write only after learned"
+      ],
+      "mastery_tests": [
+        "Learn phrase by ear without slowing below 75%",
+        "Transpose to 3 keys"
+      ],
+      "remediation": [
+        "Half-bar phrase"
+      ],
+      "unlocks": [
+        "language.extract_concept"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "transcription"
+      ]
+    },
+    {
+      "id": "ear.rhythm_copy",
+      "track": "Ear",
+      "title": "Copy jazz rhythms by ear",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.swing_subdivision"
+      ],
+      "goal": "Separate rhythmic hearing from pitch difficulty.",
+      "practice_recipe": [
+        "Choose 1-bar phrase",
+        "Clap/scat rhythm",
+        "Play on one pitch",
+        "Notate/check"
+      ],
+      "mastery_tests": [
+        "8/10 one-bar rhythms copied accurately"
+      ],
+      "remediation": [
+        "Quarter/eighth only"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 8,
+      "tags": [
+        "rhythm"
+      ]
+    },
+    {
+      "id": "ear.form",
+      "track": "Ear",
+      "title": "Hear 8-bar sections and form",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "rhythm.phrase_length"
+      ],
+      "goal": "Stay oriented in 32-bar forms without constant counting.",
+      "practice_recipe": [
+        "Listen and tap section starts",
+        "Call A/B sections",
+        "Sing melody landmarks"
+      ],
+      "mastery_tests": [
+        "Identify section boundaries in 3 standards",
+        "Do not get lost over 3 choruses"
+      ],
+      "remediation": [
+        "Follow chart visually"
+      ],
+      "unlocks": [
+        "repertoire.perform"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 10,
+      "tags": [
+        "form"
+      ]
+    },
+    {
+      "id": "language.transcribe_micro",
+      "track": "Language",
+      "title": "Micro-transcription habit",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.transcribe_phrases"
+      ],
+      "goal": "Build jazz vocabulary from tiny, memorable chunks.",
+      "practice_recipe": [
+        "Pick 1 phrase you love",
+        "Sing",
+        "Play",
+        "Analyze chord tones/rhythm",
+        "Store with source/context"
+      ],
+      "mastery_tests": [
+        "Add 1 usable phrase/week",
+        "Can sing phrase cold after 7 days"
+      ],
+      "remediation": [
+        "Use half-phrase"
+      ],
+      "unlocks": [
+        "language.extract_concept"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "transcription"
+      ]
+    },
+    {
+      "id": "language.extract_concept",
+      "track": "Language",
+      "title": "Extract concept from a phrase",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "language.transcribe_micro",
+        "improv.approach_notes"
+      ],
+      "goal": "Turn copied language into transferable devices.",
+      "practice_recipe": [
+        "Mark targets",
+        "Identify enclosure/approach/arpeggio/rhythm",
+        "Reduce to abstract pattern",
+        "Apply to new chords"
+      ],
+      "mastery_tests": [
+        "Use underlying concept in 3 new contexts"
+      ],
+      "remediation": [
+        "Keep original rhythm fixed"
+      ],
+      "unlocks": [
+        "language.transpose"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "analysis"
+      ]
+    },
+    {
+      "id": "language.transpose",
+      "track": "Language",
+      "title": "Transpose vocabulary",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "language.extract_concept"
+      ],
+      "goal": "Move phrases by function rather than finger memory.",
+      "practice_recipe": [
+        "Transpose to 3 easy keys",
+        "Then cycle of fourths",
+        "Start on different scale degrees"
+      ],
+      "mastery_tests": [
+        "Phrase in 12 keys at moderate tempo",
+        "Can state harmonic function verbally"
+      ],
+      "remediation": [
+        "6 keys only"
+      ],
+      "unlocks": [
+        "language.variation"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "transposition"
+      ]
+    },
+    {
+      "id": "language.variation",
+      "track": "Language",
+      "title": "Vary learned vocabulary",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "language.transpose",
+        "improv.motif_development"
+      ],
+      "goal": "Transform vocabulary into personal material.",
+      "practice_recipe": [
+        "Change rhythm",
+        "Change ending",
+        "Sequence fragment",
+        "Invert direction",
+        "Combine with motif"
+      ],
+      "mastery_tests": [
+        "Create 5 distinct variants",
+        "Use at least 2 naturally in a tune"
+      ],
+      "remediation": [
+        "Only rhythm variation"
+      ],
+      "unlocks": [
+        "language.integrate"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "variation"
+      ]
+    },
+    {
+      "id": "language.integrate",
+      "track": "Language",
+      "title": "Integrate language into standards",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "language.variation"
+      ],
+      "goal": "Make vocabulary appear naturally in real improvisation.",
+      "practice_recipe": [
+        "Choose 2 target spots in tune",
+        "Force phrase once",
+        "Then improvise freely",
+        "Record and review"
+      ],
+      "mastery_tests": [
+        "Phrase or concept appears unforced in 2 recordings"
+      ],
+      "remediation": [
+        "Use only one tune"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 20,
+      "tags": [
+        "application"
+      ]
+    },
+    {
+      "id": "language.solo_section",
+      "track": "Language",
+      "title": "Transcribe an 8\u201316 bar solo section",
+      "level": 3,
+      "kind": "skill",
+      "prerequisites": [
+        "language.transcribe_micro"
+      ],
+      "goal": "Develop longer-form hearing, articulation and phrasing.",
+      "practice_recipe": [
+        "Choose manageable solo",
+        "Sing entire section",
+        "Learn by ear in chunks",
+        "Match articulation",
+        "Analyze"
+      ],
+      "mastery_tests": [
+        "Perform with recording from memory",
+        "Extract 3 reusable ideas"
+      ],
+      "remediation": [
+        "4 bars only"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 30,
+      "tags": [
+        "transcription"
+      ]
+    },
+    {
+      "id": "repertoire.listen",
+      "track": "Repertoire",
+      "title": "Listening map",
+      "level": 1,
+      "kind": "process",
+      "prerequisites": [],
+      "goal": "Know the sound and landmarks of a tune before analysis.",
+      "practice_recipe": [
+        "Listen to 3 contrasting recordings",
+        "Sing melody informally",
+        "Notice form, intro, ending, tempo"
+      ],
+      "mastery_tests": [
+        "Recognize tune and sing main melody",
+        "Name 2 favorite recordings"
+      ],
+      "remediation": [],
+      "unlocks": [
+        "repertoire.melody"
+      ],
+      "maintenance_interval_days": 5,
+      "suggested_minutes": 15,
+      "tags": [
+        "standards"
+      ]
+    },
+    {
+      "id": "repertoire.melody",
+      "track": "Repertoire",
+      "title": "Learn melody deeply",
+      "level": 1,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.listen"
+      ],
+      "goal": "Play and sing melody with phrasing, not just decode notes.",
+      "practice_recipe": [
+        "Learn by ear where possible",
+        "Sing with lyrics if available",
+        "Play in 2 registers"
+      ],
+      "mastery_tests": [
+        "Play melody from memory with form intact",
+        "Sing first phrase without instrument"
+      ],
+      "remediation": [
+        "Use chart temporarily"
+      ],
+      "unlocks": [
+        "repertoire.roots"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 20,
+      "tags": [
+        "melody"
+      ]
+    },
+    {
+      "id": "repertoire.roots",
+      "track": "Repertoire",
+      "title": "Root map and form",
+      "level": 1,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.melody"
+      ],
+      "goal": "Memorize harmonic skeleton and formal sections.",
+      "practice_recipe": [
+        "Play roots only",
+        "Say Roman numerals/key centers",
+        "Mark repeated sections"
+      ],
+      "mastery_tests": [
+        "Roots + form from memory",
+        "Can start at any 8-bar section"
+      ],
+      "remediation": [
+        "Use half tune"
+      ],
+      "unlocks": [
+        "repertoire.shells"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 15,
+      "tags": [
+        "form"
+      ]
+    },
+    {
+      "id": "repertoire.shells",
+      "track": "Repertoire",
+      "title": "Shell harmonization",
+      "level": 1,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.roots",
+        "harmony.shells"
+      ],
+      "goal": "Connect tune harmony to functional shell voicings.",
+      "practice_recipe": [
+        "LH roots+shells",
+        "Melody RH",
+        "Then shells alone with metronome"
+      ],
+      "mastery_tests": [
+        "Head with shells from memory",
+        "Smooth voice leading"
+      ],
+      "remediation": [
+        "Block roots on beat 1"
+      ],
+      "unlocks": [
+        "repertoire.guide_tone_solo"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 20,
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "id": "repertoire.guide_tone_solo",
+      "track": "Repertoire",
+      "title": "Guide-tone / chord-tone solo",
+      "level": 2,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.shells",
+        "improv.chord_tones"
+      ],
+      "goal": "Improvise while clearly tracking the changes.",
+      "practice_recipe": [
+        "Solo with 3rds/7ths",
+        "Add 5ths/roots",
+        "Target next chord"
+      ],
+      "mastery_tests": [
+        "One chorus clearly outlines harmony",
+        "No chart for harmonic targets"
+      ],
+      "remediation": [
+        "Guide tones only"
+      ],
+      "unlocks": [
+        "repertoire.full_voicings"
+      ],
+      "maintenance_interval_days": 7,
+      "suggested_minutes": 20,
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "id": "repertoire.full_voicings",
+      "track": "Repertoire",
+      "title": "Full voicing pass",
+      "level": 2,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.shells",
+        "voicing.rootless_a"
+      ],
+      "goal": "Comp through tune with current voicing vocabulary.",
+      "practice_recipe": [
+        "Use rootless A/B as available",
+        "Add tensions selectively",
+        "Record one comping chorus"
+      ],
+      "mastery_tests": [
+        "Full tune without stops",
+        "Register stays controlled"
+      ],
+      "remediation": [
+        "Shells + one color tone"
+      ],
+      "unlocks": [
+        "repertoire.language"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 20,
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "id": "repertoire.language",
+      "track": "Repertoire",
+      "title": "Language application pass",
+      "level": 2,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.guide_tone_solo",
+        "improv.approach_notes"
+      ],
+      "goal": "Apply current improvisation concept in context.",
+      "practice_recipe": [
+        "Choose 1 concept",
+        "Mark 2\u20133 harmonic spots",
+        "Practice slowly",
+        "Improvise full chorus"
+      ],
+      "mastery_tests": [
+        "Concept appears naturally at least twice"
+      ],
+      "remediation": [
+        "Only one target spot"
+      ],
+      "unlocks": [
+        "repertoire.perform"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 20,
+      "tags": [
+        "integration"
+      ]
+    },
+    {
+      "id": "repertoire.perform",
+      "track": "Repertoire",
+      "title": "Performance pass",
+      "level": 3,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.full_voicings",
+        "repertoire.language",
+        "ear.form"
+      ],
+      "goal": "Play a complete musical version without stopping.",
+      "practice_recipe": [
+        "Intro",
+        "Head",
+        "2\u20133 solo choruses",
+        "Head out",
+        "Ending"
+      ],
+      "mastery_tests": [
+        "Complete take from memory",
+        "Recover from mistakes without stopping"
+      ],
+      "remediation": [
+        "Use backing track"
+      ],
+      "unlocks": [
+        "repertoire.own"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 30,
+      "tags": [
+        "performance"
+      ]
+    },
+    {
+      "id": "repertoire.own",
+      "track": "Repertoire",
+      "title": "Own the tune",
+      "level": 3,
+      "kind": "process",
+      "prerequisites": [
+        "repertoire.perform"
+      ],
+      "goal": "Make tune flexible enough for real jam situations.",
+      "practice_recipe": [
+        "Different tempo",
+        "Different key if practical",
+        "Solo piano + ensemble texture",
+        "Cold start from random section"
+      ],
+      "mastery_tests": [
+        "Perform cold after 2 weeks",
+        "Can count off and play with others"
+      ],
+      "remediation": [
+        "One alternate tempo only"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 30,
+      "tags": [
+        "mastery"
+      ]
+    },
+    {
+      "id": "repertoire.learn_by_ear",
+      "track": "Repertoire",
+      "title": "Learn a simple tune largely by ear",
+      "level": 2,
+      "kind": "process",
+      "prerequisites": [
+        "ear.bass_motion",
+        "repertoire.listen"
+      ],
+      "goal": "Reduce dependence on lead sheets.",
+      "practice_recipe": [
+        "Find melody by ear",
+        "Find bass roots",
+        "Infer chord qualities",
+        "Check chart last"
+      ],
+      "mastery_tests": [
+        "Learn 16+ bars before consulting chart"
+      ],
+      "remediation": [
+        "Use chart only for difficult bridge"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 30,
+      "tags": [
+        "ear"
+      ]
+    },
+    {
+      "id": "repertoire.blues",
+      "track": "Standards",
+      "title": "C / F Blues",
+      "level": 1,
+      "kind": "standard",
+      "prerequisites": [
+        "improv.blues_language",
+        "rhythm.comping_basic"
+      ],
+      "goal": "Learn blues form, dominant function, phrasing and trading language.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "blues",
+        "form"
+      ]
+    },
+    {
+      "id": "repertoire.autumn_leaves",
+      "track": "Standards",
+      "title": "Autumn Leaves",
+      "level": 1,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.major_251",
+        "harmony.minor_251",
+        "repertoire.melody"
+      ],
+      "goal": "Integrate major/minor ii\u2013V\u2013I, guide tones and functional voice leading.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "ii-v-i",
+        "minor"
+      ]
+    },
+    {
+      "id": "repertoire.blue_bossa",
+      "track": "Standards",
+      "title": "Blue Bossa",
+      "level": 1,
+      "kind": "standard",
+      "prerequisites": [
+        "rhythm.bossa",
+        "harmony.minor_251"
+      ],
+      "goal": "Integrate bossa groove, minor harmony and a brief key-center shift.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "bossa",
+        "minor"
+      ]
+    },
+    {
+      "id": "repertoire.all_of_me",
+      "track": "Standards",
+      "title": "All of Me",
+      "level": 1,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.secondary_dominants",
+        "repertoire.shells"
+      ],
+      "goal": "Study secondary dominants and long-form functional harmony.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "secondary-dominants"
+      ]
+    },
+    {
+      "id": "repertoire.satin_doll",
+      "track": "Standards",
+      "title": "Satin Doll",
+      "level": 2,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.major_251",
+        "rhythm.comping_basic"
+      ],
+      "goal": "Practice repeated ii\u2013V cells, bridge contrast and swing comping.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "ii-v-i",
+        "swing"
+      ]
+    },
+    {
+      "id": "repertoire.so_what",
+      "track": "Standards",
+      "title": "So What",
+      "level": 2,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.modal",
+        "voicing.quartal"
+      ],
+      "goal": "Develop modal pacing, motif development and quartal voicings.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "modal"
+      ]
+    },
+    {
+      "id": "repertoire.twnbay",
+      "track": "Standards",
+      "title": "There Will Never Be Another You",
+      "level": 2,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.secondary_dominants",
+        "improv.approach_notes"
+      ],
+      "goal": "Integrate functional harmony, key-center movement and bebop targeting.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "standard",
+        "bebop"
+      ]
+    },
+    {
+      "id": "repertoire.it_could_happen",
+      "track": "Standards",
+      "title": "It Could Happen to You",
+      "level": 2,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.secondary_dominants",
+        "repertoire.full_voicings"
+      ],
+      "goal": "Study diatonic function, turnarounds and voice leading.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "functional-harmony"
+      ]
+    },
+    {
+      "id": "repertoire.all_things",
+      "track": "Standards",
+      "title": "All the Things You Are",
+      "level": 3,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.secondary_dominants",
+        "voicing.rootless_b"
+      ],
+      "goal": "Study cycling key centers, long-range voice leading and form.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "key-centers"
+      ]
+    },
+    {
+      "id": "repertoire.green_dolphin",
+      "track": "Standards",
+      "title": "On Green Dolphin Street",
+      "level": 3,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.modal",
+        "harmony.secondary_dominants"
+      ],
+      "goal": "Switch between modal and functional harmony with contrasting feels.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "modal",
+        "functional"
+      ]
+    },
+    {
+      "id": "repertoire.rhythm_changes",
+      "track": "Standards",
+      "title": "Oleo / Rhythm Changes",
+      "level": 3,
+      "kind": "standard",
+      "prerequisites": [
+        "harmony.turnarounds",
+        "improv.turnaround_language"
+      ],
+      "goal": "Internalize AABA rhythm changes, rapid turnarounds and bridge dominants.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "rhythm-changes",
+        "bebop"
+      ]
+    },
+    {
+      "id": "repertoire.stella",
+      "track": "Standards",
+      "title": "Stella by Starlight",
+      "level": 4,
+      "kind": "standard",
+      "prerequisites": [
+        "repertoire.all_things",
+        "voicing.altered_dominants"
+      ],
+      "goal": "Integrate denser harmonic motion, non-obvious key centers and advanced voice leading.",
+      "practice_recipe": [
+        "3 recordings + melody",
+        "Root/form map",
+        "Shells",
+        "Chord-tone solo",
+        "Current voicing pass",
+        "Current language pass",
+        "Performance take"
+      ],
+      "mastery_tests": [
+        "Melody and form from memory",
+        "One complete performance take",
+        "Can explain the tune's main harmonic lesson"
+      ],
+      "remediation": [
+        "Return to repertoire process node that failed"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 45,
+      "tags": [
+        "advanced-standard"
+      ]
+    },
+    {
+      "id": "technique.maj_scales",
+      "track": "Technique",
+      "title": "Major scales as keyboard geography",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [],
+      "goal": "Use scales for key fluency, not as an end in themselves.",
+      "practice_recipe": [
+        "Play 12 keys 2 octaves",
+        "Name scale degrees",
+        "Accent random degrees"
+      ],
+      "mastery_tests": [
+        "12 keys clean at chosen moderate tempo"
+      ],
+      "remediation": [],
+      "unlocks": [
+        "technique.arpeggios"
+      ],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 10,
+      "tags": [
+        "keyboard"
+      ]
+    },
+    {
+      "id": "technique.arpeggios",
+      "track": "Technique",
+      "title": "7th-chord arpeggio fluency",
+      "level": 1,
+      "kind": "skill",
+      "prerequisites": [
+        "technique.maj_scales",
+        "harmony.chord_quality_7ths"
+      ],
+      "goal": "Make chord tones physically immediate.",
+      "practice_recipe": [
+        "maj7/min7/dom7/m7b5 arpeggios",
+        "Start from 3rd and 7th",
+        "Connect nearest chord tone"
+      ],
+      "mastery_tests": [
+        "Random chord prompts with no pause",
+        "2 octaves in all 12 keys"
+      ],
+      "remediation": [
+        "One octave"
+      ],
+      "unlocks": [
+        "improv.chord_tones"
+      ],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 10,
+      "tags": [
+        "keyboard"
+      ]
+    },
+    {
+      "id": "technique.independence",
+      "track": "Technique",
+      "title": "LH voicing + RH line independence",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "harmony.shells",
+        "improv.chord_tones"
+      ],
+      "goal": "Maintain comping/harmony while improvising in RH.",
+      "practice_recipe": [
+        "LH shells on whole notes",
+        "RH chord-tone line",
+        "Then syncopate LH lightly"
+      ],
+      "mastery_tests": [
+        "One chorus without LH time collapse"
+      ],
+      "remediation": [
+        "LH only beat 1"
+      ],
+      "unlocks": [
+        "voicing.rootless_a"
+      ],
+      "maintenance_interval_days": 10,
+      "suggested_minutes": 15,
+      "tags": [
+        "coordination"
+      ]
+    },
+    {
+      "id": "technique.articulation",
+      "track": "Technique",
+      "title": "Jazz articulation imitation",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "ear.transcribe_phrases"
+      ],
+      "goal": "Match attacks, note lengths and accents from recordings.",
+      "practice_recipe": [
+        "Choose 1 phrase",
+        "Copy exact articulation",
+        "Record A/B against source"
+      ],
+      "mastery_tests": [
+        "Audible match in note length/accent contour"
+      ],
+      "remediation": [
+        "Use slower recording"
+      ],
+      "unlocks": [],
+      "maintenance_interval_days": 14,
+      "suggested_minutes": 10,
+      "tags": [
+        "articulation"
+      ]
+    },
+    {
+      "id": "technique.octaves_register",
+      "track": "Technique",
+      "title": "Register control",
+      "level": 2,
+      "kind": "skill",
+      "prerequisites": [
+        "voicing.rootless_a"
+      ],
+      "goal": "Choose pianistic registers that avoid mud and collisions.",
+      "practice_recipe": [
+        "Play same voicing in 3 registers",
+        "Note low-interval limits",
+        "Practice melody over voicings"
+      ],
+      "mastery_tests": [
+        "No muddy minor 2nds/3rds in low register during tune"
+      ],
+      "remediation": [],
+      "unlocks": [],
+      "maintenance_interval_days": 21,
+      "suggested_minutes": 10,
+      "tags": [
+        "register"
+      ]
+    }
+  ]
+}

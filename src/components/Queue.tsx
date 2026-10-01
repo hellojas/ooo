@@ -3,6 +3,7 @@ import { DOW, MONTHS, parse, today } from '../dates'
 import { MASTER, laneEta, priorityOf, project, type Kind, type Lane, type Priority } from '../queue'
 import { update, useUser } from '../storage'
 import { Ic } from './Icons'
+import { guidance } from '../curriculum'
 
 type Tab = 'piano' | 'sax' | 'run' | 'pull'
 const TABS: [Tab, string, Lane, Kind[]][] = [['piano', 'Piano', 'piano', ['lesson', 'technique', 'standard']], ['sax', 'Sax', 'sax', ['sax']], ['run', 'Run', 'workout', ['run']], ['pull', 'Pull-ups', 'workout', ['pull']]]
@@ -44,7 +45,7 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
             <li key={x.id} className={['qrow', done ? 'done' : '', skipped ? 'skipped' : '', isNext ? 'next' : ''].join(' ')}>
               <span className="qn num">{i + 1}</span>
               <span className="qbody">
-                <b>{x.label}</b>
+                <b>{x.label}</b>{(() => { const g = guidance(x.id); return g.goal ? <small className="goal">{g.goal}{g.pass ? ` · Pass: ${g.pass}` : ''}</small> : null })()}
                 <small>{x.branch.toLowerCase()} · {priorityOf(user, x)}{done ? ` · done ${fmt(done)}` : skipped ? ' · parked' : when ? ` · ${when === real ? 'today' : fmt(when)}` : priorityOf(user, x) === 'parked' ? '' : ' · not scheduled yet'}{isNext ? ' · up next' : ''}{(user.queueRepeat ?? []).includes(x.id) ? ' · repeating' : ''}</small>
               </span>
               <span className="qacts">

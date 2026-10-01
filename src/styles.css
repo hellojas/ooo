@@ -1169,3 +1169,5 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .steps.rows li{flex-wrap:wrap}
 .steps.rows .outcomes.feel{position:static;transform:none;background:none;padding:0;flex-basis:100%;margin:2px 0 0 48px;pointer-events:none}
 .steps.rows li:hover .outcomes.feel,.steps.rows li.on .outcomes.feel{pointer-events:auto}
+.steps .lbl .ctx.pass{color:var(--move)}
+.qbody .goal{display:block;color:var(--ink-3);font-size:12px;margin-top:2px}
