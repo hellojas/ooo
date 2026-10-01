@@ -14,7 +14,7 @@ export function startReminders(getUser: () => UserData) {
     if (!remindersOn()) return
     const now = new Date(), k = today(), user = getUser(), mins = now.getHours() * 60 + now.getMinutes()
     const type = dayTypeFor(user, k, k)
-    for (const b of blocksForType(k, type, startFor(user, k))) {
+    for (const b of blocksForType(k, type, startFor(user, k), user)) {
       if ((user.practice[k]?.skipped ?? []).includes(b.title)) continue
       const id = `b|${k}|${b.title}`
       if (mins >= b.start - 5 && mins < b.start + 10 && !fired.has(id)) { fired.add(id); new Notification(b.title, { body: `${fmtMin(b.start)}–${fmtMin(b.end)}${b.note ? ' · ' + b.note : ''}` }) }

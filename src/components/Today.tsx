@@ -156,7 +156,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   // a lane with two blocks shares its logged minutes: fill the first before the second
   for (let i = 1; i < segs.length; i++) if (segs[i].lane && segs[i].lane === segs[i - 1].lane) { const spill = Math.max(0, (segs[i - 1].lane === 'piano' ? logged.piano : 0) - segs[i - 1].plan); segs[i].done = Math.min(segs[i].plan, spill) }
   const planned = segs.reduce((n, x) => n + x.plan, 0), openMin = segs.reduce((n, x) => n + (x.plan - x.done), 0)
-  const firstClass = wins.filter(w => nowMin == null || w.from > nowMin).sort((a, b) => a.from - b.from)[0]
+  const firstClass = wins.filter(w => !w.p.drop && (nowMin == null || w.from > nowMin)).sort((a, b) => a.from - b.from)[0]
   const fmtH = (m: number) => m >= 60 ? `${Math.round(m / 30) / 2} h` : `${m} min`
   const capacityLine = planned === 0 ? null : openMin === 0 ? 'Everything on the bar is done.' : `${fmtH(openMin)} still open${isToday && firstClass && nowMin != null ? ` · about ${fmtH(Math.max(0, firstClass.from - nowMin))} before you leave for ${firstClass.p.short}` : ''}.`
   const stage = (() => { if (!std) return null; const i = plan_idx(std); if (i < 0) return null; const k = [0, 1, 2, 3, 4].filter(s => user.queueDone?.[`s${i}.${s}`]).length; return { k, name: k >= 5 ? 'Owned' : STAGES[k] } })()
@@ -348,7 +348,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
 
       <footer className="weekbar">
         <span className="dots" title="last 7 days">{rh.dots.map(x => <i key={x.d} className={x.on ? 'on' : ''} />)}</span>
-        <b className="num">{rh.sessions} day{rh.sessions === 1 ? '' : 's'} · {h}h{m ? ` ${m}m` : ''} piano this week</b>
+        <b className="num">{rh.sessions} day{rh.sessions === 1 ? '' : 's'} · {h}h{m ? ` ${m}m` : ''} piano{tot.make ? ` · ${Math.round(tot.make / 6) / 10}h make` : ''} this week</b>
         <span className="num">{tot.climbs} climb{tot.climbs === 1 ? '' : 's'}</span>
         <span className="num">{saxSessions} sax session{saxSessions === 1 ? '' : 's'}</span>
         <span className="num">{tot.runs} run{tot.runs === 1 ? '' : 's'}</span>

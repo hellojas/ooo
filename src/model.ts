@@ -305,9 +305,10 @@ export function freeSlot(user: UserData, k: string, len: number, after: number):
 /** The last seven days as practice dots, plus how many days since the piano was last touched. */
 export function rhythm(user: UserData, real: string) {
   const days = Array.from({ length: 7 }, (_, i) => key(addDays(parse(real), i - 6)))
-  const dots = days.map(d => ({ d, on: hasMusic(user, d) || Object.values(user.queueDone ?? {}).includes(d) }))
+  const worked = (d: string) => hasMusic(user, d) || (user.practice[d]?.make ?? 0) > 0 || Object.values(user.queueDone ?? {}).includes(d)
+  const dots = days.map(d => ({ d, on: worked(d) }))
   let quiet = 0
-  for (let d = key(addDays(parse(real), -1)); d >= START && quiet < 30; d = key(addDays(parse(d), -1))) { if (hasMusic(user, d) || Object.values(user.queueDone ?? {}).includes(d)) break; quiet++ }
+  for (let d = key(addDays(parse(real), -1)); d >= START && quiet < 30; d = key(addDays(parse(d), -1))) { if (worked(d)) break; quiet++ }
   return { dots, quiet, sessions: dots.filter(x => x.on).length }
 }
 /** The understated nudge. Nothing for the first two quiet days; then one calm sentence. */

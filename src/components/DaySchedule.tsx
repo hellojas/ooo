@@ -9,7 +9,7 @@ import type { Program } from '../types'
 
 type Row = { start: number; node: React.ReactNode; key: string }
 const isPiano = (t: string) => t.startsWith('Piano')
-const minutesKey = (t: string): 'piano1' | 'sax' | null => isPiano(t) ? 'piano1' : t.startsWith('Sax') ? 'sax' : null
+const minutesKey = (t: string): 'piano1' | 'sax' | 'make' | null => isPiano(t) ? 'piano1' : t.startsWith('Sax') ? 'sax' : t.startsWith('Make') ? 'make' : null
 
 /** Full-day timeline. One block is active at a time; Start/Finish writes minutes, a note and a "next time". */
 export function DaySchedule({ date, onOpen, showTasks, nowMin }: { date: string; onOpen: (p: Program, d: string) => void; showTasks?: boolean; nowMin?: number }) {

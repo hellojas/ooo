@@ -1199,3 +1199,4 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .makelist .block.small input{width:100%}
 .makelist.done li{border:0;padding:4px 10px;margin:0}
 .qtag.now{background:var(--make);color:#fff;border-color:var(--make)}
+.wb-ev.flex.make{background:color-mix(in srgb,var(--make) 10%,var(--panel));border-color:color-mix(in srgb,var(--make) 45%,var(--panel))}
