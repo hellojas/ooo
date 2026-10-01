@@ -252,7 +252,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
         </section>
 
         <section className="card main">
-          <p className="eyebrow">Next at the {lane}</p>
+          <p className="eyebrow">{lane === 'make' ? 'Making' : `Next at the ${lane}`}</p>
           <div className="lanes seg-chips" role="tablist">
             {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} role="tab" aria-selected={lane === l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label[0].toUpperCase() + l.label.slice(1)}{laneDone(l.id) ? ' ✓' : ''}</button> })}
           </div>
@@ -271,7 +271,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
                 ? <button className="btn primary big wide" onClick={() => setFinishing('make')}><Ic.stop /> Finish · {elapsed} min</button>
                 : <button className="btn primary big wide" disabled={!!active} onClick={() => setPr({ active: { block: 'Make', since: Date.now() } })}><Ic.start /> Start session</button>)}
               <label className="block">Next step <input value={mk.next ?? ''} placeholder="the smallest next thing…" onChange={e => setMake(l => l.map(x => x.id === mk.id ? { ...x, next: e.target.value } : x))} /></label>
-              <div className="row between"><button className="linkbtn quiet" onClick={() => setMake(l => l.map(x => x.id === mk.id ? { ...x, done: date } : x))}>mark {mk.title.split(' ')[0].toLowerCase()} done</button><a className="linkbtn quiet" href="#/practice">the whole list →</a></div>
+              <div className="row between"><button className="linkbtn quiet" onClick={() => setMake(l => l.map(x => x.id === mk.id ? { ...x, done: date } : x))}>mark done</button><a className="linkbtn quiet" href="#/practice">the whole list →</a></div>
               {makeList(user.make).length > 1 && <><p className="eyebrow steps-h">After that</p><ol className="steps rows small">{makeList(user.make).slice(1, 4).map((x, i) => <li key={x.id}><span className="n">{i + 2}</span><span className="lbl">{x.title}<small className="ctx">{x.kind}{x.next ? ` · ${x.next}` : ''}</small></span></li>)}</ol></>}
             </> : <><h1 className="tune small">Nothing on the Make list</h1><p className="lede serif">Projects, dev work, papers, books, art. <a href="#/practice">Add one in Roadmap → Make.</a></p></>}
           </div> : (lane === 'piano' ? minutes > 0 : curTasks.length > 0 || curBlock || (lane === 'workout' && type !== 'travel' && type !== 'rest')) ? <>
