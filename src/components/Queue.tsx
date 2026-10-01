@@ -28,7 +28,7 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   return (
     <section className="plain queue">
       <div className="row between">
-        <div><h2>Curriculum</h2><p className="meta">The whole curriculum as a queue, in order. Dates are where each item lands right now; they move as you tick things off. Classes aren’t here — they’re fixed.</p></div>
+        <div><h2>Curriculum</h2><p className="lede serif">Curriculum determines what comes next. You determine how fast time moves.</p><p className="meta">The whole curriculum as a queue, in order. Dates are where each item lands right now; they move as you tick things off. Classes aren’t here — they’re fixed.</p></div>
       </div>
       <div className="subtabs">{TABS.map(([id, l, ln, ks]) => { const Icon = { piano: Ic.piano, sax: Ic.sax, workout: Ic.workout }[ln]; const all = MASTER.filter(x => ks.includes(x.kind)); return <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}><Icon /> {l} <small>{all.filter(x => user.queueDone?.[x.id]).length}/{all.length}</small></button> })}</div>
       <div className="prirow">{kinds.map(k => <label key={k} className="inl">{k} <select value={user.queuePriority?.[k] ?? priorityOf(user, MASTER.find(x => x.kind === k)!)} onChange={e => setPri(k, e.target.value as Priority)}><option value="core">core</option><option value="optional">optional</option><option value="parked">parked</option></select></label>)}
@@ -41,11 +41,11 @@ export function QueueView({ onOpenDay }: { onOpenDay: (d: string) => void }) {
           if (done && !showDone) return null
           const isNext = !done && !skipped && !nextSeen && (nextSeen = true)
           return (
-            <li key={x.id} className={['qrow', done ? 'done' : '', skipped ? 'skipped' : '', isNext ? 'next' : '', when && when < real && !done ? 'late' : ''].join(' ')}>
+            <li key={x.id} className={['qrow', done ? 'done' : '', skipped ? 'skipped' : '', isNext ? 'next' : ''].join(' ')}>
               <span className="qn num">{i + 1}</span>
               <span className="qbody">
                 <b>{x.label}</b>
-                <small>{x.kind} · {priorityOf(user, x)}{done ? ` · done ${fmt(done)}` : skipped ? ' · parked' : when ? ` · ${when === real ? 'today' : fmt(when)}` : priorityOf(user, x) === 'parked' ? '' : ' · not scheduled yet'}{isNext ? ' · up next' : ''}{(user.queueRepeat ?? []).includes(x.id) ? ' · repeating' : ''}</small>
+                <small>{x.branch.toLowerCase()} · {priorityOf(user, x)}{done ? ` · done ${fmt(done)}` : skipped ? ' · parked' : when ? ` · ${when === real ? 'today' : fmt(when)}` : priorityOf(user, x) === 'parked' ? '' : ' · not scheduled yet'}{isNext ? ' · up next' : ''}{(user.queueRepeat ?? []).includes(x.id) ? ' · repeating' : ''}</small>
               </span>
               <span className="qacts">
                 {when && !done && <button className="linkbtn quiet" onClick={() => onOpenDay(when)}>open day</button>}

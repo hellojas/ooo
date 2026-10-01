@@ -1147,3 +1147,22 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .tunemeta{margin:6px 0 10px}
 .nextq small{font-weight:400}
 .plan .btn.primary.wide{margin:0 0 12px}
+
+/* ---- session: length picker, feel buttons, stage bar, side quests, rhythm ---- */
+.planpick{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.planpick .pill{padding:5px 11px;font-size:13px}
+.nudge{margin:2px 0 4px;font-size:14px;color:var(--warm)}
+.stage{display:flex;align-items:center;gap:10px;margin:-6px 0 10px;font-size:13px;color:var(--ink-2)}
+.stage .bar{width:120px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.stage .bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.steps .lbl .mins{display:inline-block;min-width:44px;margin-right:8px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.steps .lbl .ctx{display:block;margin:2px 0 0 52px;color:var(--ink-3);font-size:12.5px}
+.outcomes.feel{gap:8px}
+.sidequests{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.sidequests li{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.sidequests .linkbtn{display:inline-flex;align-items:center;gap:6px}
+.sidequests svg{width:16px;height:16px}
+.weekbar .dots{display:inline-flex;gap:5px}
+.weekbar .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block}
+.weekbar .dots i.on{background:var(--accent)}
+.steps-h .linkbtn{margin-left:10px;font-size:12px}

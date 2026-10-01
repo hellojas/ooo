@@ -77,10 +77,10 @@ await p.selectOption('.selbtn select','rest');await p.waitForTimeout(200);await 
 await go('#/calendar/month');await p.waitForTimeout(600);const wedPiano=await p.locator('.mday').filter({hasText:/^14/}).locator('.mev.Piano').count();check('rest day has no piano pills in month', wedPiano===0, 'pills '+wedPiano);
 }catch(e){check('SECTION Change day → Rest → calendar/week reflect',false,e.message.split('\n')[0].slice(0,120))}
 
-// Skipped today → next day Light
+// Off day → tomorrow is unchanged (no "behind")
 try{
-await go('#/today/2026-10-15');await p.click('button:has-text("Skipped today")');await p.waitForTimeout(200);await go('#/today/2026-10-16');const m16=await p.textContent('.datenav .meta');check('day after a skip is Light with reason', m16.includes('Light')&&m16.includes('skipped'), m16);
-}catch(e){check('SECTION Skipped today → next day Light',false,e.message.split('\n')[0].slice(0,120))}
+await go('#/today/2026-10-15');await p.click('button[role=radio]:has-text("Off")');await p.waitForTimeout(200);const t15=await p.textContent('.main');check('Off day shows the quiet view', /No piano today/.test(t15), t15.slice(0,80));await go('#/today/2026-10-16');const m16=await p.textContent('.datenav .meta');check('day after an Off day is not punished', !m16.includes('skipped'), m16);
+}catch(e){check('SECTION Off day',false,e.message.split('\n')[0].slice(0,120))}
 
 // Replan → Configure target
 try{

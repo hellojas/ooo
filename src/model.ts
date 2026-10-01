@@ -80,8 +80,25 @@ export const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); r
 /** Start time for a day: that date's override, else the weekday default from Configure, else the global default. */
 export const defaultStartFor = (user: UserData, k: string) => user.settings.startTimes?.[parse(k).getDay()] || user.settings.startTime || DEFAULT_START
 export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || defaultStartFor(user, k)
-const fmtHM = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
 export const READ_MIN = 90
+/** Session lengths you can pick for a day. 0 = no piano today. */
+export const PLAN_CHOICES: { min: number; label: string; hint: string }[] = [
+  { min: 0, label: 'Off', hint: 'No piano today. The queue waits.' },
+  { min: 20, label: 'Tiny', hint: '20 min. Enough.' },
+  { min: 45, label: '45', hint: 'The tune and one thing.' },
+  { min: 90, label: '90', hint: 'A real session.' },
+  { min: 120, label: '2h', hint: 'The full morning block.' },
+  { min: 210, label: 'Afternoon', hint: 'Both blocks: curriculum, then ear + arrangement.' },
+]
+/** Planned piano minutes for a date: what you picked, else what the day type suggests. */
+export function planMinutes(user: UserData | undefined, k: string, type: DayType): number {
+  const set = user?.practice[k]?.plan
+  if (set != null) return set
+  if (type === 'rest' || type === 'travel') return 0
+  if (type === 'light') return user?.settings.lightMinutes ?? 60
+  if (type === 'class') return 120
+  return 210
+}
 /** When a session happens on a date. Classes keep their listed time; the reading morning opens the day at your start time (90 min). */
 export function itemSpan(p: Program, user: UserData, k: string): [number, number] | null {
   if (p.kind === 'read') { const st = toMin(startFor(user, k)); return [st, st + READ_MIN] }
@@ -250,16 +267,21 @@ export const dayTypeFor = (user: UserData, k: string, real: string): DayType => 
 export function blocksForType(k: string, type: DayType, startTime: string, user?: UserData): Block[] {
   const dow = parse(k).getDay()
   const st = toMin(startTime) + morningShift(user, k)
-  startTime = fmtHM(st)
   let bs: Block[] = []
   if (type === 'rest' || type === 'travel') bs = []
-  else if (type === 'light') {
-    const m = user?.settings.lightMinutes ?? 60
-    bs = dow >= 1 && dow <= 5 ? [{ start: st, end: st + m, title: 'Piano (light)', note: `${m} min — this week’s tune, then one thing you enjoy` }] : blocksOn(k, startTime)
-  } else if (type === 'class') {
-    const base = blocksOn(k, startTime)
-    bs = dow >= 1 && dow <= 5 ? base.filter(b => !b.title.startsWith('Piano block 2') && b.title !== 'Gym slot') : base
-  } else bs = blocksOn(k, startTime)
+  else if (dow === 0) bs = blocksOn(k, startTime)
+  else if (dow === 6) bs = []
+  else {
+    const m = planMinutes(user, k, type)
+    const gym = type === 'full' && m > 0
+    bs.push({ start: st, end: st + 30, title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' })
+    if (m > 0) {
+      const b1 = Math.min(m, 120)
+      bs.push({ start: st + 30, end: st + 30 + b1, title: 'Piano block 1', note: m <= 20 ? 'tiny piano — enough for today' : 'curriculum: technique, lesson, the tune' })
+      if (m > 120) { const s2 = st + 30 + b1 + 60; bs.push({ start: s2, end: s2 + (m - 120), title: 'Piano block 2', note: 'Ear training lives here: transcription (60) + arrangement (30)' }) }
+    }
+    if (gym) { const last = bs[bs.length - 1].end + 30; bs.push({ start: last, end: last + 120, title: 'Gym slot' }) }
+  }
   const ov = user?.practice[k]?.blocks
   if (ov) bs = bs.map(b => ov[b.title] ? { ...b, start: ov[b.title].start ?? b.start, end: ov[b.title].end ?? b.end } : b)
   for (const a of user?.practice[k]?.added ?? []) bs.push({ title: a.title, start: a.start, end: a.end, note: 'added' })
@@ -271,4 +293,22 @@ export function freeSlot(user: UserData, k: string, len: number, after: number):
   let t = after
   for (const w of wins) { if (t + len <= w.from) break; if (t < w.to) t = w.to }
   return t
+}
+
+/** The last seven days as practice dots, plus how many days since the piano was last touched. */
+export function rhythm(user: UserData, real: string) {
+  const days = Array.from({ length: 7 }, (_, i) => key(addDays(parse(real), i - 6)))
+  const dots = days.map(d => ({ d, on: hasMusic(user, d) || Object.values(user.queueDone ?? {}).includes(d) }))
+  let quiet = 0
+  for (let d = key(addDays(parse(real), -1)); d >= START && quiet < 30; d = key(addDays(parse(d), -1))) { if (hasMusic(user, d) || Object.values(user.queueDone ?? {}).includes(d)) break; quiet++ }
+  return { dots, quiet, sessions: dots.filter(x => x.on).length }
+}
+/** The understated nudge. Nothing for the first two quiet days; then one calm sentence. */
+export function nudge(user: UserData, real: string, type: DayType, next?: string): string | null {
+  if (type === 'travel' || real < START || real > END) return null
+  const { quiet } = rhythm(user, real)
+  if (!Object.keys(user.practice).some(d => d < real && hasMusic(user, d)) && !Object.values(user.queueDone ?? {}).some(d => d < real)) return null   // nothing to come back to yet
+  if (quiet >= 5) return `It’s been ${quiet} days. A little rust is starting; a tiny session is enough.`
+  if (quiet >= 3) return `It’s been ${quiet} days. ${next ? next + ' is' : 'Your current work is'} still warm — today would be a good day to come back.`
+  return null
 }

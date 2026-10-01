@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { DOW, END, MONTHS, key, parse, START, today as todayKey, weekNo, weekStart } from '../dates'
 import { courses } from '../data'
-import { DAY_TYPES, itemSpan, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, phasesForWeek, setTaipeiStart, startFor, tripOn, weekTotals, attKey, type Block } from '../model'
+import { DAY_TYPES, PLAN_CHOICES, itemSpan, blocksForType, classWindows, coursesForWeek, dayTypeWhy, defaultStartFor, fmtMin, freeSlot, itemsOn, nudge, phasesForWeek, planMinutes, rhythm, setTaipeiStart, startFor, tripOn, weekTotals, attKey, type Block } from '../model'
 import { update, useUser } from '../storage'
 import { signIn, useSync } from '../sync'
-import { standardOfWeek, tasksFor, type Task } from '../tasks'
+import { STAGES, standardOfWeek, tasksFor, type Task } from '../tasks'
 import { MASTER, byId, project, priorityOf, type Lane } from '../queue'
 import { courseLinks, pdfLinks } from '../drive'
 import { currentByEar, EAR_STEPS } from './ByEar'
@@ -20,6 +20,7 @@ export const shiftDay = (k: string, n: number) => { const d = parse(k); d.setDat
 export const fmtDate = (k: string) => { const d = parse(k); return `${DOW[d.getDay()]}, ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}` }
 const fmtLong = (k: string) => { const d = parse(k); return `${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}` }
 const LANE_ICON = { piano: Ic.piano, sax: Ic.sax, workout: Ic.workout }
+const plan_idx = (tune: string) => MASTER.find(x => x.kind === 'standard' && x.tune === tune)?.id.match(/^s(\d+)/)?.[1] != null ? Number(MASTER.find(x => x.kind === 'standard' && x.tune === tune)!.id.match(/^s(\d+)/)![1]) : -1
 const LANES: { id: Lane; label: string; blocks: string[]; minutes: 'piano1' | 'sax' | null }[] = [
   { id: 'piano', label: 'piano', blocks: ['Piano block 1', 'Piano (light)', 'Piano block 2'], minutes: 'piano1' },
   { id: 'sax', label: 'sax', blocks: ['Sax'], minutes: 'sax' },
@@ -65,13 +66,16 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
 
   const projected = useMemo(() => project(user, real), [user, real])
   const tasks = tasksFor(date, user, type, projected)
+  const minutes = planMinutes(user, date, type)
+  const suggested = planMinutes({ ...user, practice: { ...user.practice, [date]: { ...user.practice[date], plan: undefined } } }, date, type)
+  const setPlan = (m: number | undefined) => setPr({ plan: m })
   const done = pr.tasks ?? [], skipped = pr.skipped ?? []
   const wins = classWindows(user, date)
   const blocks = blocksForType(date, type, startFor(user, date), user)
   const laneOf = (t: string): Lane | undefined => LANES.find(l => l.blocks.includes(t))?.id ?? (t.startsWith('Piano') ? 'piano' : t.startsWith('Sax') ? 'sax' : undefined)
   const rows: PlanRow[] = blocks.map(b => ({
     key: 'b' + b.title, start: b.start, end: b.end, title: b.title, kind: 'block' as const, block: b, skipped: skipped.includes(b.title), lane: laneOf(b.title),
-    sub: (tasks[b.title]?.length ? `${tasks[b.title].filter(t => isDone(t)).length}/${tasks[b.title].length} done` : b.note),
+    sub: tasks[b.title]?.length ? tasks[b.title].map(t => t.label.startsWith('Focus: ') ? t.label.slice(7).split(' · ')[0] : t.qid ? t.label.split(/[:·]/)[0].replace(/^Technique$/, 'technique').trim() : t.label.split(/[.:]/)[0]).join(' · ') : b.note,
     clash: wins.find(w => b.start < w.to && b.end > w.from && !skipped.includes(b.title)),
   }))
   const items = itemsOn(date, user).filter(x => !['climb', 'climbLES', 'run', 'run2'].includes(x.p.id))
@@ -87,6 +91,13 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   // ---- queue-aware done state: queue items are done when queueDone has them on this date; plain tasks live in practice[date].tasks
   function isDone(t: Task) { return t.qid ? user.queueDone?.[t.qid] === date : done.includes(t.id) }
   const isRepeat = (t: Task) => !!t.qid && (user.queueRepeat ?? []).includes(t.qid)
+  /** Tiny feedback after an item. Lost / working → it comes back next session (smaller scope); solid / easy → move on. */
+  function feel(t: Task, f: 'lost' | 'working' | 'solid' | 'easy') {
+    if (!t.qid) return
+    const id = t.qid
+    update(u => ({ ...u, queueMemo: { ...u.queueMemo, [id]: { ...u.queueMemo?.[id], feel: f, date } } }))
+    outcome(t, f === 'lost' || f === 'working' ? 'repeat' : 'done')
+  }
   function outcome(t: Task, o: 'done' | 'repeat' | 'park' | 'clear') {
     if (!t.qid) { setPr({ tasks: done.includes(t.id) ? done.filter(x => x !== t.id) : [...done, t.id] }); return }
     const id = t.qid
@@ -132,6 +143,9 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const isActive = !!active && laneOf(active.block) === lane
   const elapsed = isActive ? Math.max(1, Math.round((Date.now() - active!.since) / 60000)) : 0
   const laneDef = LANES.find(l => l.id === lane)!
+  const stage = (() => { if (!std) return null; const i = plan_idx(std); if (i < 0) return null; const k = [0, 1, 2, 3, 4].filter(s => user.queueDone?.[`s${i}.${s}`]).length; return { k, name: k >= 5 ? 'Owned' : STAGES[k] } })()
+  const rh = rhythm(user, real)
+  const nudgeLine = isToday ? nudge(user, real, type, next?.label.split(': ')[0]) : null
   const lastSession = [...user.sessions].reverse().find(s => laneOf(s.block) === lane && s.date < date && (lane === 'piano' ? s.tune === std : true))
   const lessonItem = curTasks.find(t => t.qid?.startsWith('v'))
   const lessonQ = lessonItem?.qid ? byId(lessonItem.qid) : undefined
@@ -143,7 +157,13 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
   const setBlock = (t: string, v: { start?: number; end?: number } | null) => setPr({ blocks: v ? { ...pr.blocks, [t]: v } : Object.fromEntries(Object.entries(pr.blocks ?? {}).filter(([k]) => k !== t)) })
   const [nextNote, setNextNote] = useState('')
-  const saveNext = () => { if (nextNote.trim() && curBlock) { update(u => ({ ...u, sessions: [...u.sessions, { date, block: curBlock.title, minutes: 0, tune: lane === 'piano' ? std : undefined, next: nextNote.trim() }] })); setNextNote('') } }
+  const saveNext = () => {
+    if (!nextNote.trim() || !curBlock) return
+    const note = nextNote.trim()
+    const target = curTasks.find(t => t.qid && (!isDone(t) || isRepeat(t)))?.qid ?? curTasks.find(t => t.qid)?.qid   // the item you were on remembers it
+    update(u => ({ ...u, sessions: [...u.sessions, { date, block: curBlock.title, minutes: 0, tune: lane === 'piano' ? std : undefined, next: note }], queueMemo: target ? { ...u.queueMemo, [target]: { ...u.queueMemo?.[target], note, date } } : u.queueMemo }))
+    setNextNote('')
+  }
   const todayNext = [...user.sessions].reverse().find(s => s.date === date && s.next)?.next
   const pianoToday = (pr.piano1 ?? 0) + (pr.piano2 ?? 0)
   const tot = weekTotals(user, wk)
@@ -161,10 +181,10 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
           </div>
           <button className="btn icon" onClick={() => setDate(shiftDay(date, 1))} aria-label="Next day">›</button>
         </div>
+        {nudgeLine && <p className="nudge">{nudgeLine}</p>}
         <div className="hdr-actions">
           <label className="btn selbtn"><Ic.calendar /><span>{pr.dayType ? 'Day changed' : 'Change day'}</span>
             <select value={pr.dayType ?? ''} onChange={e => setPr({ dayType: (e.target.value || undefined) as never })}><option value="">Let the app decide ({DAY_TYPES.find(t => t.id === type)?.label})</option>{DAY_TYPES.map(t => <option key={t.id} value={t.id}>{t.label} day</option>)}</select></label>
-          {type !== 'travel' && type !== 'rest' && date <= real && <button className={'btn' + (pr.skippedDay ? ' on' : '')} onClick={() => setPr({ skippedDay: pr.skippedDay ? undefined : true })}>{pr.skippedDay ? 'Skipped ✓' : 'Skipped today'}</button>}
           {!isToday && <button className="btn" onClick={() => setDate(clampDay(real))}>Back to today</button>}
         </div>
       </div>
@@ -208,8 +228,14 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
           <div className="lanes seg-chips" role="tablist">
             {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} role="tab" aria-selected={lane === l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label[0].toUpperCase() + l.label.slice(1)}{laneDone(l.id) ? ' ✓' : ''}</button> })}
           </div>
-          {curTasks.length > 0 || curBlock || (lane === 'workout' && type !== 'travel' && type !== 'rest') ? <>
+          {lane === 'piano' && type !== 'travel' && type !== 'rest' && <div className="planpick" role="radiogroup" aria-label="Piano today">
+            <span className="meta">Piano today</span>
+            {PLAN_CHOICES.map(c => <button key={c.min} role="radio" aria-checked={minutes === c.min} className={'pill' + (minutes === c.min ? ' active' : '')} title={c.hint} onClick={() => setPlan(c.min === suggested ? undefined : c.min)}>{c.label}{c.min === suggested ? ' ·' : ''}</button>)}
+            <small className="meta">· = suggested</small>
+          </div>}
+          {(lane === 'piano' ? minutes > 0 : curTasks.length > 0 || curBlock || (lane === 'workout' && type !== 'travel' && type !== 'rest')) ? <>
             <h1 className="tune">{title}</h1>
+            {lane === 'piano' && stage && <p className="stage" title={`${stage.k} of 5 stages`}><span className="bar"><i style={{ width: `${stage.k * 20}%` }} /></span><span>{stage.name}</span></p>}
             {focusLine && <p className="lede serif">{focusLine}.</p>}
             {lastSession?.next ? <p className="meta">Start with: {lastSession.next}</p> : lastSession?.note ? <p className="meta">Last time: {lastSession.note}</p> : <p className="meta">{curTasks.filter(isDone).length} of {curTasks.length} done today</p>}
             {laneDef.minutes && curBlock && (isActive
@@ -220,7 +246,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
               {course && <a className="btn" href={course.url} target="_blank" rel="noreferrer"><Ic.lesson /> Open lesson{lessonQ ? ` · ${lessonQ.label.split(': ')[1]?.slice(0, 26)}` : ''}</a>}
               {chart ? <a className="btn" href={chart.url} target="_blank" rel="noreferrer"><Ic.chart /> Open chart · {chart.label.split(' — ')[0].split(' (')[0]}</a> : <a className="btn" href={`https://www.google.com/search?q=${encodeURIComponent((std ?? '') + ' lead sheet')}`} target="_blank" rel="noreferrer"><Ic.chart /> Find chart</a>}
             </div>}
-            <p className="eyebrow steps-h">{lane === 'piano' ? 'Session steps' : lane === 'sax' ? 'Today' : 'Today’s session'}</p>
+            <p className="eyebrow steps-h">{lane === 'piano' ? `Session · ${Math.min(minutes, 120)} min` : lane === 'sax' ? 'Today' : 'Today’s session'}{lane === 'piano' && curTasks.some(t => !isDone(t)) && <button className="linkbtn" onClick={() => { const t = curTasks.find(x => !isDone(x))!; t.qid ? feel(t, 'solid') : toggleTask(t) }}>next ›</button>}</p>
             {lane === 'workout' && <div className="climbrow">
               <label className="inl big"><input type="checkbox" checked={!!user.climbing[date]?.done} onChange={e => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: e.target.checked } } }))} /> Climbed today</label>
               <span className="meta">Not queued — just for fun. Mon/Wed/Fri at Vital BK is the habit.</span>
@@ -230,11 +256,14 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
               {curTasks.map((t, i) => { const on = isDone(t); return (
                 <li key={t.id} className={(on ? 'on' : '') + (isRepeat(t) ? ' rep' : '')} onClick={() => toggleTask(t)}>
                   <span className="n">{on ? (isRepeat(t) ? '↻' : '✓') : i + 1}</span>
-                  <span className="lbl">{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && byId(t.qid) && priorityOf(user, byId(t.qid)!) === 'optional' && <small className="qtag">optional</small>}</span>
-                  {t.qid && <span className="outcomes" onClick={e => e.stopPropagation()}>
-                    <button className={'linkbtn quiet' + (on && !isRepeat(t) ? ' sel' : '')} onClick={() => outcome(t, on && !isRepeat(t) ? 'clear' : 'done')} title="Done — moves on">done</button>
-                    <button className={'linkbtn quiet' + (isRepeat(t) ? ' sel' : '')} onClick={() => outcome(t, isRepeat(t) ? 'clear' : 'repeat')} title="Practiced, but again tomorrow">repeat</button>
-                    <button className="linkbtn quiet" onClick={() => outcome(t, 'park')} title="Park it — stops blocking the queue">park</button>
+                  <span className="lbl">{t.min != null && <small className="mins num">{t.min} min</small>}{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && byId(t.qid) && priorityOf(user, byId(t.qid)!) === 'optional' && <small className="qtag">optional</small>}{t.ctx && <small className="ctx">{t.ctx}</small>}</span>
+                  {t.qid && <span className="outcomes feel" onClick={e => e.stopPropagation()}>
+                    {on ? <button className="linkbtn quiet" onClick={() => outcome(t, 'clear')}>{isRepeat(t) ? 'again tomorrow · undo' : 'done · undo'}</button> : <>
+                      <button className="linkbtn quiet" onClick={() => feel(t, 'lost')} title="Keep it, smaller scope next time">lost</button>
+                      <button className="linkbtn quiet" onClick={() => feel(t, 'working')} title="Again next session">working</button>
+                      <button className="linkbtn quiet sel" onClick={() => feel(t, 'solid')} title="Move on">solid</button>
+                      <button className="linkbtn quiet" onClick={() => feel(t, 'easy')} title="Move on">too easy</button>
+                      <button className="linkbtn quiet" onClick={() => outcome(t, 'park')} title="Park it — stops blocking the queue">park</button></>}
                   </span>}
                 </li>) })}
             </ol>
@@ -244,9 +273,17 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
             </div>}
             <p className="banner"><span>✈</span> Travel or rest day? Your queue stays paused. Anything unticked stays at the front and shows up tomorrow.</p>
           </> : <div className="quietday">
-            <h1 className="tune small">{type === 'rest' ? 'Rest' : type === 'travel' ? 'Away' : title}</h1>
-            <p className="lede serif">{type === 'rest' ? 'Nothing planned. That’s part of the plan.' : trip ? `${trip.name}. The queue waits.` : 'Open to interpretation.'}</p>
-            {type !== 'rest' && <p className="meta">If you want something: listen to a take of {std ?? 'this week’s tune'}, or bring the book.</p>}
+            <h1 className="tune small">{type === 'rest' ? 'Rest' : type === 'travel' ? 'Away' : lane === 'piano' ? 'No piano today' : title}</h1>
+            <p className="lede serif">{type === 'rest' ? 'Nothing planned. That’s part of the plan.' : trip ? `${trip.name}. The queue waits.` : 'The queue waits. Nothing moves without you.'}</p>
+            {type !== 'rest' && type !== 'travel' && next && <p className="meta">Up next when you sit down: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></p>}
+            {type !== 'travel' && <ul className="sidequests">
+              {laneTasks('sax').length > 0 && <li><button className="linkbtn" onClick={() => setLane('sax')}><Ic.sax /> Sax · {laneTasks('sax')[0]?.label.replace(/^Focus: /, '').split(' · ')[0]}</button></li>}
+              <li><label className="inl"><input type="checkbox" checked={!!user.climbing[date]?.done} onChange={e => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: e.target.checked } } }))} /> Climb</label></li>
+              <li><label className="inl"><input type="checkbox" checked={!!user.running[date]?.done} onChange={e => update(u => ({ ...u, running: { ...u.running, [date]: { ...u.running[date], done: e.target.checked } } }))} /> Run</label></li>
+              <li><span>📖 Disappear into a book</span></li>
+              <li><span>🎧 Steal 8 bars from a record{(() => { const e = currentByEar(user.transcriptions); return e ? ` · ${e.song}` : '' })()}</span></li>
+              <li><span>☕ Find good coffee</span><CoffeePick date={date} /></li>
+            </ul>}
           </div>}
         </section>
 
@@ -269,8 +306,8 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
       </div>
 
       <footer className="weekbar">
-        <Ic.review /><span>This week</span>
-        <b className="num">{h}h {m ? m + 'm' : ''} piano</b>
+        <span className="dots" title="last 7 days">{rh.dots.map(x => <i key={x.d} className={x.on ? 'on' : ''} />)}</span>
+        <b className="num">{rh.sessions} day{rh.sessions === 1 ? '' : 's'} · {h}h{m ? ` ${m}m` : ''} piano this week</b>
         <span className="num">{tot.climbs} climb{tot.climbs === 1 ? '' : 's'}</span>
         <span className="num">{saxSessions} sax session{saxSessions === 1 ? '' : 's'}</span>
         <span className="num">{tot.runs} run{tot.runs === 1 ? '' : 's'}</span>
