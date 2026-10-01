@@ -1,0 +1,8 @@
+[
+  { "id": "track", "title": "ML / robotics / AI, the last 5–10 years — a track of what mattered", "kind": "project", "next": "List the 10 papers or systems that changed the field; one page each, oldest first" },
+  { "id": "devenv", "title": "Dev environment + one-command web app deploy", "kind": "project", "next": "A template repo that goes from idea to a live URL in one command" },
+  { "id": "apps", "title": "Fun apps and ideas — keep the hands sharp", "kind": "project", "next": "Pick one idea and ship an ugly v0 in a day" },
+  { "id": "papers", "title": "Top ML papers, read deeply", "kind": "paper", "next": "Choose paper #1 from the track list; one page of notes + a tiny repro" },
+  { "id": "books", "title": "Books from the Goodreads shelf", "kind": "book", "url": "https://www.goodreads.com/user/show/9817840-jasmine", "next": "Pick the first one for Tuesday and Friday coffee mornings" },
+  { "id": "art", "title": "An art project — draw, paint, make something", "kind": "art", "next": "Decide the medium and get the materials" }
+]

@@ -5,6 +5,7 @@ import { update, useUser } from '../storage'
 import { standardOfWeek } from '../tasks'
 import { MASTER } from '../queue'
 import { QueueView } from './Queue'
+import { MakeList } from './Make'
 import { ByEar } from './ByEar'
 
 
@@ -14,7 +15,7 @@ const agoText = (d?: string) => { const a = daysAgo(d); return a == null ? '' : 
 
 /** Repertoire pipeline for the 10 standards + the transcription log. */
 export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
-  const [tab, setTab] = useState<'repertoire' | 'library' | 'byear'>('repertoire')
+  const [tab, setTab] = useState<'repertoire' | 'library' | 'byear' | 'make'>('repertoire')
   const user = useUser()
   const wk = Math.max(1, weekNo(today()))
   const current = standardOfWeek(user, wk)
@@ -24,7 +25,8 @@ export function Practice({ onOpenDay }: { onOpenDay: (d: string) => void }) {
   const touch = (name: string) => set(name, { last: today() })
   return (
     <>
-      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Curriculum</button><button aria-pressed={tab === 'byear'} onClick={() => setTab('byear')}>By ear</button></div>
+      <div className="subtabs"><button aria-pressed={tab === 'repertoire'} onClick={() => setTab('repertoire')}>Repertoire</button><button aria-pressed={tab === 'library'} onClick={() => setTab('library')}>Curriculum</button><button aria-pressed={tab === 'byear'} onClick={() => setTab('byear')}>By ear</button><button aria-pressed={tab === 'make'} onClick={() => setTab('make')}>Make</button></div>
+      {tab === 'make' && <MakeList />}
       {tab === 'byear' && <ByEar />}
       {tab === 'library' && <QueueView onOpenDay={onOpenDay} />}
       {tab === 'repertoire' && <>

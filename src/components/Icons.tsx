@@ -15,6 +15,7 @@ export const Ic = {
   chart: (p: SVGProps<SVGSVGElement>) => <I {...p}><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></I>,
   piano: (p: SVGProps<SVGSVGElement>) => <I {...p}><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M6 6v7M10 6v7M14 6v7M18 6v7" /><path d="M5 13h2M9 13h2M13 13h2M17 13h2" strokeWidth="2.6" /></I>,
   sax: (p: SVGProps<SVGSVGElement>) => <I {...p}><path d="M15 3h3" /><path d="M16 3v4c0 5-2 8-5 11" /><path d="M11 18c-1.5 1.5-4 1.5-5.5 0S4.5 14 6 12.5" /><path d="M11 18l3 1" /><circle cx="12" cy="10" r=".7" fill="currentColor" stroke="none" /><circle cx="11" cy="13" r=".7" fill="currentColor" stroke="none" /><circle cx="9.5" cy="15.5" r=".7" fill="currentColor" stroke="none" /></I>,
+  make: (p: SVGProps<SVGSVGElement>) => <I {...p}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 9l3 3-3 3" /><path d="M12 15h5" /></I>,
   workout: (p: SVGProps<SVGSVGElement>) => <I {...p}><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12" /><path d="M8 7h-2v10h2zM16 7h2v10h-2z" /></I>,
   logo: (p: SVGProps<SVGSVGElement>) => <svg width="40" height="22" viewBox="0 0 40 22" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true" {...p}><circle cx="9" cy="11" r="7.5" /><circle cx="20" cy="11" r="7.5" /><circle cx="31" cy="11" r="7.5" /></svg>,
 }

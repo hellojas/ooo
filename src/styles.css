@@ -1171,3 +1171,31 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .steps.rows li:hover .outcomes.feel,.steps.rows li.on .outcomes.feel{pointer-events:auto}
 .steps .lbl .ctx.pass{color:var(--move)}
 .qbody .goal{display:block;color:var(--ink-3);font-size:12px;margin-top:2px}
+
+/* ---- the day as capacity ---- */
+:root{--make:#7A52B8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--make:#B498E8}}
+:root[data-theme="dark"]{--make:#B498E8}
+.capbar{display:flex;gap:3px;height:14px;margin:10px 0 6px}
+.capbar .cseg{display:block;height:14px;border-radius:4px;background:color-mix(in srgb,var(--c,var(--ink-3)) 18%,var(--panel));overflow:hidden;min-width:6px}
+.capbar .cseg i{display:block;height:100%;background:var(--c,var(--ink-3));border-radius:4px}
+.capbar .cseg.piano{--c:var(--accent)}.capbar .cseg.sax{--c:var(--warm)}.capbar .cseg.make{--c:var(--make)}.capbar .cseg.workout{--c:var(--move)}.capbar .cseg.read{--c:#8B6B4A}
+.plan .caption{margin:0 0 10px;font-size:13px}
+.plan-list.chunks::before{display:none}
+.plan-list.chunks .plan-row{grid-template-columns:24px 1fr auto;padding:10px 6px}
+.plan-list.chunks .plan-row.done b{color:var(--ink-3)}
+.plan-row .dot.piano{background:var(--accent)}.plan-row .dot.sax{background:var(--warm)}.plan-row .dot.make{background:var(--make)}.plan-row .dot.workout{background:var(--move)}.plan-row .dot.read{background:#8B6B4A}
+.plan .eyebrow{margin:14px 0 2px}
+.plan-list.anchors::before{left:74px}
+.nudge.calm{color:var(--ink-2)}
+.makecard .tune a{color:inherit;text-decoration:none}
+.makecard .block{margin-top:14px}
+.steps.rows.small li{font-size:14px;padding:8px 12px}
+.steps.rows.small .n{width:26px;height:26px;font-size:12px}
+.makelist{list-style:none;margin:14px 0;padding:0}
+.makelist li{display:flex;gap:12px;align-items:flex-start;padding:12px 10px;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+.makelist li.top{background:color-mix(in srgb,var(--make) 6%,var(--panel))}
+.makelist .block.small{margin:6px 0 0;font-size:13px}
+.makelist .block.small input{width:100%}
+.makelist.done li{border:0;padding:4px 10px;margin:0}
+.qtag.now{background:var(--make);color:#fff;border-color:var(--make)}

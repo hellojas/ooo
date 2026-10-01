@@ -13,7 +13,7 @@ const story=async(name,fn)=>{try{await fn()}catch(e){check('STORY '+name+' crash
 await story('AE. Week board: change visit window in the side panel → Today chain updates',async()=>{
   await open('2026-10-13T09:00:00');await go('#/calendar/week');await p.waitForTimeout(300);await p.locator('.wb-row').nth(2).locator('.wb-day').click();await p.waitForTimeout(200);
   await p.locator('.wb-visit select').first().selectOption('960');await p.waitForTimeout(150);
-  await go('#/today/2026-10-13');const plan=await p.textContent('.plan-list');check('AE: leaving BH at 4p → chain still from BH (5:10p leave)',/5:10p.*Leave for Kaufman/.test(plan)&&/2p–4pBH free jam/.test(plan),plan.slice(0,220));
+  await go('#/today/2026-10-13');const plan=await p.textContent('.anchors');check('AE: leaving BH at 4p → chain still from BH (5:10p leave)',/5:10p.*Leave for Kaufman/.test(plan)&&/2p–4pBH free jam/.test(plan),plan.slice(0,220));
 });
 await story('AF. Week board: added block appears on Today and belongs to a lane',async()=>{
   await open('2026-10-14T09:00:00');await go('#/calendar/week');await p.waitForTimeout(300);const row=p.locator('.wb-row').nth(3);await row.hover();await row.locator('.wb-add').click({force:true});await p.waitForTimeout(150);

@@ -24,8 +24,8 @@ await story('Q. Started a session yesterday and never finished',async()=>{
 });
 await story('R. Week board: move a block onto a class → Today flags the clash with move/shorten',async()=>{
   const s=seed();s.practice['2026-10-13']={blocks:{'Piano block 1':{start:15*60,end:17*60}}};
-  await open('2026-10-13T09:00:00',s);const plan=await p.textContent('.plan-list');check('R: clash shown with actions',plan.includes('Overlaps')&&plan.includes('move after'),plan.slice(0,200));
-  await p.locator('.plan-row',{hasText:'Piano block 1'}).locator('button:has-text("move after")').click();await p.waitForTimeout(150);const s2=await st();const b=s2.practice['2026-10-13'].blocks['Piano block 1'];check('R: moved after the class chain (≥ 7:45p incl. travel)',b.start>=19*60+45,JSON.stringify(b));
+  await open('2026-10-13T09:00:00',s);const plan=await p.textContent('.plan');check('R: a moved block still shows as a chunk, no clock, no clash',plan.includes('Piano')&&!plan.includes('Overlaps'),plan.slice(0,200));
+  const s2=await st();const b=s2.practice['2026-10-13'].blocks['Piano block 1'];check('R: the week-board placement is kept for the board',b.start===15*60,JSON.stringify(b));
 });
 await story('T. Finish a by-ear song → counted, Today asks for the next one',async()=>{
   const s=seed();s.transcriptions=[{id:'1',date:'2026-10-10',song:'Sunny',note:'',steps:[]}];
@@ -54,7 +54,7 @@ await story('W. Trips: Taipei start moved earlier; CoRL unticked',async()=>{
 });
 await story('X. Configure: weekday start, light minutes, hidden coffee',async()=>{
   const s=seed();s.settings.startTimes={3:'09:00'};s.settings.lightMinutes=45;s.settings.hiddenItems=['coffee'];s.practice['2026-10-13']={dayType:'light'};
-  await open('2026-10-14T08:00:00',s);const plan=await p.textContent('.plan-list');check('X: Wed starts 9a',/9a.*Sax/.test(plan),plan.slice(0,60));
+  await open('2026-10-14T08:00:00',s);const startV=await p.inputValue('.plan input[type=time]');check('X: Wed starts 9a',startV==='09:00',startV);
   await go('#/today/2026-10-13');const l=await p.textContent('.plan-list');check('X: light day uses 45 min',l.includes('45 min'),l);
   await go('#/today/2026-10-16');const f=await p.textContent('.plan-list');check('X: hidden coffee gone from Friday',!f.includes('Coffee'),f.slice(0,80));
 });

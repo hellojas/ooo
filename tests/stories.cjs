@@ -14,7 +14,7 @@ await story('A. Missed Monday (no log) → Tuesday carries Monday items, stays F
   await open('2026-10-13T10:45:00');
   const meta=await p.textContent('.datenav .meta');check('A: empty log is not a miss (Tue is Class, not Light)',!meta.includes('Light'),meta);
   const steps=await p.textContent('.steps');check('A: Monday’s first lesson carried to Tuesday',steps.includes('Welcome') || steps.includes('Rooted 5-Note GPS #1'),steps);
-  const now=await p.locator('.plan-row.now').textContent().catch(()=>'');check('A: 10:45 highlights the current block',/Coffee|Piano/.test(now),now);
+  const bar=await p.locator('.capbar').count();check('A: the day shows as a capacity bar',bar===1);
 });
 await story('B. Skipped Monday → Tuesday is Light with fewer steps',async()=>{
   const s=JSON.parse(seed());s.practice['2026-10-12']={skippedDay:true};await open('2026-10-13T09:00:00',JSON.stringify(s));
@@ -42,7 +42,7 @@ await story('E. Finish everything → Up next + pull one in',async()=>{
   await p.click('.nextq button');await p.waitForTimeout(200);const n2=await p.locator('.steps li').count();check('E: pulled item added',n2===n+1,`${n}→${n2}`);
 });
 await story('F. Class day chain: BH until 5p (default) → Kaufman leaves from BH',async()=>{
-  await open('2026-10-13T09:00:00');const plan=await p.textContent('.plan-list');
+  await open('2026-10-13T09:00:00');const plan=await p.textContent('.plan');
   check('F: class day drops piano block 2',!plan.includes('Piano block 2'),plan);
   check('F: leave for Kaufman ~5:10p (20 min from BH)',/5:10p.*Leave for Kaufman/.test(plan),plan);
   await go('#/calendar/week');await p.waitForTimeout(400);await p.locator('.wb-row').nth(2).locator('.wb-day').click();await p.waitForTimeout(200);const side=await p.textContent('.wb-side');check('F: week board side panel says travel from BH',/from BH/.test(side),side.slice(0,200));
@@ -57,7 +57,7 @@ await story('H. Skip a block on the plan → its steps leave the lane',async()=>
   // no direct skip UI without a clash; use the week board's day panel? Use plan "skip" only appears on clash — so skip via store
   const s=await st();s.practice['2026-10-14']={skipped:['Sax']};await open('2026-10-14T09:00:00',JSON.stringify(s));await p.locator('.lanebtn:has-text("Sax")').click();
   const after=await p.locator('.steps li').count();check('H: skipped sax block removes its step',before>0&&after===0,`${before}→${after}`);
-  await open('2026-10-14T09:00:00');await p.locator('.plan-row',{hasText:'Sax'}).locator('button:has-text("skip today")').click();await p.waitForTimeout(200);await p.locator('.lanebtn:has-text("Sax")').click();const n3=await p.locator('.steps li').count();check('H: skip today from the plan row works',n3===0,'n '+n3);
+  await open('2026-10-14T09:00:00');await p.locator('.plan-row',{hasText:'Sax'}).locator('button:has-text("not today")').click();await p.waitForTimeout(200);await p.locator('.lanebtn:has-text("Sax")').click();const n3=await p.locator('.steps li').count();check('H: skip today from the plan row works',n3===0,'n '+n3);
 });
 await story('I. Sunday: review button, hours accumulate, preview → apply → configure',async()=>{
   const s=JSON.parse(seed());s.sessions=[{date:'2026-10-12',block:'Piano block 1',minutes:90},{date:'2026-10-13',block:'Piano block 1',minutes:60}];s.practice={'2026-10-12':{piano1:90},'2026-10-13':{piano1:60},'2026-10-15':{skippedDay:true},'2026-10-16':{skippedDay:true}};
@@ -83,7 +83,7 @@ await story('L. Backup export/import round trip',async()=>{
   const s=await st();check('L: lastBackup recorded',!!s.settings.lastBackup);
 });
 await story('M. Programs: considering stays off Today; registered loses flex tag',async()=>{
-  await open('2026-10-12T09:00:00');const plan=await p.textContent('.plan-list');check('M: BKCM (planned) on Mon plan',plan.includes('BKCM'));
+  await open('2026-10-12T09:00:00');const plan=await p.textContent('.plan');check('M: BKCM (planned) on Mon plan',plan.includes('BKCM'));
   await go('#/programs');const row=p.locator('table.t tr',{hasText:'Blues Jam'});await row.locator('select').last().selectOption('considering');await p.waitForTimeout(150);await go('#/today/2026-10-15');const plan2=await p.textContent('.plan-list');check('M: considering class leaves Today (Thu Blues Jam)',!plan2.includes('Blues Jam'),plan2.slice(0,120));
 });
 await story('N. Deep link + back button through tabs',async()=>{

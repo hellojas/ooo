@@ -81,6 +81,8 @@ export const toMin = (t: string) => { const [h, m] = t.split(':').map(Number); r
 export const defaultStartFor = (user: UserData, k: string) => user.settings.startTimes?.[parse(k).getDay()] || user.settings.startTime || DEFAULT_START
 export const startFor = (user: UserData, k: string) => user.practice[k]?.startTime || defaultStartFor(user, k)
 export const READ_MIN = 90
+/** Make blocks start the week after the SF/Toronto trip: settle in with piano and classes first. */
+export const MAKE_FROM = '2026-10-12'
 /** Session lengths you can pick for a day. 0 = no piano today. */
 export const PLAN_CHOICES: { min: number; label: string; hint: string }[] = [
   { min: 0, label: 'Off', hint: 'No piano today. The queue waits.' },
@@ -88,7 +90,7 @@ export const PLAN_CHOICES: { min: number; label: string; hint: string }[] = [
   { min: 45, label: '45', hint: 'The tune and one thing.' },
   { min: 90, label: '90', hint: 'A real session.' },
   { min: 120, label: '2h', hint: 'The full morning block.' },
-  { min: 210, label: 'Afternoon', hint: 'Both blocks: curriculum, then ear + arrangement.' },
+  { min: 180, label: '3h', hint: 'Two blocks: curriculum, then ear + arrangement.' },
 ]
 /** Planned piano minutes for a date: what you picked, else what the day type suggests. */
 export function planMinutes(user: UserData | undefined, k: string, type: DayType): number {
@@ -96,8 +98,7 @@ export function planMinutes(user: UserData | undefined, k: string, type: DayType
   if (set != null) return set
   if (type === 'rest' || type === 'travel') return 0
   if (type === 'light') return user?.settings.lightMinutes ?? 60
-  if (type === 'class') return 120
-  return 210
+  return 120
 }
 /** When a session happens on a date. Classes keep their listed time; the reading morning opens the day at your start time (90 min). */
 export function itemSpan(p: Program, user: UserData, k: string): [number, number] | null {
@@ -144,10 +145,11 @@ export const WEEK_TEMPLATE: { day: string; items: { t: string; c?: string; opt?:
   { day: 'Sun', items: [{ t: 'Quick run 10a (optional 2nd)', c: 'run2', opt: true }, { t: 'Weekly review · record' }, { t: 'Barry Harris 6–10p', c: 'bhSun' }] },
 ]
 
-export type TargetId = 'sax' | 'piano' | 'climbs' | 'runs' | 'pullups' | 'reading'
+export type TargetId = 'sax' | 'piano' | 'make' | 'climbs' | 'runs' | 'pullups' | 'reading'
 /** Weekly guidelines (from docs/plan.md): rough minutes for music, sessions/reps for the rest. Editable in Configure. */
 export const WEEKLY_METRICS: { id: TargetId; label: string; unit: 'min' | 'sessions' | 'reps'; def: number; note: string }[] = [
-  { id: 'piano', label: 'Piano', unit: 'min', def: 1050, note: '≈3½ h × 5 days' },
+  { id: 'piano', label: 'Piano', unit: 'min', def: 600, note: '≈2 h × 5 days; 3 h on the days you want' },
+  { id: 'make', label: 'Make', unit: 'min', def: 360, note: 'projects, dev, papers · ≈4 × 90 min' },
   { id: 'sax', label: 'Sax', unit: 'min', def: 150, note: '15–30 min a day' },
   { id: 'climbs', label: 'Climbing', unit: 'sessions', def: 3, note: '3 floor, 4 ceiling' },
   { id: 'runs', label: 'Runs', unit: 'sessions', def: 2, note: 'Tue fixed, Sun optional' },
@@ -173,8 +175,8 @@ export const runDays = (user: UserData, wk: number) => {
 export const pullReps = (u: { reps?: number; sets?: { reps: number }[] } | undefined) => u ? (u.reps ?? 0) + (u.sets ?? []).reduce((n, x) => n + x.reps, 0) : 0
 
 export function weekTotals(user: UserData, wk: number): Record<TargetId, number> {
-  const t: Record<TargetId, number> = { sax: 0, piano: 0, climbs: climbDays(user, wk), runs: runDays(user, wk), pullups: 0, reading: attendedDays(user, ['coffee'], wk).size }
-  for (const [d, p] of Object.entries(user.practice)) if (weekNo(d) === wk) { t.sax += p.sax ?? 0; t.piano += (p.piano1 ?? 0) + (p.piano2 ?? 0) }
+  const t: Record<TargetId, number> = { sax: 0, piano: 0, make: 0, climbs: climbDays(user, wk), runs: runDays(user, wk), pullups: 0, reading: attendedDays(user, ['coffee'], wk).size }
+  for (const [d, p] of Object.entries(user.practice)) if (weekNo(d) === wk) { t.sax += p.sax ?? 0; t.piano += (p.piano1 ?? 0) + (p.piano2 ?? 0); t.make += p.make ?? 0 }
   for (const [d, u] of Object.entries(user.pullups)) if (weekNo(d) === wk) t.pullups += pullReps(u)
   return t
 }
@@ -191,6 +193,8 @@ export function freeDays(user: UserData, wk: number, from?: string): number {
 }
 
 const hasMusic = (user: UserData, k: string) => ((user.practice[k]?.piano1 ?? 0) + (user.practice[k]?.piano2 ?? 0) + (user.practice[k]?.sax ?? 0)) > 0
+/** Minutes logged on a date per lane, plus whether the gym happened. */
+export const loggedOn = (user: UserData, k: string) => { const p = user.practice[k] ?? {}; return { sax: p.sax ?? 0, piano: (p.piano1 ?? 0) + (p.piano2 ?? 0), make: p.make ?? 0, gym: !!(user.climbing[k]?.done || user.running[k]?.done) } }
 /** Consecutive music days ending at `upTo` (today not yet logged doesn't break it); travel days neither count nor break. */
 export function streak(user: UserData, upTo: string): { days: number; thisWeek: number } {
   let days = 0, k = upTo > END ? END : upTo
@@ -273,14 +277,17 @@ export function blocksForType(k: string, type: DayType, startTime: string, user?
   else if (dow === 6) bs = []
   else {
     const m = planMinutes(user, k, type)
-    const gym = type === 'full' && m > 0
+    const gym = type === 'full'
+    const make = k >= MAKE_FROM ? (type === 'class' ? 60 : 90) : 0   // the Make block: projects, dev, papers
     bs.push({ start: st, end: st + 30, title: 'Sax', note: 'long tones + breathing; wk 4+ the week’s standard head' })
+    let t = st + 30
     if (m > 0) {
       const b1 = Math.min(m, 120)
-      bs.push({ start: st + 30, end: st + 30 + b1, title: 'Piano block 1', note: m <= 20 ? 'tiny piano — enough for today' : 'curriculum: technique, lesson, the tune' })
-      if (m > 120) { const s2 = st + 30 + b1 + 60; bs.push({ start: s2, end: s2 + (m - 120), title: 'Piano block 2', note: 'Ear training lives here: transcription (60) + arrangement (30)' }) }
+      bs.push({ start: t, end: t + b1, title: 'Piano block 1', note: m <= 20 ? 'tiny piano — enough for today' : 'curriculum: technique, lesson, the tune' }); t += b1 + 60
+      if (m > 120) { bs.push({ start: t, end: t + (m - 120), title: 'Piano block 2', note: 'Ear training lives here: transcription (60) + arrangement (30)' }); t += m - 120 + 30 }
     }
-    if (gym) { const last = bs[bs.length - 1].end + 30; bs.push({ start: last, end: last + 120, title: 'Gym slot' }) }
+    if (make) { bs.push({ start: t, end: t + make, title: 'Make', note: 'projects · dev · a paper' }); t += make + 30 }
+    if (gym) bs.push({ start: t, end: t + 120, title: 'Gym slot' })
   }
   const ov = user?.practice[k]?.blocks
   if (ov) bs = bs.map(b => ov[b.title] ? { ...b, start: ov[b.title].start ?? b.start, end: ov[b.title].end ?? b.end } : b)

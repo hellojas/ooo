@@ -102,7 +102,7 @@ export function WeekBoard({ onOpenDay, onOpen }: { onOpenDay: (d: string) => voi
                   {blocks.map(b => {
                     const d = drag && drag.date === date && drag.title === b.title ? drag : null
                     const s = d?.start ?? b.start, e2 = d?.end ?? b.end
-                    const lane = /piano/i.test(b.title) ? 'piano' : /sax/i.test(b.title) ? 'sax' : /gym/i.test(b.title) ? 'gym' : 'other'
+                    const lane = /piano/i.test(b.title) ? 'piano' : /sax/i.test(b.title) ? 'sax' : /gym/i.test(b.title) ? 'gym' : /^Make/.test(b.title) ? 'make' : 'other'
                     const done = user.practice[date]?.active === undefined && (user.sessions ?? []).some(x => x.date === date && x.block === b.title && x.minutes > 0)
                     const n = lane === 'piano' ? q.filter(x => x.lane === 'piano').length : lane === 'sax' ? q.filter(x => x.lane === 'sax').length : lane === 'gym' ? q.filter(x => x.lane === 'workout').length : 0
                     return (

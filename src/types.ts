@@ -14,9 +14,9 @@ export interface Lunch { n: string; a: string; nb: string; note: string; u: stri
 
 export type Attendance = 'went' | 'missed' | 'skipped'
 export interface UserData {
-  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string; startTimes?: Record<number, string>; lightMinutes?: number; visitUntil?: Record<string, number>; lastBackup?: string; confirmed?: string[]; programState?: Record<string, 'considering' | 'planned' | 'registered'> }
+  settings: { taipeiStart?: string; hiddenItems: string[]; tripsOff: string[]; targets?: Partial<Record<'sax'|'piano'|'make'|'transcribe'|'arrange'|'climbs'|'runs'|'pullups'|'reading', number>>; startTime?: string; startTimes?: Record<number, string>; lightMinutes?: number; visitUntil?: Record<string, number>; lastBackup?: string; confirmed?: string[]; programState?: Record<string, 'considering' | 'planned' | 'registered'> }
   attendance: Record<string, Attendance>            // `${programId}|${date}`
-  practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'transcribe'|'arrange', number>> & {
+  practice: Record<string, Partial<Record<'sax'|'piano1'|'piano2'|'make'|'transcribe'|'arrange', number>> & {
     notes?: string; tasks?: string[]; dayType?: 'full' | 'class' | 'light' | 'travel' | 'rest'; pulled?: string[]; blocks?: Record<string, { start?: number; end?: number }>; added?: { title: string; start: number; end: number }[]; skippedDay?: boolean; until?: Record<string, number>; active?: { block: string; since: number }; skipped?: string[]; startTime?: string; plan?: number; feel?: 'fresh' | 'ok' | 'tired' | 'sore'; standardOfWeek?: string; songTranscribed?: string }>
   climbing: Record<string, { done?: boolean; gym?: 'BK'|'LES'; sessionType?: 'volume'|'limit'; sends?: { grade: string; style: string }[]; fingerFeel?: number; notes?: string }>
   running: Record<string, { done?: boolean; minutes?: number; c25kWeek?: number; felt?: string }>
@@ -25,6 +25,8 @@ export interface UserData {
   customShops: Shop[]
   tunes: Record<string, Tune>
   transcriptions: Transcription[]
+  /** The Make list: projects, dev work, papers. A list with a next step each, not a curriculum. */
+  make?: MakeItem[]
   sessions: Session[]
   queueDone: Record<string, string>   // queue item id → date done
   queueSkip: string[]                 // parked items
@@ -37,6 +39,8 @@ export interface UserData {
 }
 export interface Take { date: string; url: string; rubric?: Record<string, number> }
 export interface Tune { checks: string[]; recordingUrl?: string; last?: string; takes?: Take[]; rubric?: Record<string, number>; key?: string; tempo?: number; targetTempo?: number }
+export type MakeKind = 'project' | 'paper' | 'book' | 'art'
+export interface MakeItem { id: string; title: string; kind: MakeKind; next?: string; url?: string; done?: string; notes?: string }
 export interface Session { date: string; block: string; minutes: number; tune?: string; note?: string; next?: string }
 export interface Transcription { id: string; date: string; song: string; note: string; url?: string; steps?: string[]; keys?: number; done?: string }
 export const emptyUser = (): UserData => ({
