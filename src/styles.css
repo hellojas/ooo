@@ -1166,3 +1166,6 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .weekbar .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block}
 .weekbar .dots i.on{background:var(--accent)}
 .steps-h .linkbtn{margin-left:10px;font-size:12px}
+.steps.rows li{flex-wrap:wrap}
+.steps.rows .outcomes.feel{position:static;transform:none;background:none;padding:0;flex-basis:100%;margin:2px 0 0 48px;pointer-events:none}
+.steps.rows li:hover .outcomes.feel,.steps.rows li.on .outcomes.feel{pointer-events:auto}

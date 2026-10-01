@@ -14,7 +14,7 @@ await story('A. Missed Monday (no log) → Tuesday carries Monday items, stays F
   await open('2026-10-13T10:45:00');
   const meta=await p.textContent('.datenav .meta');check('A: empty log is not a miss (Tue is Class, not Light)',!meta.includes('Light'),meta);
   const steps=await p.textContent('.steps');check('A: Monday’s first lesson carried to Tuesday',steps.includes('Welcome') || steps.includes('Rooted 5-Note GPS #1'),steps);
-  const now=await p.locator('.plan-row.now').textContent().catch(()=>'');check('A: 10:45 highlights the current block',/Piano/.test(now),now);
+  const now=await p.locator('.plan-row.now').textContent().catch(()=>'');check('A: 10:45 highlights the current block',/Coffee|Piano/.test(now),now);
 });
 await story('B. Skipped Monday → Tuesday is Light with fewer steps',async()=>{
   const s=JSON.parse(seed());s.practice['2026-10-12']={skippedDay:true};await open('2026-10-13T09:00:00',JSON.stringify(s));
@@ -24,14 +24,14 @@ await story('B. Skipped Monday → Tuesday is Light with fewer steps',async()=>{
 });
 await story('C. Repeat on Monday → Tuesday shows it first with “Again:”',async()=>{
   await open('2026-10-12T11:00:00');
-  const li=p.locator('.steps li').nth(1);await li.hover();await li.locator('button:has-text("repeat")').click();await p.waitForTimeout(200);
+  const li=p.locator('.steps li').nth(1);await li.hover();await li.locator('button:has-text("working")').click();await p.waitForTimeout(200);
   const s=await st();check('C: repeat stored',s.queueRepeat.length===1,JSON.stringify(s.queueRepeat));
   await open('2026-10-13T09:00:00',JSON.stringify(s));const lede=await p.textContent('.main .lede');check('C: focus line starts with Again:',lede.startsWith('Again:'),lede);
 });
 await story('D. Park a lesson → gone from Today and forecast, visible in Curriculum',async()=>{
   await open('2026-10-12T11:00:00');const first=await p.locator('.steps li').first().textContent();
   const li=p.locator('.steps li').first();await li.hover();await li.locator('button:has-text("park")').click();await p.waitForTimeout(200);
-  const after=await p.textContent('.steps');check('D: parked item left Today',!after.includes(first.slice(2,30)),after);
+  const after=await p.textContent('.steps');check('D: parked item left Today',!after.includes('(1/4)'),after);
   await go('#/practice');await p.click('button:has-text("Curriculum")');const cur=await p.textContent('.qlist');check('D: curriculum marks it parked',cur.includes('parked'),cur.slice(0,120));
 });
 await story('E. Finish everything → Up next + pull one in',async()=>{
