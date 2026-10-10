@@ -46,8 +46,8 @@ export const pianoMinutes = (blocks: Block[]) => blocks.filter(b => b.title.star
 export function fits(min: number) { return { standard: min >= 20 ? 1 : 0, technique: min >= 45 ? 1 : 0, lesson: min >= 90 ? 1 : 0 } }
 function capacity(type: DayType, dow: number, blocks: Block[]): Record<Kind, number> {
   const zero: Record<Kind, number> = { lesson: 0, technique: 0, standard: 0, sax: 0, climb: 0, run: 0, pull: 0 }
-  if (type === 'rest' || type === 'travel' || dow === 0 || dow === 6) return zero
-  const f = fits(pianoMinutes(blocks))
+  if (type === 'travel') return zero
+  const f = fits(pianoMinutes(blocks))   // a rest day or weekend only has capacity if a piano block was pulled into it
   const gym = blocks.some(b => b.title === 'Gym slot')
   const mwf = dow === 1 || dow === 3 || dow === 5, tue = dow === 2
   return {

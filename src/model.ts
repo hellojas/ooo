@@ -272,9 +272,12 @@ export function blocksForType(k: string, type: DayType, startTime: string, user?
   const dow = parse(k).getDay()
   const st = toMin(startTime) + morningShift(user, k)
   let bs: Block[] = []
-  if (type === 'rest' || type === 'travel') bs = []
-  else if (dow === 0) bs = blocksOn(k, startTime)
-  else if (dow === 6) bs = []
+  const pulled = planMinutes(user, k, type)   // a weekend or rest day with a chosen length gets a piano block anyway
+  if (type === 'travel') bs = []
+  else if (type === 'rest' || dow === 0 || dow === 6) {
+    if (dow === 0) bs = blocksOn(k, startTime)
+    if (pulled > 0) { const b1 = Math.min(pulled, 120); bs.push({ start: st, end: st + 30, title: 'Sax', note: 'long tones + breathing' }, { start: st + 30, end: st + 30 + b1, title: 'Piano block 1', note: 'pulled into a rest day — the queue moves up' }) }
+  }
   else {
     const m = planMinutes(user, k, type)
     const gym = type === 'full'

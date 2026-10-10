@@ -256,10 +256,10 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
           <div className="lanes seg-chips" role="tablist">
             {LANES.map(l => { const Icon = LANE_ICON[l.id]; return <button key={l.id} role="tab" aria-selected={lane === l.id} className={'lanebtn' + (lane === l.id ? ' on' : '') + (laneDone(l.id) ? ' done' : '')} onClick={() => setLane(l.id)}><Icon />{l.label[0].toUpperCase() + l.label.slice(1)}{laneDone(l.id) ? ' ✓' : ''}</button> })}
           </div>
-          {lane === 'piano' && type !== 'travel' && type !== 'rest' && <div className="planpick" role="radiogroup" aria-label="Piano today">
+          {lane === 'piano' && type !== 'travel' && <div className="planpick" role="radiogroup" aria-label="Piano today">
             <span className="meta">Piano today</span>
             {PLAN_CHOICES.map(c => <button key={c.min} role="radio" aria-checked={minutes === c.min} className={'pill' + (minutes === c.min ? ' active' : '')} title={c.hint} onClick={() => setPlan(c.min === suggested ? undefined : c.min)}>{c.label}{c.min === suggested ? ' ·' : ''}</button>)}
-            <small className="meta">· = suggested</small>
+            <small className="meta">{type === 'rest' ? 'rest day · pull some in if you feel like it' : '· = suggested'}</small>
           </div>}
           {lane === 'make' ? <div className="makecard">
             {!curBlock && <p className="meta">{date < '2026-10-12' ? 'Make starts the week of Oct 12 — piano and classes first.' : 'No Make block today. Log a session anyway if one happens.'}</p>}
@@ -316,7 +316,7 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
           </> : <div className="quietday">
             <h1 className="tune small">{type === 'rest' ? 'Rest' : type === 'travel' ? 'Away' : lane === 'piano' ? 'No piano today' : title}</h1>
             <p className="lede serif">{type === 'rest' ? 'Nothing planned. That’s part of the plan.' : trip ? `${trip.name}. The queue waits.` : 'The queue waits. Nothing moves without you.'}</p>
-            {type !== 'rest' && type !== 'travel' && next && <p className="meta">Up next when you sit down: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></p>}
+            {type !== 'travel' && next && <p className="meta">Up next when you sit down: <b>{next.label.replace(/ \(\d+\/\d+\)$/, '')}</b></p>}
             {type !== 'travel' && <ul className="sidequests">
               {laneTasks('sax').length > 0 && <li><button className="linkbtn" onClick={() => setLane('sax')}><Ic.sax /> Sax · {laneTasks('sax')[0]?.label.replace(/^Focus: /, '').split(' · ')[0]}</button></li>}
               <li><label className="inl"><input type="checkbox" checked={!!user.climbing[date]?.done} onChange={e => update(u => ({ ...u, climbing: { ...u.climbing, [date]: { ...u.climbing[date], done: e.target.checked } } }))} /> Climb</label></li>

@@ -1,8 +1,8 @@
 const {chromium}=require('playwright');
 (async()=>{
 const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium'});
-const ctx=await b.newContext({viewport:{width:1366,height:900}});
-const p=await ctx.newPage();const errs=[],log=[];
+const ctx=await b.newContext({viewport:{width:1366,height:900},timezoneId:'America/New_York'});
+const p=await ctx.newPage();await p.clock.install({time:new Date('2026-10-05T09:00:00-04:00')});/* pinned: the suite walks forward from 'today' */const errs=[],log=[];
 p.on('pageerror',e=>errs.push('PAGEERR '+e.message));p.on('console',m=>{if(m.type()==='error'&&!/fonts|ERR_CERT|favicon/.test(m.text()))errs.push('CONSOLE '+m.text().slice(0,200))});
 const seed=JSON.stringify({settings:{hiddenItems:[],tripsOff:[],programState:{kaufTue:'registered',bhTue:'planned'}},attendance:{},practice:{},climbing:{},running:{},pullups:{},coffee:{},weekly:{},customShops:[],tunes:{},transcriptions:[],sessions:[],queueDone:{},queueSkip:[],queueRepeat:[],queuePriority:{}});
 const go=async(h)=>{await p.goto('http://localhost:4173/'+h);await p.waitForTimeout(500)};

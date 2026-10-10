@@ -30,8 +30,9 @@ export function ctxFor(user: UserData, q: QItem): string | undefined {
 function budget(tasks: Task[], total: number, playLabel?: string, ear?: Task): Task[] {
   const has = (k: string) => tasks.some(t => t.qid?.startsWith(k))
   const play = total >= 60 ? 15 : total >= 20 ? 7 : 0
-  const earMin = ear && total >= 90 ? 15 : 0
-  const fixed = (has('t') ? 20 : 0) + (has('v') ? 30 : 0) + play + earMin
+  const base = (has('t') ? 20 : 0) + (has('v') ? 30 : 0) + play
+  const earMin = ear && total >= 90 && total - base - 15 >= 15 ? 15 : 0   // the ear item yields before the tune drops under 15 min
+  const fixed = base + earMin
   const stdMin = Math.max(Math.min(15, total - play), total - fixed)
   const out: Task[] = tasks.map(t => ({ ...t, min: t.qid?.startsWith('t') ? 20 : t.qid?.startsWith('v') ? 30 : t.qid?.startsWith('s') ? stdMin : undefined, pass: t.qid ? guidance(t.qid).pass : undefined }))
   if (earMin && ear) out.push({ ...ear, min: earMin })
@@ -43,16 +44,16 @@ function budget(tasks: Task[], total: number, playLabel?: string, ear?: Task): T
 export function tasksFor(date: string, user: UserData, type: 'full' | 'class' | 'light' | 'travel' | 'rest' = 'full', projected = project(user)): Record<string, Task[]> {
   const wk = weekNo(date), dow = parse(date).getDay()
   const out: Record<string, Task[]> = {}
-  if (wk < 1 || type === 'rest' || type === 'travel') return out
-  if (dow === 0) { out['Weekly review (30 min)'] = plan.sundayReview.map((label, i) => ({ id: `rev${i}`, label })); return out }
-  if (dow === 6) return out
+  if (wk < 1 || type === 'travel') return out
+  const minutes = pianoMinutes(blocksForType(date, type, startFor(user, date), user))
+  if (dow === 0) out['Weekly review (30 min)'] = plan.sundayReview.map((label, i) => ({ id: `rev${i}`, label }))
+  if ((dow === 0 || dow === 6 || type === 'rest') && minutes === 0) return out   // a rest day only has piano if you pulled some in
   const std = standardOfWeek(user, wk)
   const items = projected.alloc[date] ?? []
   const sax = plan.sax.find(x => inRange(wk, x.wk))
   const saxQ = items.filter(i => i.lane === 'sax').map(toTask)
   if (sax && type !== 'light') out['Sax'] = saxQ.length ? saxQ.map(t => ({ ...t, label: t.label.replace("this week's standard", `this week's standard (${std ?? '…'})`) })) : sax.tasks.map((label, i) => ({ id: `sax${i}`, label }))
 
-  const minutes = pianoMinutes(blocksForType(date, type, startFor(user, date), user))
   const b1raw = items.filter(i => i.kind === 'technique').concat(items.filter(i => i.kind === 'lesson'), items.filter(i => i.kind === 'standard')).map(q => ({ ...toTask(q), ctx: ctxFor(user, q) }))
   const ear = currentByEar(user.transcriptions)
   const nextStep = ear ? EAR_STEPS.find(st => !(ear.steps ?? []).includes(st)) : undefined
