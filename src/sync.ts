@@ -20,7 +20,9 @@ export const signIn = async () => {
   catch (e) {
     const code = (e as { code?: string }).code ?? ''
     if (/popup-blocked|popup-closed|cancelled-popup|operation-not-supported/.test(code)) { try { await signInWithRedirect(auth, googleProvider); return } catch (e2) { e = e2 } }
-    const msg = /unauthorized-domain/.test(code) ? `This domain (${location.hostname}) isn’t authorized in Firebase → Authentication → Settings → Authorized domains.` : String((e as Error).message ?? e)
+    const msg = /unauthorized-domain/.test(code) ? `This domain (${location.hostname}) isn’t authorized in Firebase → Authentication → Settings → Authorized domains.`
+      : /operation-not-allowed/.test(code) ? 'Google sign-in is switched off for this Firebase project: Firebase console → Authentication → Sign-in method → Google → Enable, then save.'
+      : String((e as Error).message ?? e)
     set({ user: null, state: 'error', error: msg })
   }
 }
