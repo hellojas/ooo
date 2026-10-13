@@ -7,7 +7,7 @@ import type { UserData } from './types'
 import { blocksForType, startFor } from './model'
 import { earMicro, guidance, maintenanceTune } from './curriculum'
 
-export interface Task { id: string; label: string; url?: string; qid?: string; pdf?: string; /** minute budget inside the session */ min?: number; /** where you stopped last time, or the tune's key/tempo/target */ ctx?: string; /** how you know you can move on (from the curriculum graph) */ pass?: string }
+export interface Task { id: string; label: string; url?: string; qid?: string; pdf?: string; /** minute budget inside the session */ min?: number; /** where you stopped last time, or the tune's key/tempo/target */ ctx?: string; /** how you know you can move on (from the curriculum graph) */ pass?: string; /** on a past day: not finished then, carried forward */ carried?: boolean }
 export const STAGES = ['Map', 'Harmonize', 'Navigate', 'Language', 'Perform']
 const inRange = (wk: number, r: number[]) => wk >= r[0] && wk <= r[1]
 

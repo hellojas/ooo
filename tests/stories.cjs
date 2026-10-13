@@ -36,7 +36,7 @@ await story('D. Park a lesson → gone from Today and forecast, visible in Curri
 });
 await story('E. Finish everything → Up next + pull one in',async()=>{
   await open('2026-10-12T11:00:00');
-  const n=await p.locator('.steps li').count();for(let i=0;i<n;i++){await p.locator('.steps li').nth(i).locator('.lbl').click();await p.waitForTimeout(80)}
+  const n=await p.locator('.steps li').count();for(let i=0;i<n;i++){const li=p.locator('.steps li').nth(i);if(await li.locator('button:has-text("solid")').count())await li.locator('button:has-text("solid")').click();else await li.locator('.lbl').click();await p.waitForTimeout(80)}
   const lane=await p.locator('.lanebtn.on').textContent();check('E: lane shows ✓ when all done',lane.includes('✓'),lane);
   const has=await p.locator('.nextq button:has-text("Pull it into today")').count();check('E: pull button appears',has===1);
   await p.click('.nextq button');await p.waitForTimeout(200);const n2=await p.locator('.steps li').count();check('E: pulled item added',n2===n+1,`${n}→${n2}`);

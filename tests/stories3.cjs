@@ -32,7 +32,7 @@ await story('AH. Priority: park the whole lesson kind → no lessons on Today, c
 await story('AI. Repeat, then done the next day → leaves the repeat list',async()=>{
   const s=seed();s.queueRepeat=['t0.1'];s.queueDone={'t0.1':'2026-10-12'};await open('2026-10-13T09:00:00',s);
   const li=p.locator('.steps li',{hasText:'(1/4)'}).first();check('AI: repeated item is first on Tue',(await li.count())===1);
-  await li.locator('.lbl').click();await p.waitForTimeout(150);const s2=await st();check('AI: done clears repeat and dates it today',s2.queueRepeat.length===0&&s2.queueDone['t0.1']==='2026-10-13',JSON.stringify([s2.queueRepeat,s2.queueDone['t0.1']]));
+  await li.locator('button:has-text("solid")').click();await p.waitForTimeout(150);const s2=await st();check('AI: done clears repeat and dates it today',s2.queueRepeat.length===0&&s2.queueDone['t0.1']==='2026-10-13',JSON.stringify([s2.queueRepeat,s2.queueDone['t0.1']]));
 });
 await story('AJ. Three weeks of logging → pace + finish estimate in Curriculum',async()=>{
   const s=seed();let i=0;for(const d of ['12','13','14','15','16','19','20','21','22','23','26','27','28','29','30']){s.practice['2026-10-'+d]={piano1:90};s.queueDone[`s${Math.floor(i/5)}.${i%5}`]='2026-10-'+d;s.queueDone[`t${Math.floor(i/4)}.${i%4+1}`]='2026-10-'+d;i++}

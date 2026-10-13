@@ -134,7 +134,18 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
     }
   }
   const laneBlocks = (l: UILane) => blocks.filter(b => laneOf(b.title) === l && !skipped.includes(b.title))
-  const laneTasks = (l: UILane) => laneBlocks(l).flatMap(b => tasks[b.title] ?? [])
+  const heldIds = (pr.held ?? [])
+  const laneTasks = (l: UILane) => {
+    const own = laneBlocks(l).flatMap(b => tasks[b.title] ?? [])
+    if (date >= real || !heldIds.length) return own
+    // a past day: what it held when it was today, with the unfinished ones marked carried (they are at the front of the queue now)
+    const seen = new Set(own.map(t => t.qid).filter(Boolean))
+    const extra: Task[] = heldIds.map(id => byId(id)).filter((q): q is NonNullable<typeof q> => !!q && q.lane === l && !seen.has(q.id)).map(q => ({ id: 'q:' + q.id, qid: q.id, label: q.label, url: q.url, pdf: q.pdf, carried: !user.queueDone?.[q.id] || user.queueDone[q.id] !== date }))
+    return [...own.filter(t => t.qid), ...extra, ...own.filter(t => !t.qid)]
+  }
+  const holdIds = isToday ? (['piano', 'sax', 'workout'] as UILane[]).flatMap(l => laneBlocks(l).flatMap(b => (tasks[b.title] ?? []).map(t => t.qid).filter(Boolean) as string[])) : []
+  const holdKey = holdIds.join(',')
+  useEffect(() => { if (isToday && holdKey && holdKey !== (pr.held ?? []).join(',')) setPr({ held: holdIds }) }, [holdKey, isToday]) // eslint-disable-line react-hooks/exhaustive-deps
   const curBlock = laneBlocks(lane)[0]
   const curTasks = laneTasks(lane)
   const laneDone = (l: UILane) => { const ts = laneTasks(l); return ts.length > 0 && ts.every(isDone) }
@@ -164,7 +175,8 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const nudgeLine = isToday ? nudge(user, real, type, next?.label.split(': ')[0]) : null
   const lastSession = [...user.sessions].reverse().find(s => laneOf(s.block) === lane && s.date < date && (lane === 'piano' ? s.tune === std : true))
   const lessonItem = curTasks.find(t => t.qid?.startsWith('v'))
-  const lessonQ = lessonItem?.qid ? byId(lessonItem.qid) : undefined
+  // The lesson you're on: today's, else the first unfinished one in the queue. It never moves by calendar — only when you mark it done.
+  const lessonQ = (lessonItem?.qid ? byId(lessonItem.qid) : undefined) ?? MASTER.find(x => x.kind === 'lesson' && !user.queueDone?.[x.id] && !(user.queueSkip ?? []).includes(x.id))
   const course = courses.find(c => c.id === (lessonQ?.course ?? coursesForWeek(wk)[0]?.id))
   const chart = (lessonQ ? pdfLinks(lessonQ.pdf) : courseLinks(course?.id ?? ''))[0]
   const title = lane === 'piano' ? (std ?? 'Pick a standard') : lane === 'sax' ? 'Sax' : 'Run + pull-ups'
@@ -298,9 +310,9 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
             <ol className="steps rows">
               {curTasks.length === 0 && <li className="meta">{curBlock?.note ?? 'Nothing queued for today.'}</li>}
               {curTasks.map((t, i) => { const on = isDone(t); return (
-                <li key={t.id} className={(on ? 'on' : '') + (isRepeat(t) ? ' rep' : '')} onClick={() => toggleTask(t)}>
+                <li key={t.id} className={(on ? 'on' : '') + (isRepeat(t) ? ' rep' : '') + (t.carried ? ' carried' : '')} onClick={t.qid ? undefined : () => toggleTask(t)}>
                   <span className="n">{on ? (isRepeat(t) ? '↻' : '✓') : i + 1}</span>
-                  <span className="lbl">{t.min != null && <small className="mins num">{t.min} min</small>}{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && byId(t.qid) && priorityOf(user, byId(t.qid)!) === 'optional' && <small className="qtag">optional</small>}{t.ctx && <small className="ctx">{t.ctx}</small>}{t.pass && !on && curTasks.find(x => !isDone(x))?.id === t.id && <small className="ctx pass">Pass: {t.pass}</small>}</span>
+                  <span className="lbl">{t.min != null && <small className="mins num">{t.min} min</small>}{t.url ? <a href={t.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>{t.label} ↗</a> : t.label}{t.qid && byId(t.qid) && priorityOf(user, byId(t.qid)!) === 'optional' && <small className="qtag">optional</small>}{t.carried && !on && <small className="ctx carried">still open · carried forward</small>}{t.ctx && <small className="ctx">{t.ctx}</small>}{t.pass && !on && curTasks.find(x => !isDone(x))?.id === t.id && <small className="ctx pass">Pass: {t.pass}</small>}</span>
                   {t.qid && <span className="outcomes feel" onClick={e => e.stopPropagation()}>
                     {on ? <button className="linkbtn quiet" onClick={() => outcome(t, 'clear')}>{isRepeat(t) ? 'again tomorrow · undo' : 'done · undo'}</button> : <>
                       <button className="linkbtn quiet" onClick={() => feel(t, 'lost')} title="Keep it, smaller scope next time">lost</button>

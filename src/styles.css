@@ -1200,3 +1200,8 @@ h2.serif.big{font-size:38px;font-weight:600;letter-spacing:-0.02em;line-height:1
 .makelist.done li{border:0;padding:4px 10px;margin:0}
 .qtag.now{background:var(--make);color:#fff;border-color:var(--make)}
 .wb-ev.flex.make{background:color-mix(in srgb,var(--make) 10%,var(--panel));border-color:color-mix(in srgb,var(--make) 45%,var(--panel))}
+/* feel buttons are always visible: on a phone there is no hover, and a row tap must never mean "done" */
+.steps.rows .outcomes.feel{opacity:1;pointer-events:auto}
+.steps.rows li{cursor:default}
+.steps li.carried .n{background:transparent;border:1.5px dashed var(--ink-3);color:var(--ink-3)}
+.steps .lbl .ctx.carried{color:var(--warm)}

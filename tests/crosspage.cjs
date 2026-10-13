@@ -1,6 +1,6 @@
 const {chromium}=require('playwright');
 (async()=>{
-const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium'});const p=await b.newPage({viewport:{width:1366,height:900}});
+const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium'});const p=await b.newPage({viewport:{width:1366,height:900}});await p.clock.install({time:new Date('2026-10-05T09:00:00-04:00')});/* pinned: the suite's dates are fixed */
 const errs=[],log=[];p.on('pageerror',e=>errs.push(e.message));
 const seed=JSON.stringify({settings:{hiddenItems:[],tripsOff:[],programState:{kaufTue:'registered'}},attendance:{},practice:{},climbing:{},running:{},pullups:{},coffee:{},weekly:{},customShops:[],tunes:{},transcriptions:[],sessions:[],queueDone:{},queueSkip:[],queueRepeat:[],queuePriority:{}});
 const go=async h=>{await p.goto('http://localhost:4173/'+h);await p.waitForTimeout(500)};
@@ -12,7 +12,7 @@ await go('#/today');await p.evaluate(s=>localStorage.setItem('project-ooo:v1',s)
 try{
 await go('#/today/2026-10-12');
 await p.click('button:has-text("Start session")');await p.waitForTimeout(200);
-await p.locator('.steps li').nth(0).locator('.n').click();await p.locator('.steps li').nth(2).locator('.n').click();await p.waitForTimeout(200);
+await p.locator('.steps li').nth(0).locator('button:has-text("solid")').click();await p.locator('.steps li').nth(2).locator('button:has-text("solid")').click();await p.waitForTimeout(200);
 await p.click('button:has-text("Finish")');await p.fill('.sheet input[type=number]','75');await p.fill('.sheet textarea','form held');await p.fill('.sheet input:not([type=number])','the bridge slowly');await p.click('.sheet button:has-text("Save")');await p.waitForTimeout(300);
 let s=await st();
 check('finish logs minutes to the day', (s.practice['2026-10-12']?.piano1||0)===75, JSON.stringify(s.practice['2026-10-12']));
