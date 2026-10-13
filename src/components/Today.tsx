@@ -172,12 +172,15 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
   const focusLine = (repeats.length ? 'Again: ' + repeats[0].label.split(': ').slice(-1)[0].replace(/ \(\d+\/\d+\)$/, '') + '. ' : '') + (lane === 'piano' ? curTasks.filter(t => t.qid?.startsWith('s') && !repeats.includes(t)).map(t => t.label.split(': ')[1]).join('. ') : (curTasks.find(t => !repeats.includes(t))?.label.replace(/ \(\d+\/\d+\)$/, '').replace(/^Focus: /, '') ?? ''))
   const skip = (t: string) => setPr({ skipped: skipped.includes(t) ? skipped.filter(x => x !== t) : [...skipped, t] })
   const [nextNote, setNextNote] = useState('')
+  const [savedFlash, setSavedFlash] = useState(false)
+  const flash = () => { setSavedFlash(true); window.setTimeout(() => setSavedFlash(false), 1800) }
   const saveNext = () => {
     if (!nextNote.trim() || !curBlock) return
     const note = nextNote.trim()
     const target = curTasks.find(t => t.qid && (!isDone(t) || isRepeat(t)))?.qid ?? curTasks.find(t => t.qid)?.qid   // the item you were on remembers it
     update(u => ({ ...u, sessions: [...u.sessions, { date, block: curBlock.title, minutes: 0, tune: lane === 'piano' ? std : undefined, next: note }], queueMemo: target ? { ...u.queueMemo, [target]: { ...u.queueMemo?.[target], note, date } } : u.queueMemo }))
     setNextNote('')
+    flash()
   }
   const todayNext = [...user.sessions].reverse().find(s => s.date === date && s.next)?.next
   const pianoToday = (pr.piano1 ?? 0) + (pr.piano2 ?? 0)
@@ -341,7 +344,8 @@ export function Today({ date, setDate, onOpen, onNav, onReview }: { date: string
             <DayLog date={date} />
           </details>
           <label className="block">Next time, start with…
-            <textarea rows={3} placeholder={todayNext ?? 'Add a quick note…'} value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
+            <textarea rows={3} placeholder="Add a quick note…" value={nextNote} onChange={e => setNextNote(e.target.value)} onBlur={saveNext} /></label>
+          <div className="row between"><button className="btn" disabled={!nextNote.trim()} onClick={saveNext}>Save note</button><span className="meta">{savedFlash ? 'Saved ✓' : todayNext ? `Saved: ${todayNext}` : ''}</span></div>
           <p className="meta savestate">{sync.user ? (sync.state === 'synced' ? '☁ Synced to Firebase' : sync.state === 'error' ? `⚠ ${sync.error}` : '☁ Syncing…') : <>Saved on this device · <button className="linkbtn" onClick={signIn}>{sync.state === 'syncing' ? 'signing in…' : 'sign in to sync'}</button>{sync.error && <><br /><span className="warn">⚠ {sync.error}</span></>}</>}</p>
         </section>
       </div>

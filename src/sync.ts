@@ -31,6 +31,7 @@ export const logOut = () => signOut(auth)
 
 let unsub: (() => void) | undefined
 let timer: number | undefined
+let firstAnswer: number | undefined
 
 onAuthStateChanged(auth, user => {
   unsub?.(); unsub = undefined; setRemoteSaver(null)
@@ -40,12 +41,16 @@ onAuthStateChanged(auth, user => {
   }
   set({ user, state: 'syncing' })
   const ref = doc(db, 'users', user.uid)
+  // Firestore retries silently forever if the database doesn't exist or is blocked; say so instead of spinning.
+  clearTimeout(firstAnswer)
+  firstAnswer = window.setTimeout(() => { if (status.state === 'syncing') set({ user, state: 'error', error: `Signed in as ${user.email}, but Firestore hasn’t answered. In the Firebase console check that Firestore Database exists (Build → Firestore Database → Create database) and that the rules from firestore.rules are published. An ad blocker can also block firestore.googleapis.com.` }) }, 12000)
   unsub = onSnapshot(ref, snap => {
+    clearTimeout(firstAnswer)
     if (snap.metadata.hasPendingWrites) return
     if (snap.exists()) replace({ ...emptyUser(), ...JSON.parse(snap.data().json) })
     else setDoc(ref, { json: JSON.stringify(getState()), updatedAt: Date.now() }) // first sign-in: upload local data
     set({ user, state: 'synced' })
-  }, e => set({ user, state: 'error', error: e.message }))
+  }, e => { clearTimeout(firstAnswer); set({ user, state: 'error', error: /permission-denied/i.test(e.message) ? 'Firestore refused the read: publish the rules from firestore.rules in Firebase console → Firestore Database → Rules.' : e.message }) })
   setRemoteSaver(data => {
     clearTimeout(timer)
     timer = window.setTimeout(() => setDoc(ref, { json: JSON.stringify(data), updatedAt: Date.now() }).catch(e => set({ user, state: 'error', error: e.message })), 600)

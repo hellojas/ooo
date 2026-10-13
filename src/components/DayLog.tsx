@@ -15,7 +15,7 @@ export function DayLog({ date }: { date: string }) {
   const fromTasks = (prefix: string) => user.sessions.filter(s => s.date === date && s.block.startsWith(prefix)).length > 0
   return (
     <div className="quicklog">
-      <p className="eyebrow">Practice</p>
+      <p className="eyebrow">Practice <small className="meta">· saves as you tap</small></p>
       {([['Piano', 'piano1', piano, fromTasks('Piano')], ['Sax', 'sax', pr.sax ?? 0, fromTasks('Sax')]] as const).map(([label, id, mins, auto]) => (
         <div className="logline" key={id}>
           <span className="lbl2"><b>{label}</b><small>{auto ? 'from finished blocks' : 'or finish a block'}</small></span>
